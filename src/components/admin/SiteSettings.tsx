@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Save, Upload } from 'lucide-react';
 import { toast } from 'sonner';
@@ -7,7 +6,7 @@ const SiteSettings = () => {
   const [settings, setSettings] = useState({
     siteName: 'The Fashion & Furious',
     contactEmail: 'orders@thefashionandfurious.com',
-    shippingCost: '10.00',
+    shippingCost: '500',
     logoUrl: '',
     supportEmail: 'support@thefashionandfurious.com'
   });
@@ -77,14 +76,14 @@ const SiteSettings = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Shipping Cost ($)</label>
+              <label className="block text-sm font-medium mb-2">Shipping Cost (৳)</label>
               <input
                 type="number"
                 name="shippingCost"
                 value={settings.shippingCost}
                 onChange={handleInputChange}
                 min="0"
-                step="0.01"
+                step="1"
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-red-600"
               />
             </div>
@@ -171,7 +170,7 @@ const SiteSettings = () => {
               <div className="text-sm text-gray-400">Products</div>
             </div>
             <div className="bg-gray-700 p-4 rounded text-center">
-              <div className="text-2xl font-bold text-blue-400">$0</div>
+              <div className="text-2xl font-bold text-blue-400">৳0</div>
               <div className="text-sm text-gray-400">Revenue</div>
             </div>
             <div className="bg-gray-700 p-4 rounded text-center">

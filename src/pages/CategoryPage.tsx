@@ -3,10 +3,11 @@ import { useParams } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ProductGrid from '../components/ProductGrid';
-import { products } from '../data/products';
+import { useProducts } from '../context/ProductsContext';
 
 const CategoryPage = () => {
   const { category } = useParams();
+  const { products } = useProducts();
   
   const categoryProducts = products.filter(product => 
     product.category === category

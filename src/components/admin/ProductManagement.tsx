@@ -1,12 +1,12 @@
 
 import { useState } from 'react';
 import { Plus, Edit, Trash2, Upload } from 'lucide-react';
-import { products } from '../../data/products';
+import { useProducts } from '../../context/ProductsContext';
 import { Product } from '../../types/Product';
 import { toast } from 'sonner';
 
 const ProductManagement = () => {
-  const [productList, setProductList] = useState(products);
+  const { products, updateProduct, addProduct, deleteProduct } = useProducts();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [dragOver, setDragOver] = useState(false);
@@ -66,10 +66,10 @@ const ProductManagement = () => {
     };
 
     if (editingProduct) {
-      setProductList(prev => prev.map(p => p.id === editingProduct.id ? productData : p));
+      updateProduct(productData);
       toast.success('Product updated successfully!');
     } else {
-      setProductList(prev => [...prev, productData]);
+      addProduct(productData);
       toast.success('Product added successfully!');
     }
 
@@ -106,7 +106,7 @@ const ProductManagement = () => {
 
   const handleDelete = (id: string) => {
     if (confirm('Are you sure you want to delete this product?')) {
-      setProductList(prev => prev.filter(p => p.id !== id));
+      deleteProduct(id);
       toast.success('Product deleted successfully!');
     }
   };
@@ -126,7 +126,7 @@ const ProductManagement = () => {
 
       {/* Products Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {productList.map(product => (
+        {products.map(product => (
           <div key={product.id} className="bg-gray-800 rounded-lg overflow-hidden">
             <img
               src={product.image}
@@ -137,7 +137,7 @@ const ProductManagement = () => {
               <h3 className="font-semibold mb-2">{product.name}</h3>
               <p className="text-gray-400 text-sm mb-2 line-clamp-2">{product.description}</p>
               <div className="flex justify-between items-center mb-4">
-                <span className="text-lg font-bold">${product.price}</span>
+                <span className="text-lg font-bold">৳{product.price}</span>
                 <span className="text-sm bg-gray-700 px-2 py-1 rounded">{product.category}</span>
               </div>
               <div className="flex gap-2">
@@ -196,7 +196,7 @@ const ProductManagement = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Price ($)</label>
+                  <label className="block text-sm font-medium mb-2">Price (৳)</label>
                   <input
                     type="number"
                     name="price"
@@ -204,7 +204,7 @@ const ProductManagement = () => {
                     onChange={handleInputChange}
                     required
                     min="0"
-                    step="0.01"
+                    step="1"
                     className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-red-600"
                   />
                 </div>

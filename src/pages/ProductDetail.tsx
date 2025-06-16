@@ -4,12 +4,13 @@ import { useParams } from 'react-router-dom';
 import { Minus, Plus } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { products } from '../data/products';
+import { useProducts } from '../context/ProductsContext';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const { products } = useProducts();
   const { addToCart } = useCart();
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -65,7 +66,7 @@ const ProductDetail = () => {
             </h1>
             
             <div className="text-2xl font-bold text-gray-900 mb-6">
-              ${product.price}
+              ৳{product.price}
             </div>
 
             <div className="prose text-gray-600 mb-8">

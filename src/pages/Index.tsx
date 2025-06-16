@@ -4,10 +4,15 @@ import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import ProductGrid from '../components/ProductGrid';
 import Footer from '../components/Footer';
-import { products } from '../data/products';
+import { useProducts } from '../context/ProductsContext';
 
 const Index = () => {
+  const { products } = useProducts();
   const [featuredProducts, setFeaturedProducts] = useState(products.slice(0, 8));
+
+  useEffect(() => {
+    setFeaturedProducts(products.slice(0, 8));
+  }, [products]);
 
   return (
     <div className="min-h-screen bg-white">
