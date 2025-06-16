@@ -11,46 +11,49 @@ const Header = () => {
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200">
+    <header className="bg-black shadow-sm border-b border-gray-800">
       {/* Top Bar */}
-      <div className="bg-black text-white text-center py-2 text-sm">
-        <p>FREE SHIPPING ON ORDERS OVER $75 | WORLDWIDE DELIVERY</p>
+      <div className="bg-gray-900 text-white text-center py-1 text-xs">
+        <p>FREE SHIPPING ON ORDERS OVER ৳2000 | WORLDWIDE DELIVERY</p>
       </div>
 
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between py-4">
+        <div className="flex items-center justify-between py-2">
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden"
+            className="md:hidden text-white"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
 
           {/* Logo */}
-          <Link to="/" className="text-2xl font-bold text-center flex-1 md:flex-none">
-            <div className="text-red-600">THE FASHION</div>
-            <div className="text-black text-lg">& FURIOUS</div>
+          <Link to="/" className="flex-1 md:flex-none">
+            <img 
+              src="/lovable-uploads/1bfadb02-757f-46dc-b0c2-f866a1969b54.png" 
+              alt="The Fashion & The Furious" 
+              className="h-12 md:h-14 object-contain"
+            />
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
-            <Link to="/drivers" className="hover:text-red-600 transition-colors font-medium">
-              DRIVERS
+          {/* Desktop Navigation - Right aligned */}
+          <nav className="hidden md:flex space-x-8 ml-auto mr-8">
+            <Link to="/drivers" className="text-white hover:text-red-500 transition-colors font-medium text-sm">
+              Drivers
             </Link>
-            <Link to="/f1-classic" className="hover:text-red-600 transition-colors font-medium">
-              F1 CLASSIC
+            <Link to="/f1-classic" className="text-white hover:text-red-500 transition-colors font-medium text-sm">
+              F1 Classics
             </Link>
-            <Link to="/teams" className="hover:text-red-600 transition-colors font-medium">
-              TEAMS
+            <Link to="/teams" className="text-white hover:text-red-500 transition-colors font-medium text-sm">
+              Teams
             </Link>
           </nav>
 
           {/* Cart Icon */}
           <Link to="/cart" className="relative">
-            <ShoppingCart size={24} className="hover:text-red-600 transition-colors" />
+            <ShoppingCart size={20} className="text-white hover:text-red-500 transition-colors" />
             {cartItemsCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
                 {cartItemsCount}
               </span>
             )}
@@ -59,28 +62,28 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <nav className="md:hidden py-4 border-t">
+          <nav className="md:hidden py-4 border-t border-gray-800">
             <div className="flex flex-col space-y-4">
               <Link 
                 to="/drivers" 
-                className="hover:text-red-600 transition-colors font-medium"
+                className="text-white hover:text-red-500 transition-colors font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                DRIVERS
+                Drivers
               </Link>
               <Link 
                 to="/f1-classic" 
-                className="hover:text-red-600 transition-colors font-medium"
+                className="text-white hover:text-red-500 transition-colors font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                F1 CLASSIC
+                F1 Classics
               </Link>
               <Link 
                 to="/teams" 
-                className="hover:text-red-600 transition-colors font-medium"
+                className="text-white hover:text-red-500 transition-colors font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                TEAMS
+                Teams
               </Link>
             </div>
           </nav>

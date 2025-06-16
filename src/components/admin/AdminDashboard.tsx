@@ -1,9 +1,10 @@
 
 import { useState } from 'react';
-import { Package, ShoppingCart, Settings, LogOut, Plus } from 'lucide-react';
+import { LogOut, Package, FileText, Settings, Image } from 'lucide-react';
 import ProductManagement from './ProductManagement';
 import OrderManagement from './OrderManagement';
 import SiteSettings from './SiteSettings';
+import BannerManagement from './BannerManagement';
 
 interface AdminDashboardProps {
   onLogout: () => void;
@@ -13,13 +14,16 @@ const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
   const [activeTab, setActiveTab] = useState('products');
 
   const tabs = [
+    { id: 'banners', label: 'Banners', icon: Image },
     { id: 'products', label: 'Products', icon: Package },
-    { id: 'orders', label: 'Orders', icon: ShoppingCart },
+    { id: 'orders', label: 'Orders', icon: FileText },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
   const renderContent = () => {
     switch (activeTab) {
+      case 'banners':
+        return <BannerManagement />;
       case 'products':
         return <ProductManagement />;
       case 'orders':
@@ -34,29 +38,25 @@ const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
   return (
     <div className="min-h-screen bg-gray-900">
       {/* Header */}
-      <header className="bg-gray-800 border-b border-gray-700">
-        <div className="px-6 py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-white">
-              The Fashion & Furious - Admin Panel
-            </h1>
-            <button
-              onClick={onLogout}
-              className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors"
-            >
-              <LogOut size={20} />
-              Logout
-            </button>
-          </div>
+      <header className="bg-black border-b border-gray-700">
+        <div className="px-6 py-4 flex justify-between items-center">
+          <h1 className="text-white text-2xl font-bold">Admin Dashboard</h1>
+          <button
+            onClick={onLogout}
+            className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition-colors"
+          >
+            <LogOut size={20} />
+            Logout
+          </button>
         </div>
       </header>
 
       <div className="flex">
         {/* Sidebar */}
-        <nav className="bg-gray-800 w-64 min-h-screen border-r border-gray-700">
-          <div className="p-6">
+        <nav className="w-64 bg-gray-800 min-h-screen border-r border-gray-700">
+          <div className="p-4">
             <ul className="space-y-2">
-              {tabs.map(tab => {
+              {tabs.map((tab) => {
                 const Icon = tab.icon;
                 return (
                   <li key={tab.id}>

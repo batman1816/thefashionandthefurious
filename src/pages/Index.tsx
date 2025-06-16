@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import ProductGrid from '../components/ProductGrid';
 import Footer from '../components/Footer';
+import RotatingBanner from '../components/RotatingBanner';
 import { useProducts } from '../context/ProductsContext';
 
 const Index = () => {
@@ -18,31 +19,8 @@ const Index = () => {
     <div className="min-h-screen bg-white">
       <Header />
       
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-red-600 via-black to-red-600 text-white py-20">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
-            THE FASHION &<br />FURIOUS
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 font-light">
-            Premium Formula 1 Inspired Apparel
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link 
-              to="/drivers" 
-              className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-none font-semibold transition-all duration-300 transform hover:scale-105"
-            >
-              SHOP DRIVERS
-            </Link>
-            <Link 
-              to="/teams" 
-              className="bg-transparent border-2 border-white hover:bg-white hover:text-black text-white px-8 py-4 rounded-none font-semibold transition-all duration-300"
-            >
-              SHOP TEAMS
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* Rotating Banner */}
+      <RotatingBanner />
 
       {/* Featured Products */}
       <section className="py-16">
