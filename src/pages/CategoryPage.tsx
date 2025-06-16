@@ -1,13 +1,16 @@
 
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ProductGrid from '../components/ProductGrid';
 import { useProducts } from '../context/ProductsContext';
 
 const CategoryPage = () => {
-  const { category } = useParams();
+  const location = useLocation();
   const { products } = useProducts();
+  
+  // Extract category from pathname
+  const category = location.pathname.substring(1); // Remove leading slash
   
   const categoryProducts = products.filter(product => 
     product.category === category

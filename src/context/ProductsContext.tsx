@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Product } from '../types/Product';
 import { products as initialProducts } from '../data/products';
 
@@ -13,7 +13,24 @@ interface ProductsContextType {
 const ProductsContext = createContext<ProductsContextType | undefined>(undefined);
 
 export const ProductsProvider = ({ children }: { children: ReactNode }) => {
-  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [products, setProducts] = useState<Product[]>(() => {
+    // Try to load from localStorage first
+    const savedProducts = localStorage.getItem('fashion-furious-products');
+    if (savedProducts) {
+      try {
+        return JSON.parse(savedProducts);
+      } catch (error) {
+        console.error('Error parsing saved products:', error);
+        return initialProducts;
+      }
+    }
+    return initialProducts;
+  });
+
+  // Save to localStorage whenever products change
+  useEffect(() => {
+    localStorage.setItem('fashion-furious-products', JSON.stringify(products));
+  }, [products]);
 
   const updateProduct = (updatedProduct: Product) => {
     setProducts(prev => prev.map(p => p.id === updatedProduct.id ? updatedProduct : p));

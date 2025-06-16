@@ -43,17 +43,17 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
       className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
       onClick={handleBackdropClick}
     >
-      <div className="bg-white max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
+      <div className="bg-white max-w-4xl w-full max-h-[90vh] overflow-y-auto relative rounded-none shadow-2xl">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100"
+          className="absolute top-4 right-4 z-10 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors"
         >
           <X size={20} />
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-2">
           {/* Product Image */}
-          <div className="aspect-square overflow-hidden bg-gray-100">
+          <div className="aspect-square overflow-hidden bg-gray-50">
             <img
               src={product.image}
               alt={product.name}
@@ -63,30 +63,30 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
 
           {/* Product Info */}
           <div className="p-8 flex flex-col">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            <h1 className="text-2xl font-medium text-gray-900 mb-2">
               {product.name}
             </h1>
             
-            <div className="text-xl font-bold text-gray-900 mb-6">
-              Tk {product.price}.00 BDT
+            <div className="text-2xl font-medium text-gray-900 mb-6">
+              ৳{product.price}.00 BDT
             </div>
 
-            <p className="text-sm text-gray-600 mb-6">
+            <p className="text-sm text-gray-500 mb-6">
               Shipping calculated at checkout.
             </p>
 
             {/* Size Selection */}
             <div className="mb-6">
-              <h3 className="text-sm font-semibold mb-3 uppercase">Size</h3>
+              <h3 className="text-sm font-medium mb-3 uppercase tracking-wide">Size</h3>
               <div className="flex flex-wrap gap-2">
                 {product.sizes.map(size => (
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    className={`px-4 py-2 border text-sm font-medium transition-colors ${
+                    className={`px-4 py-2 border text-sm font-medium transition-all ${
                       selectedSize === size
                         ? 'border-black bg-black text-white'
-                        : 'border-gray-300 hover:border-gray-400'
+                        : 'border-gray-300 hover:border-gray-400 bg-white text-gray-900'
                     }`}
                   >
                     {size}
@@ -97,21 +97,21 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
 
             {/* Quantity */}
             <div className="mb-8">
-              <h3 className="text-sm font-semibold mb-3 uppercase">Quantity</h3>
-              <div className="flex items-center border border-gray-300 w-fit">
+              <h3 className="text-sm font-medium mb-3 uppercase tracking-wide">Quantity</h3>
+              <div className="flex items-center border border-gray-300 w-fit bg-white">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="p-2 hover:bg-gray-100"
+                  className="p-3 hover:bg-gray-50 transition-colors disabled:opacity-50"
                   disabled={quantity <= 1}
                 >
                   <Minus size={16} />
                 </button>
-                <span className="px-4 py-2 text-center min-w-[60px]">
+                <span className="px-6 py-3 text-center min-w-[80px] font-medium">
                   {quantity}
                 </span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="p-2 hover:bg-gray-100"
+                  className="p-3 hover:bg-gray-50 transition-colors"
                 >
                   <Plus size={16} />
                 </button>
@@ -122,13 +122,13 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
             <div className="space-y-3 mb-6">
               <button
                 onClick={handleAddToCart}
-                className="w-full bg-white border border-black text-black py-3 px-8 font-medium hover:bg-gray-50 transition-colors duration-300"
+                className="w-full bg-white border border-black text-black py-3 px-8 font-medium hover:bg-gray-50 transition-colors duration-200 uppercase tracking-wide"
               >
                 Add to cart
               </button>
               <button
                 onClick={handleAddToCart}
-                className="w-full bg-black text-white py-3 px-8 font-medium hover:bg-gray-800 transition-colors duration-300"
+                className="w-full bg-black text-white py-3 px-8 font-medium hover:bg-gray-800 transition-colors duration-200 uppercase tracking-wide"
               >
                 Buy it now
               </button>
@@ -138,7 +138,7 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
             <Link 
               to={`/product/${product.id}`}
               onClick={onClose}
-              className="text-sm text-gray-600 hover:text-black transition-colors underline"
+              className="text-sm text-gray-500 hover:text-black transition-colors underline"
             >
               View full details →
             </Link>
