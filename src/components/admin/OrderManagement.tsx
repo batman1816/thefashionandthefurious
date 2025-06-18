@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Check, Clock, Eye } from 'lucide-react';
 import { Order } from '../../types/Product';
@@ -20,7 +19,7 @@ const OrderManagement = () => {
             name: 'Lewis Hamilton Championship Tee',
             description: '',
             price: 45,
-            image: '',
+            image_url: '',
             category: 'drivers',
             sizes: [],
             stock: 0
@@ -48,7 +47,7 @@ const OrderManagement = () => {
             name: 'Ferrari Scuderia Heritage Tee',
             description: '',
             price: 40,
-            image: '',
+            image_url: '',
             category: 'teams',
             sizes: [],
             stock: 0
