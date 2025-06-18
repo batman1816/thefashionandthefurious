@@ -1,33 +1,126 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Save, Upload } from 'lucide-react';
+import { supabase } from '../../integrations/supabase/client';
+import { SiteSettings as SiteSettingsType } from '../../types/Product';
+import { uploadImage } from '../../utils/imageUpload';
 import { toast } from 'sonner';
 
 const SiteSettings = () => {
-  const [settings, setSettings] = useState({
-    siteName: 'The Fashion & Furious',
-    contactEmail: 'orders@thefashionandfurious.com',
-    shippingCost: '500',
-    logoUrl: '',
-    supportEmail: 'support@thefashionandfurious.com'
+  const [settings, setSettings] = useState<SiteSettingsType>({
+    id: '',
+    site_name: 'The Fashion & Furious',
+    contact_email: 'orders@thefashionandfurious.com',
+    support_email: 'support@thefashionandfurious.com',
+    shipping_cost: 500,
+    logo_url: ''
   });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('site_settings')
+        .select('*')
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        throw error;
+      }
+
+      if (data) {
+        setSettings(data);
+      }
+    } catch (error) {
+      console.error('Error fetching settings:', error);
+      toast.error('Failed to load settings');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSettings({
-      ...settings,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    setSettings(prev => ({
+      ...prev,
+      [name]: name === 'shipping_cost' ? parseInt(value) || 0 : value
+    }));
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const logoUrl = await uploadImage(file, 'banner-images'); // Using banner-images bucket for logo
+      setSettings(prev => ({ ...prev, logo_url: logoUrl }));
+      toast.success('Logo uploaded successfully');
+    } catch (error) {
+      toast.error('Failed to upload logo');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, you would save these to your backend
-    toast.success('Settings saved successfully!');
+    setSaving(true);
+
+    try {
+      if (settings.id) {
+        // Update existing settings
+        const { error } = await supabase
+          .from('site_settings')
+          .update({
+            site_name: settings.site_name,
+            contact_email: settings.contact_email,
+            support_email: settings.support_email,
+            shipping_cost: settings.shipping_cost,
+            logo_url: settings.logo_url
+          })
+          .eq('id', settings.id);
+
+        if (error) throw error;
+      } else {
+        // Create new settings
+        const { data, error } = await supabase
+          .from('site_settings')
+          .insert({
+            site_name: settings.site_name,
+            contact_email: settings.contact_email,
+            support_email: settings.support_email,
+            shipping_cost: settings.shipping_cost,
+            logo_url: settings.logo_url
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+        if (data) setSettings(data);
+      }
+
+      toast.success('Settings saved successfully!');
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      toast.error('Failed to save settings');
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const handleLogoUpload = () => {
-    // In a real app, you would handle file upload here
-    toast.success('Logo uploaded successfully!');
-  };
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-white">Loading settings...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="text-white">
@@ -45,8 +138,8 @@ const SiteSettings = () => {
               <label className="block text-sm font-medium mb-2">Site Name</label>
               <input
                 type="text"
-                name="siteName"
-                value={settings.siteName}
+                name="site_name"
+                value={settings.site_name}
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-red-600"
               />
@@ -56,8 +149,8 @@ const SiteSettings = () => {
               <label className="block text-sm font-medium mb-2">Contact Email</label>
               <input
                 type="email"
-                name="contactEmail"
-                value={settings.contactEmail}
+                name="contact_email"
+                value={settings.contact_email}
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-red-600"
               />
@@ -68,8 +161,8 @@ const SiteSettings = () => {
               <label className="block text-sm font-medium mb-2">Support Email</label>
               <input
                 type="email"
-                name="supportEmail"
-                value={settings.supportEmail}
+                name="support_email"
+                value={settings.support_email}
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-red-600"
               />
@@ -79,8 +172,8 @@ const SiteSettings = () => {
               <label className="block text-sm font-medium mb-2">Shipping Cost (৳)</label>
               <input
                 type="number"
-                name="shippingCost"
-                value={settings.shippingCost}
+                name="shipping_cost"
+                value={settings.shipping_cost}
                 onChange={handleInputChange}
                 min="0"
                 step="1"
@@ -90,10 +183,11 @@ const SiteSettings = () => {
 
             <button
               type="submit"
-              className="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded flex items-center justify-center gap-2 transition-colors"
+              disabled={saving}
+              className="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
             >
               <Save size={20} />
-              Save Settings
+              {saving ? 'Saving...' : 'Save Settings'}
             </button>
           </form>
         </div>
@@ -106,30 +200,54 @@ const SiteSettings = () => {
             <div>
               <label className="block text-sm font-medium mb-2">Logo</label>
               <div className="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center">
-                <Upload className="mx-auto mb-4 text-gray-400" size={48} />
-                <p className="text-gray-400 mb-4">Upload your logo</p>
-                <button
-                  onClick={handleLogoUpload}
-                  className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded transition-colors"
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleLogoUpload}
+                  className="hidden"
+                  id="logo-upload"
+                  disabled={uploading}
+                />
+                <label
+                  htmlFor="logo-upload"
+                  className={`cursor-pointer ${uploading ? 'opacity-50' : ''}`}
                 >
-                  Choose File
-                </button>
+                  <Upload className="mx-auto mb-4 text-gray-400" size={48} />
+                  <p className="text-gray-400 mb-4">
+                    {uploading ? 'Uploading...' : 'Upload your logo'}
+                  </p>
+                  <button
+                    type="button"
+                    className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded transition-colors"
+                    disabled={uploading}
+                  >
+                    Choose File
+                  </button>
+                </label>
               </div>
             </div>
 
             <div>
               <h4 className="font-medium mb-2">Current Logo Preview</h4>
               <div className="bg-gray-700 p-4 rounded text-center">
-                <div className="text-xl font-bold">
-                  <div className="text-red-400">THE FASHION</div>
-                  <div className="text-white">& FURIOUS</div>
-                </div>
+                {settings.logo_url ? (
+                  <img 
+                    src={settings.logo_url} 
+                    alt="Logo" 
+                    className="max-h-16 mx-auto"
+                  />
+                ) : (
+                  <div className="text-xl font-bold">
+                    <div className="text-red-400">THE FASHION</div>
+                    <div className="text-white">& FURIOUS</div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Email Settings */}
+        {/* Email Configuration */}
         <div className="bg-gray-800 rounded-lg p-6">
           <h3 className="text-xl font-semibold mb-6">Email Configuration</h3>
           

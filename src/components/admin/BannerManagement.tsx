@@ -1,71 +1,82 @@
 
 import { useState } from 'react';
 import { Plus, Edit, Trash2, Upload, Eye, EyeOff } from 'lucide-react';
-import { useBanners, Banner } from '../../context/BannerContext';
+import { useBanners } from '../../context/BannerContext';
+import { Banner } from '../../types/Product';
+import { uploadImage, deleteImage } from '../../utils/imageUpload';
+import { toast } from 'sonner';
 
 const BannerManagement = () => {
-  const { banners, addBanner, updateBanner, deleteBanner } = useBanners();
+  const { banners, loading, addBanner, updateBanner, deleteBanner } = useBanners();
   const [isAddingBanner, setIsAddingBanner] = useState(false);
   const [editingBanner, setEditingBanner] = useState<Banner | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   const [formData, setFormData] = useState({
-    image: '',
-    buttonText: '',
-    buttonLink: '',
-    isActive: true
+    image_url: '',
+    button_text: '',
+    button_link: '',
+    is_active: true
   });
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const result = event.target?.result as string;
-        setFormData(prev => ({ ...prev, image: result }));
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const imageUrl = await uploadImage(file, 'banner-images');
+      setFormData(prev => ({ ...prev, image_url: imageUrl }));
+      toast.success('Banner image uploaded successfully');
+    } catch (error) {
+      toast.error('Failed to upload banner image');
+    } finally {
+      setUploading(false);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.image) {
-      alert('Please upload an image');
+    if (!formData.image_url) {
+      toast.error('Please upload a banner image');
       return;
     }
 
     const bannerData = {
-      id: editingBanner?.id || Date.now().toString(),
-      image: formData.image,
-      buttonText: formData.buttonText || undefined,
-      buttonLink: formData.buttonLink || undefined,
-      isActive: formData.isActive
+      image_url: formData.image_url,
+      button_text: formData.button_text || undefined,
+      button_link: formData.button_link || undefined,
+      is_active: formData.is_active
     };
 
-    if (editingBanner) {
-      updateBanner(bannerData);
-      setEditingBanner(null);
-    } else {
-      addBanner(bannerData);
-      setIsAddingBanner(false);
-    }
+    try {
+      if (editingBanner) {
+        await updateBanner({ ...bannerData, id: editingBanner.id });
+        setEditingBanner(null);
+      } else {
+        await addBanner(bannerData);
+        setIsAddingBanner(false);
+      }
 
-    // Reset form
-    setFormData({
-      image: '',
-      buttonText: '',
-      buttonLink: '',
-      isActive: true
-    });
+      // Reset form
+      setFormData({
+        image_url: '',
+        button_text: '',
+        button_link: '',
+        is_active: true
+      });
+    } catch (error) {
+      console.error('Error saving banner:', error);
+    }
   };
 
   const handleEdit = (banner: Banner) => {
     setFormData({
-      image: banner.image,
-      buttonText: banner.buttonText || '',
-      buttonLink: banner.buttonLink || '',
-      isActive: banner.isActive
+      image_url: banner.image_url,
+      button_text: banner.button_text || '',
+      button_link: banner.button_link || '',
+      is_active: banner.is_active
     });
     setEditingBanner(banner);
     setIsAddingBanner(true);
@@ -75,16 +86,40 @@ const BannerManagement = () => {
     setIsAddingBanner(false);
     setEditingBanner(null);
     setFormData({
-      image: '',
-      buttonText: '',
-      buttonLink: '',
-      isActive: true
+      image_url: '',
+      button_text: '',
+      button_link: '',
+      is_active: true
     });
   };
 
-  const toggleBannerStatus = (banner: Banner) => {
-    updateBanner({ ...banner, isActive: !banner.isActive });
+  const toggleBannerStatus = async (banner: Banner) => {
+    try {
+      await updateBanner({ ...banner, is_active: !banner.is_active });
+    } catch (error) {
+      console.error('Error toggling banner status:', error);
+    }
   };
+
+  const handleDelete = async (banner: Banner) => {
+    try {
+      // Delete image from storage if it's hosted on Supabase
+      if (banner.image_url.includes('supabase')) {
+        await deleteImage(banner.image_url, 'banner-images');
+      }
+      await deleteBanner(banner.id);
+    } catch (error) {
+      console.error('Error deleting banner:', error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-white">Loading banners...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -117,20 +152,21 @@ const BannerManagement = () => {
                     onChange={handleImageUpload}
                     className="hidden"
                     id="banner-upload"
+                    disabled={uploading}
                   />
                   <label
                     htmlFor="banner-upload"
-                    className="cursor-pointer flex flex-col items-center justify-center text-gray-400 hover:text-white"
+                    className={`cursor-pointer flex flex-col items-center justify-center text-gray-400 hover:text-white ${uploading ? 'opacity-50' : ''}`}
                   >
                     <Upload size={32} className="mb-2" />
-                    <span>Click to upload banner image</span>
+                    <span>{uploading ? 'Uploading...' : 'Click to upload banner image'}</span>
                   </label>
                 </div>
                 
-                {formData.image && (
+                {formData.image_url && (
                   <div className="mt-4">
                     <img
-                      src={formData.image}
+                      src={formData.image_url}
                       alt="Preview"
                       className="w-full max-w-md h-32 object-cover rounded border-2 border-gray-600"
                     />
@@ -144,8 +180,8 @@ const BannerManagement = () => {
                 <label className="block text-white mb-2">Button Text (Optional)</label>
                 <input
                   type="text"
-                  value={formData.buttonText}
-                  onChange={(e) => setFormData(prev => ({ ...prev, buttonText: e.target.value }))}
+                  value={formData.button_text}
+                  onChange={(e) => setFormData(prev => ({ ...prev, button_text: e.target.value }))}
                   className="w-full px-3 py-2 bg-gray-700 text-white rounded"
                   placeholder="e.g., Shop Now"
                 />
@@ -154,8 +190,8 @@ const BannerManagement = () => {
                 <label className="block text-white mb-2">Button Link (Optional)</label>
                 <input
                   type="text"
-                  value={formData.buttonLink}
-                  onChange={(e) => setFormData(prev => ({ ...prev, buttonLink: e.target.value }))}
+                  value={formData.button_link}
+                  onChange={(e) => setFormData(prev => ({ ...prev, button_link: e.target.value }))}
                   className="w-full px-3 py-2 bg-gray-700 text-white rounded"
                   placeholder="e.g., /drivers"
                 />
@@ -166,8 +202,8 @@ const BannerManagement = () => {
               <input
                 type="checkbox"
                 id="isActive"
-                checked={formData.isActive}
-                onChange={(e) => setFormData(prev => ({ ...prev, isActive: e.target.checked }))}
+                checked={formData.is_active}
+                onChange={(e) => setFormData(prev => ({ ...prev, is_active: e.target.checked }))}
                 className="w-4 h-4"
               />
               <label htmlFor="isActive" className="text-white">Active Banner</label>
@@ -176,7 +212,8 @@ const BannerManagement = () => {
             <div className="flex gap-4 pt-4">
               <button
                 type="submit"
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded"
+                disabled={uploading}
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded disabled:opacity-50"
               >
                 {editingBanner ? 'Update Banner' : 'Add Banner'}
               </button>
@@ -210,18 +247,18 @@ const BannerManagement = () => {
                 <tr key={banner.id} className="border-b border-gray-700">
                   <td className="px-6 py-4">
                     <img
-                      src={banner.image}
+                      src={banner.image_url}
                       alt="Banner"
                       className="w-24 h-12 object-cover rounded"
                     />
                   </td>
-                  <td className="px-6 py-4 text-white">{banner.buttonText || '-'}</td>
-                  <td className="px-6 py-4 text-gray-300">{banner.buttonLink || '-'}</td>
+                  <td className="px-6 py-4 text-white">{banner.button_text || '-'}</td>
+                  <td className="px-6 py-4 text-gray-300">{banner.button_link || '-'}</td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-1 rounded text-xs ${
-                      banner.isActive ? 'bg-green-600 text-white' : 'bg-gray-600 text-gray-300'
+                      banner.is_active ? 'bg-green-600 text-white' : 'bg-gray-600 text-gray-300'
                     }`}>
-                      {banner.isActive ? 'Active' : 'Inactive'}
+                      {banner.is_active ? 'Active' : 'Inactive'}
                     </span>
                   </td>
                   <td className="px-6 py-4">
@@ -229,10 +266,10 @@ const BannerManagement = () => {
                       <button
                         onClick={() => toggleBannerStatus(banner)}
                         className={`p-2 rounded ${
-                          banner.isActive ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-green-600 hover:bg-green-700'
+                          banner.is_active ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-green-600 hover:bg-green-700'
                         } text-white`}
                       >
-                        {banner.isActive ? <EyeOff size={16} /> : <Eye size={16} />}
+                        {banner.is_active ? <EyeOff size={16} /> : <Eye size={16} />}
                       </button>
                       <button
                         onClick={() => handleEdit(banner)}
@@ -241,7 +278,7 @@ const BannerManagement = () => {
                         <Edit size={16} />
                       </button>
                       <button
-                        onClick={() => deleteBanner(banner.id)}
+                        onClick={() => handleDelete(banner)}
                         className="bg-red-600 hover:bg-red-700 text-white p-2 rounded"
                       >
                         <Trash2 size={16} />

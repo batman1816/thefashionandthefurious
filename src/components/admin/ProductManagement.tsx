@@ -3,11 +3,14 @@ import { useState } from 'react';
 import { Plus, Edit, Trash2, Upload } from 'lucide-react';
 import { useProducts } from '../../context/ProductsContext';
 import { Product } from '../../types/Product';
+import { uploadImage, deleteImage } from '../../utils/imageUpload';
+import { toast } from 'sonner';
 
 const ProductManagement = () => {
-  const { products, addProduct, updateProduct, deleteProduct } = useProducts();
+  const { products, loading, addProduct, updateProduct, deleteProduct } = useProducts();
   const [isAddingProduct, setIsAddingProduct] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -16,58 +19,65 @@ const ProductManagement = () => {
     category: 'drivers' as 'drivers' | 'f1-classic' | 'teams',
     sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
     stock: '10',
-    image: ''
+    image_url: ''
   });
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const result = event.target?.result as string;
-        setFormData(prev => ({ ...prev, image: result }));
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const imageUrl = await uploadImage(file, 'product-images');
+      setFormData(prev => ({ ...prev, image_url: imageUrl }));
+      toast.success('Image uploaded successfully');
+    } catch (error) {
+      toast.error('Failed to upload image');
+    } finally {
+      setUploading(false);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.price || !formData.image) {
-      alert('Please fill in all required fields and upload an image');
+    if (!formData.name || !formData.price || !formData.image_url) {
+      toast.error('Please fill in all required fields and upload an image');
       return;
     }
 
     const productData = {
-      id: editingProduct?.id || Date.now().toString(),
       name: formData.name,
       description: formData.description,
       price: parseInt(formData.price),
       category: formData.category,
       sizes: formData.sizes,
       stock: parseInt(formData.stock),
-      image: formData.image
+      image_url: formData.image_url
     };
 
-    if (editingProduct) {
-      updateProduct(productData);
-      setEditingProduct(null);
-    } else {
-      addProduct(productData);
-      setIsAddingProduct(false);
-    }
+    try {
+      if (editingProduct) {
+        await updateProduct({ ...productData, id: editingProduct.id });
+        setEditingProduct(null);
+      } else {
+        await addProduct(productData);
+        setIsAddingProduct(false);
+      }
 
-    // Reset form
-    setFormData({
-      name: '',
-      description: '',
-      price: '',
-      category: 'drivers',
-      sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
-      stock: '10',
-      image: ''
-    });
+      // Reset form
+      setFormData({
+        name: '',
+        description: '',
+        price: '',
+        category: 'drivers',
+        sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
+        stock: '10',
+        image_url: ''
+      });
+    } catch (error) {
+      console.error('Error saving product:', error);
+    }
   };
 
   const handleEdit = (product: Product) => {
@@ -78,7 +88,7 @@ const ProductManagement = () => {
       category: product.category,
       sizes: product.sizes,
       stock: product.stock.toString(),
-      image: product.image
+      image_url: product.image_url
     });
     setEditingProduct(product);
     setIsAddingProduct(true);
@@ -94,9 +104,29 @@ const ProductManagement = () => {
       category: 'drivers',
       sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
       stock: '10',
-      image: ''
+      image_url: ''
     });
   };
+
+  const handleDelete = async (product: Product) => {
+    try {
+      // Delete image from storage if it's hosted on Supabase
+      if (product.image_url.includes('supabase')) {
+        await deleteImage(product.image_url, 'product-images');
+      }
+      await deleteProduct(product.id);
+    } catch (error) {
+      console.error('Error deleting product:', error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-white">Loading products...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -185,20 +215,21 @@ const ProductManagement = () => {
                     onChange={handleImageUpload}
                     className="hidden"
                     id="image-upload"
+                    disabled={uploading}
                   />
                   <label
                     htmlFor="image-upload"
-                    className="cursor-pointer flex flex-col items-center justify-center text-gray-400 hover:text-white"
+                    className={`cursor-pointer flex flex-col items-center justify-center text-gray-400 hover:text-white ${uploading ? 'opacity-50' : ''}`}
                   >
                     <Upload size={32} className="mb-2" />
-                    <span>Click to upload image</span>
+                    <span>{uploading ? 'Uploading...' : 'Click to upload image'}</span>
                   </label>
                 </div>
                 
-                {formData.image && (
+                {formData.image_url && (
                   <div className="mt-4">
                     <img
-                      src={formData.image}
+                      src={formData.image_url}
                       alt="Preview"
                       className="w-32 h-32 object-cover rounded border-2 border-gray-600"
                     />
@@ -210,7 +241,8 @@ const ProductManagement = () => {
             <div className="flex gap-4 pt-4">
               <button
                 type="submit"
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded"
+                disabled={uploading}
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded disabled:opacity-50"
               >
                 {editingProduct ? 'Update Product' : 'Add Product'}
               </button>
@@ -245,7 +277,7 @@ const ProductManagement = () => {
                 <tr key={product.id} className="border-b border-gray-700">
                   <td className="px-6 py-4">
                     <img
-                      src={product.image}
+                      src={product.image_url}
                       alt={product.name}
                       className="w-16 h-16 object-cover rounded"
                     />
@@ -263,7 +295,7 @@ const ProductManagement = () => {
                         <Edit size={16} />
                       </button>
                       <button
-                        onClick={() => deleteProduct(product.id)}
+                        onClick={() => handleDelete(product)}
                         className="bg-red-600 hover:bg-red-700 text-white p-2 rounded"
                       >
                         <Trash2 size={16} />
@@ -275,6 +307,11 @@ const ProductManagement = () => {
             </tbody>
           </table>
         </div>
+        {products.length === 0 && (
+          <div className="text-center py-8 text-gray-400">
+            No products found. Add your first product to get started!
+          </div>
+        )}
       </div>
     </div>
   );

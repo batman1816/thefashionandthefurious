@@ -9,7 +9,108 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      banners: {
+        Row: {
+          button_link: string | null
+          button_text: string | null
+          created_at: string
+          id: string
+          image_url: string
+          is_active: boolean
+          updated_at: string
+        }
+        Insert: {
+          button_link?: string | null
+          button_text?: string | null
+          created_at?: string
+          id?: string
+          image_url: string
+          is_active?: boolean
+          updated_at?: string
+        }
+        Update: {
+          button_link?: string | null
+          button_text?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string
+          is_active?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          name: string
+          price: number
+          sizes: string[]
+          stock: number
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          price: number
+          sizes?: string[]
+          stock?: number
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          price?: number
+          sizes?: string[]
+          stock?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          contact_email: string
+          created_at: string
+          id: string
+          logo_url: string | null
+          shipping_cost: number
+          site_name: string
+          support_email: string
+          updated_at: string
+        }
+        Insert: {
+          contact_email?: string
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          shipping_cost?: number
+          site_name?: string
+          support_email?: string
+          updated_at?: string
+        }
+        Update: {
+          contact_email?: string
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          shipping_cost?: number
+          site_name?: string
+          support_email?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
