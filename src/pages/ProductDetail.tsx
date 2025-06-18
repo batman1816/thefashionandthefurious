@@ -53,7 +53,7 @@ const ProductDetail = () => {
           {/* Product Image */}
           <div className="aspect-square overflow-hidden bg-gray-100">
             <img
-              src={product.image}
+              src={product.image_url}
               alt={product.name}
               className="w-full h-full object-cover"
             />

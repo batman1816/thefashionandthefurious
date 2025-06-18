@@ -24,7 +24,7 @@ const ProductGrid = ({ products }: ProductGridProps) => {
           >
             <div className="aspect-square overflow-hidden bg-gray-50 relative">
               <img
-                src={product.image}
+                src={product.image_url}
                 alt={product.name}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />

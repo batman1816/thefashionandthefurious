@@ -28,16 +28,7 @@ export const BannerProvider = ({ children }: { children: ReactNode }) => {
 
       if (error) throw error;
 
-      // Transform database fields to match our Banner interface
-      const transformedBanners = data.map(banner => ({
-        ...banner,
-        image: banner.image_url, // Map image_url to image for backward compatibility
-        buttonText: banner.button_text,
-        buttonLink: banner.button_link,
-        isActive: banner.is_active
-      }));
-
-      setBanners(transformedBanners);
+      setBanners(data || []);
     } catch (error) {
       console.error('Error fetching banners:', error);
       toast.error('Failed to load banners');
@@ -87,15 +78,7 @@ export const BannerProvider = ({ children }: { children: ReactNode }) => {
 
       if (error) throw error;
 
-      const banner = {
-        ...data,
-        image: data.image_url,
-        buttonText: data.button_text,
-        buttonLink: data.button_link,
-        isActive: data.is_active
-      };
-      
-      setBanners(prev => [banner, ...prev]);
+      setBanners(prev => [data, ...prev]);
       toast.success('Banner added successfully');
     } catch (error) {
       console.error('Error adding banner:', error);

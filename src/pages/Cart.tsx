@@ -41,7 +41,7 @@ const Cart = () => {
               {cartItems.map((item) => (
                 <div key={`${item.product.id}-${item.size}`} className="flex gap-4 p-4 border border-gray-200">
                   <img
-                    src={item.product.image}
+                    src={item.product.image_url}
                     alt={item.product.name}
                     className="w-24 h-24 object-cover"
                   />

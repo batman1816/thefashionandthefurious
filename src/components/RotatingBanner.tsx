@@ -6,7 +6,7 @@ import { useBanners } from '../context/BannerContext';
 
 const RotatingBanner = () => {
   const { banners } = useBanners();
-  const activeBanners = banners.filter(banner => banner.isActive);
+  const activeBanners = banners.filter(banner => banner.is_active);
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
 
   useEffect(() => {
@@ -62,7 +62,7 @@ const RotatingBanner = () => {
     <section className="relative h-[60vh] overflow-hidden">
       <div className="relative w-full h-full">
         <img
-          src={currentBanner.image}
+          src={currentBanner.image_url}
           alt="Banner"
           className="w-full h-full object-cover"
         />
@@ -73,12 +73,12 @@ const RotatingBanner = () => {
         {/* Banner Content */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center text-white z-10">
-            {currentBanner.buttonText && currentBanner.buttonLink && (
+            {currentBanner.button_text && currentBanner.button_link && (
               <Link
-                to={currentBanner.buttonLink}
+                to={currentBanner.button_link}
                 className="inline-block bg-red-600 hover:bg-red-700 text-white px-8 py-3 font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
               >
-                {currentBanner.buttonText}
+                {currentBanner.button_text}
               </Link>
             )}
           </div>

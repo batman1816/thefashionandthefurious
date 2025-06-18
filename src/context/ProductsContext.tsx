@@ -31,7 +31,7 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
       // Transform database fields to match our Product interface
       const transformedProducts = data.map(product => ({
         ...product,
-        image: product.image_url // Map image_url to image for backward compatibility
+        category: product.category as 'drivers' | 'f1-classic' | 'teams'
       }));
 
       setProducts(transformedProducts);
@@ -90,7 +90,10 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
 
       if (error) throw error;
 
-      const product = { ...data, image: data.image_url };
+      const product = { 
+        ...data, 
+        category: data.category as 'drivers' | 'f1-classic' | 'teams'
+      };
       setProducts(prev => [product, ...prev]);
       toast.success('Product added successfully');
     } catch (error) {
