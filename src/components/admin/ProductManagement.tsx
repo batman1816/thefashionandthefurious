@@ -1,19 +1,21 @@
-
 import { useState } from 'react';
 import { Plus, Edit, Trash2, Upload } from 'lucide-react';
 import { useProducts } from '../../context/ProductsContext';
 import { Product } from '../../types/Product';
 import { uploadImage, deleteImage } from '../../utils/imageUpload';
 import { toast } from 'sonner';
-
 type ProductCategory = 'drivers' | 'f1-classic' | 'teams';
-
 const ProductManagement = () => {
-  const { products, loading, addProduct, updateProduct, deleteProduct } = useProducts();
+  const {
+    products,
+    loading,
+    addProduct,
+    updateProduct,
+    deleteProduct
+  } = useProducts();
   const [isAddingProduct, setIsAddingProduct] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [uploading, setUploading] = useState(false);
-
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -23,17 +25,18 @@ const ProductManagement = () => {
     stock: '10',
     image_url: ''
   });
-
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     console.log('Starting image upload for product:', file.name);
     setUploading(true);
     try {
       const imageUrl = await uploadImage(file, 'product-images');
       console.log('Image uploaded successfully:', imageUrl);
-      setFormData(prev => ({ ...prev, image_url: imageUrl }));
+      setFormData(prev => ({
+        ...prev,
+        image_url: imageUrl
+      }));
       toast.success('Image uploaded successfully');
     } catch (error) {
       console.error('Failed to upload image:', error);
@@ -42,15 +45,12 @@ const ProductManagement = () => {
       setUploading(false);
     }
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!formData.name || !formData.price || !formData.image_url) {
       toast.error('Please fill in all required fields and upload an image');
       return;
     }
-
     const productData = {
       name: formData.name,
       description: formData.description,
@@ -60,12 +60,13 @@ const ProductManagement = () => {
       stock: parseInt(formData.stock),
       image_url: formData.image_url
     };
-
     console.log('Submitting product data:', productData);
-
     try {
       if (editingProduct) {
-        await updateProduct({ ...productData, id: editingProduct.id });
+        await updateProduct({
+          ...productData,
+          id: editingProduct.id
+        });
         setEditingProduct(null);
       } else {
         await addProduct(productData);
@@ -87,7 +88,6 @@ const ProductManagement = () => {
       toast.error('Failed to save product');
     }
   };
-
   const handleEdit = (product: Product) => {
     setFormData({
       name: product.name,
@@ -101,7 +101,6 @@ const ProductManagement = () => {
     setEditingProduct(product);
     setIsAddingProduct(true);
   };
-
   const handleCancel = () => {
     setIsAddingProduct(false);
     setEditingProduct(null);
@@ -115,7 +114,6 @@ const ProductManagement = () => {
       image_url: ''
     });
   };
-
   const handleDelete = async (product: Product) => {
     try {
       // Delete image from storage if it's hosted on Supabase
@@ -127,32 +125,21 @@ const ProductManagement = () => {
       console.error('Error deleting product:', error);
     }
   };
-
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
+    return <div className="flex justify-center items-center h-64">
         <div className="text-white">Loading products...</div>
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="space-y-6">
+  return <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-white">Product Management</h2>
-        {!isAddingProduct && (
-          <button
-            onClick={() => setIsAddingProduct(true)}
-            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded flex items-center gap-2"
-          >
+        {!isAddingProduct && <button onClick={() => setIsAddingProduct(true)} className="text-white px-4 py-2 rounded flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700">
             <Plus size={20} />
             Add Product
-          </button>
-        )}
+          </button>}
       </div>
 
-      {isAddingProduct && (
-        <div className="bg-gray-800 p-6 rounded-lg">
+      {isAddingProduct && <div className="bg-gray-800 p-6 rounded-lg">
           <h3 className="text-xl font-semibold text-white mb-4">
             {editingProduct ? 'Edit Product' : 'Add New Product'}
           </h3>
@@ -160,43 +147,35 @@ const ProductManagement = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-white mb-2">Product Name *</label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  className="w-full px-3 py-2 bg-gray-700 text-white rounded"
-                  required
-                />
+                <input type="text" value={formData.name} onChange={e => setFormData(prev => ({
+              ...prev,
+              name: e.target.value
+            }))} className="w-full px-3 py-2 bg-gray-700 text-white rounded" required />
               </div>
               <div>
                 <label className="block text-white mb-2">Price (Taka) *</label>
-                <input
-                  type="number"
-                  value={formData.price}
-                  onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
-                  className="w-full px-3 py-2 bg-gray-700 text-white rounded"
-                  required
-                />
+                <input type="number" value={formData.price} onChange={e => setFormData(prev => ({
+              ...prev,
+              price: e.target.value
+            }))} className="w-full px-3 py-2 bg-gray-700 text-white rounded" required />
               </div>
             </div>
 
             <div>
               <label className="block text-white mb-2">Description</label>
-              <textarea
-                value={formData.description}
-                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                className="w-full px-3 py-2 bg-gray-700 text-white rounded h-24"
-              />
+              <textarea value={formData.description} onChange={e => setFormData(prev => ({
+            ...prev,
+            description: e.target.value
+          }))} className="w-full px-3 py-2 bg-gray-700 text-white rounded h-24" />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-white mb-2">Category</label>
-                <select
-                  value={formData.category}
-                  onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value as any }))}
-                  className="w-full px-3 py-2 bg-gray-700 text-white rounded"
-                >
+                <select value={formData.category} onChange={e => setFormData(prev => ({
+              ...prev,
+              category: e.target.value as any
+            }))} className="w-full px-3 py-2 bg-gray-700 text-white rounded">
                   <option value="drivers">Drivers</option>
                   <option value="f1-classic">F1 Classic</option>
                   <option value="teams">Teams</option>
@@ -204,12 +183,10 @@ const ProductManagement = () => {
               </div>
               <div>
                 <label className="block text-white mb-2">Stock</label>
-                <input
-                  type="number"
-                  value={formData.stock}
-                  onChange={(e) => setFormData(prev => ({ ...prev, stock: e.target.value }))}
-                  className="w-full px-3 py-2 bg-gray-700 text-white rounded"
-                />
+                <input type="number" value={formData.stock} onChange={e => setFormData(prev => ({
+              ...prev,
+              stock: e.target.value
+            }))} className="w-full px-3 py-2 bg-gray-700 text-white rounded" />
               </div>
             </div>
 
@@ -217,18 +194,8 @@ const ProductManagement = () => {
               <label className="block text-white mb-2">Product Image *</label>
               <div className="space-y-4">
                 <div className="border-2 border-dashed border-gray-600 rounded-lg p-4">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                    id="image-upload"
-                    disabled={uploading}
-                  />
-                  <label
-                    htmlFor="image-upload"
-                    className={`cursor-pointer flex flex-col items-center justify-center text-gray-400 hover:text-white transition-colors ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  >
+                  <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id="image-upload" disabled={uploading} />
+                  <label htmlFor="image-upload" className={`cursor-pointer flex flex-col items-center justify-center text-gray-400 hover:text-white transition-colors ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
                     <Upload size={32} className="mb-2" />
                     <span className="text-center">
                       {uploading ? 'Uploading...' : 'Click to upload product image'}
@@ -238,41 +205,25 @@ const ProductManagement = () => {
                   </label>
                 </div>
                 
-                {formData.image_url && (
-                  <div className="mt-4">
-                    <img
-                      src={formData.image_url}
-                      alt="Preview"
-                      className="w-32 h-32 object-cover rounded border-2 border-gray-600"
-                      onError={(e) => {
-                        console.error('Image failed to load:', formData.image_url);
-                        e.currentTarget.src = 'https://via.placeholder.com/128x128?text=Image+Error';
-                      }}
-                    />
-                  </div>
-                )}
+                {formData.image_url && <div className="mt-4">
+                    <img src={formData.image_url} alt="Preview" className="w-32 h-32 object-cover rounded border-2 border-gray-600" onError={e => {
+                console.error('Image failed to load:', formData.image_url);
+                e.currentTarget.src = 'https://via.placeholder.com/128x128?text=Image+Error';
+              }} />
+                  </div>}
               </div>
             </div>
 
             <div className="flex gap-4 pt-4">
-              <button
-                type="submit"
-                disabled={uploading || !formData.image_url}
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-              >
+              <button type="submit" disabled={uploading || !formData.image_url} className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed">
                 {editingProduct ? 'Update Product' : 'Add Product'}
               </button>
-              <button
-                type="button"
-                onClick={handleCancel}
-                className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded"
-              >
+              <button type="button" onClick={handleCancel} className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded">
                 Cancel
               </button>
             </div>
           </form>
-        </div>
-      )}
+        </div>}
 
       {/* Products List */}
       <div className="bg-gray-800 rounded-lg overflow-hidden">
@@ -280,57 +231,41 @@ const ProductManagement = () => {
           <table className="w-full">
             <thead className="bg-gray-700">
               <tr>
-                <th className="px-6 py-3 text-left text-white">Image</th>
-                <th className="px-6 py-3 text-left text-white">Name</th>
-                <th className="px-6 py-3 text-left text-white">Category</th>
-                <th className="px-6 py-3 text-left text-white">Price</th>
-                <th className="px-6 py-3 text-left text-white">Stock</th>
-                <th className="px-6 py-3 text-left text-white">Actions</th>
+                <th className="px-6 py-3 text-left text-white bg-zinc-800">Image</th>
+                <th className="px-6 py-3 text-left text-white bg-zinc-800">Name</th>
+                <th className="px-6 py-3 text-left text-white bg-zinc-800">Category</th>
+                <th className="px-6 py-3 text-left text-white bg-zinc-800">Price</th>
+                <th className="px-6 py-3 text-left text-white bg-zinc-800">Stock</th>
+                <th className="px-6 py-3 text-left text-white bg-zinc-800">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {products.map((product) => (
-                <tr key={product.id} className="border-b border-gray-700">
-                  <td className="px-6 py-4">
-                    <img
-                      src={product.image_url}
-                      alt={product.name}
-                      className="w-16 h-16 object-cover rounded"
-                    />
+              {products.map(product => <tr key={product.id} className="border-b border-gray-700">
+                  <td className="px-6 py-4 bg-zinc-800">
+                    <img src={product.image_url} alt={product.name} className="w-16 h-16 object-cover rounded" />
                   </td>
-                  <td className="px-6 py-4 text-white">{product.name}</td>
-                  <td className="px-6 py-4 text-gray-300 capitalize">{product.category}</td>
-                  <td className="px-6 py-4 text-white">৳{product.price}</td>
-                  <td className="px-6 py-4 text-gray-300">{product.stock}</td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 text-white bg-zinc-800">{product.name}</td>
+                  <td className="px-6 py-4 text-gray-300 capitalize bg-zinc-800">{product.category}</td>
+                  <td className="px-6 py-4 text-white bg-zinc-800">৳{product.price}</td>
+                  <td className="px-6 py-4 text-gray-300 bg-zinc-800">{product.stock}</td>
+                  <td className="px-6 py-4 bg-zinc-800">
                     <div className="flex gap-2">
-                      <button
-                        onClick={() => handleEdit(product)}
-                        className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded"
-                      >
+                      <button onClick={() => handleEdit(product)} className="text-white p-2 rounded bg-slate-700 hover:bg-slate-600">
                         <Edit size={16} />
                       </button>
-                      <button
-                        onClick={() => handleDelete(product)}
-                        className="bg-red-600 hover:bg-red-700 text-white p-2 rounded"
-                      >
+                      <button onClick={() => handleDelete(product)} className="bg-red-600 hover:bg-red-700 text-white p-2 rounded">
                         <Trash2 size={16} />
                       </button>
                     </div>
                   </td>
-                </tr>
-              ))}
+                </tr>)}
             </tbody>
           </table>
         </div>
-        {products.length === 0 && (
-          <div className="text-center py-8 text-gray-400">
+        {products.length === 0 && <div className="text-center py-8 text-gray-400">
             No products found. Add your first product to get started!
-          </div>
-        )}
+          </div>}
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default ProductManagement;

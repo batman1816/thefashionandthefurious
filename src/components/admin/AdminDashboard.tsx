@@ -56,7 +56,7 @@ const AdminDashboard = ({
 
       <div className="flex">
         {/* Sidebar */}
-        <nav className="w-64 bg-black min-h-screen border-r border-gray-800">
+        <nav className="w-64 min-h-screen border-r border-gray-800 bg-zinc-900">
           <div className="p-4">
             <ul className="space-y-2">
               {tabs.map(tab => {
