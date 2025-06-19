@@ -148,7 +148,7 @@ const SalesChart = () => {
       {/* Summary */}
       {!loading && salesData.length > 0 && <div className="grid grid-cols-2 gap-4 mt-4">
           <div className="p-3 rounded text-center bg-zinc-900">
-            <div className="text-lg font-bold text-red-400">
+            <div className="text-lg font-bold text-white">
               TK{salesData.reduce((sum, item) => sum + item.sales, 0).toFixed(2)}
             </div>
             <div className="text-xs text-gray-400">Total Sales</div>
