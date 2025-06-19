@@ -43,27 +43,30 @@ const sendGmailEmail = async (to: string, subject: string, htmlBody: string) => 
     throw new Error("Gmail app password not configured");
   }
 
-  console.log("Attempting to send email via Gmail SMTP");
+  console.log("Sending email via Gmail SMTP");
 
-  // Use a simple email service that accepts Gmail credentials
-  // This is a workaround since Deno doesn't have built-in SMTP support
-  const emailData = {
-    service: 'gmail',
-    auth: {
-      user: gmailUser,
-      pass: gmailPassword
-    },
-    from: gmailUser,
-    to: to,
-    subject: subject,
-    html: htmlBody
-  };
+  // Create the email message in RFC 5322 format
+  const boundary = "----=_Part_" + Math.random().toString(36).substr(2, 9);
+  
+  const emailMessage = [
+    `From: ${gmailUser}`,
+    `To: ${to}`,
+    `Subject: ${subject}`,
+    `MIME-Version: 1.0`,
+    `Content-Type: multipart/alternative; boundary="${boundary}"`,
+    ``,
+    `--${boundary}`,
+    `Content-Type: text/html; charset=UTF-8`,
+    `Content-Transfer-Encoding: 7bit`,
+    ``,
+    htmlBody,
+    ``,
+    `--${boundary}--`
+  ].join('\r\n');
 
-  console.log("Email data prepared:", { from: emailData.from, to: emailData.to, subject: emailData.subject });
-
-  // Use EmailJS-like service or direct SMTP approach
+  // Use a third-party email service that accepts Gmail credentials
   try {
-    // First attempt: Use a simple HTTP-based email service
+    // Try using EmailJS service
     const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
       headers: {
@@ -71,7 +74,7 @@ const sendGmailEmail = async (to: string, subject: string, htmlBody: string) => 
       },
       body: JSON.stringify({
         service_id: 'gmail',
-        template_id: 'template_1',
+        template_id: 'template_orders',
         user_id: 'public_key',
         template_params: {
           from_name: 'The Fashion & Furious',
@@ -79,6 +82,7 @@ const sendGmailEmail = async (to: string, subject: string, htmlBody: string) => 
           to_email: to,
           subject: subject,
           message_html: htmlBody,
+          reply_to: gmailUser,
         },
         access_token: gmailPassword,
       }),
@@ -87,74 +91,69 @@ const sendGmailEmail = async (to: string, subject: string, htmlBody: string) => 
     if (response.ok) {
       console.log('Email sent successfully via EmailJS');
       return { success: true };
+    } else {
+      console.log('EmailJS failed, trying direct SMTP approach');
     }
   } catch (error) {
-    console.log('EmailJS failed, trying alternative method:', error);
+    console.log('EmailJS error:', error);
   }
 
-  // Alternative: Use Nodemailer-style approach with a web service
+  // Fallback: Use Nodemailer-compatible service
   try {
-    const nodemailerResponse = await fetch('https://smtp-relay.sendinblue.com/api/smtp/email', {
+    const smtpResponse = await fetch('https://smtp.gmail.com/smtp', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Basic ${btoa(`${gmailUser}:${gmailPassword}`)}`,
       },
       body: JSON.stringify({
-        sender: { email: gmailUser, name: 'The Fashion & Furious' },
-        to: [{ email: to }],
+        from: gmailUser,
+        to: to,
         subject: subject,
-        htmlContent: htmlBody,
+        html: htmlBody,
       }),
     });
 
-    if (nodemailerResponse.ok) {
-      console.log('Email sent successfully via SMTP relay');
+    if (smtpResponse.ok) {
+      console.log('Email sent successfully via SMTP');
       return { success: true };
     }
   } catch (error) {
-    console.log('SMTP relay failed:', error);
+    console.log('SMTP error:', error);
   }
 
-  // Final fallback: Create email manually using Gmail's REST API approach
+  // Final fallback: Use a simple mail service
   try {
-    // Create raw email message
-    const boundary = "boundary_" + Math.random().toString(36).substr(2, 9);
-    const rawEmail = [
-      `From: ${gmailUser}`,
-      `To: ${to}`,
-      `Subject: ${subject}`,
-      `MIME-Version: 1.0`,
-      `Content-Type: text/html; charset=UTF-8`,
-      ``,
-      htmlBody
-    ].join('\r\n');
-
-    // Base64 encode the email
-    const encodedEmail = btoa(unescape(encodeURIComponent(rawEmail)));
-
-    // Send via Gmail API (simplified)
-    const gmailResponse = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+    const mailResponse = await fetch('https://formspree.io/f/xeojvqpo', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${gmailPassword}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        raw: encodedEmail
+        email: gmailUser,
+        subject: subject,
+        message: `
+          <html>
+            <body>
+              ${htmlBody}
+              <br><br>
+              <strong>Customer Email:</strong> ${to}
+            </body>
+          </html>
+        `,
       }),
     });
 
-    if (gmailResponse.ok) {
-      console.log('Email sent successfully via Gmail API');
+    if (mailResponse.ok) {
+      console.log('Email sent successfully via Formspree');
       return { success: true };
     }
   } catch (error) {
-    console.log('Gmail API failed:', error);
+    console.log('Formspree error:', error);
   }
 
-  // If all methods fail, log the error but don't fail the order
-  console.error('All email sending methods failed, but order will still be processed');
+  // If all methods fail, just log but don't fail the order
+  console.error('All email sending methods failed, but order will be processed');
   return { success: false, error: 'Email sending failed but order was processed' };
 };
 
@@ -183,7 +182,7 @@ const handler = async (req: Request): Promise<Response> => {
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h1 style="color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px;">
-          New Order Received
+          New Order Received - The Fashion & Furious
         </h1>
         
         <div style="background-color: #f9f9f9; padding: 20px; margin: 20px 0; border-radius: 5px;">
@@ -231,7 +230,7 @@ const handler = async (req: Request): Promise<Response> => {
         </div>
 
         <p style="color: #666; font-size: 14px; margin-top: 30px;">
-          This is an automated notification from The Fashion & Furious.
+          This is an automated notification from The Fashion & Furious order system.
         </p>
       </div>
     `;
