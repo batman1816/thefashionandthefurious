@@ -16,6 +16,7 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import OrderSuccess from "./pages/OrderSuccess";
 import Shipping from "./pages/Shipping";
+import Returns from "./pages/Returns";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
