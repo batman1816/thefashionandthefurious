@@ -110,7 +110,7 @@ const Cart = () => {
 
               <Link
                 to="/checkout"
-                className="w-full bg-red-600 hover:bg-red-700 text-white py-3 px-6 font-semibold transition-colors duration-300 block text-center"
+                className="w-full bg-black hover:bg-gray-800 text-white py-3 px-6 font-semibold transition-colors duration-300 block text-center"
               >
                 PROCEED TO CHECKOUT
               </Link>
