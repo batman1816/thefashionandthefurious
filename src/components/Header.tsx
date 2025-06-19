@@ -21,7 +21,7 @@ const Header = () => {
 
           {/* Logo */}
           <Link to="/" className="flex-1 md:flex-none">
-            <img src="/lovable-uploads/1bfadb02-757f-46dc-b0c2-f866a1969b54.png" alt="The Fashion & The Furious" className="h-12 md:h-14 object-contain" />
+            <img src="/lovable-uploads/1bfadb02-757f-46dc-b0c2-f866a1969b54.png" alt="The Fashion & The Furious" className="max-h-1000 md:h-100000 shadow-amber-100 " />
           </Link>
 
           {/* Desktop Navigation - Right aligned */}
