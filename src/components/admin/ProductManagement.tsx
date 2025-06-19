@@ -14,7 +14,8 @@ const ProductManagement = () => {
     loading,
     addProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    refreshProducts
   } = useProducts();
   const [isAddingProduct, setIsAddingProduct] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -76,6 +77,7 @@ const ProductManagement = () => {
       toast.error('Please fill in all required fields and upload an image');
       return;
     }
+    
     const productData = {
       name: formData.name,
       description: formData.description,
@@ -87,7 +89,9 @@ const ProductManagement = () => {
       tags: formData.tags,
       is_active: formData.is_active
     };
+    
     console.log('Submitting product data:', productData);
+    
     try {
       if (editingProduct) {
         await updateProduct({
@@ -95,10 +99,16 @@ const ProductManagement = () => {
           id: editingProduct.id
         });
         setEditingProduct(null);
+        console.log('Product updated successfully');
       } else {
         await addProduct(productData);
         setIsAddingProduct(false);
+        console.log('Product added successfully');
       }
+      
+      // Refresh products to ensure we have the latest data
+      await refreshProducts();
+      
       setFormData({
         name: '',
         description: '',
@@ -117,9 +127,10 @@ const ProductManagement = () => {
   };
 
   const handleEdit = (product: Product) => {
+    console.log('Editing product:', product);
     setFormData({
       name: product.name,
-      description: product.description,
+      description: product.description || '',
       price: product.price.toString(),
       category: product.category as ProductCategory,
       sizes: product.sizes,
@@ -134,10 +145,13 @@ const ProductManagement = () => {
 
   const toggleProductStatus = async (product: Product) => {
     try {
+      console.log('Toggling product status for:', product.name, 'Current status:', product.is_active);
       await updateProduct({
         ...product,
         is_active: !product.is_active
       });
+      // Refresh products after status change
+      await refreshProducts();
     } catch (error) {
       console.error('Error toggling product status:', error);
     }
@@ -236,8 +250,12 @@ const ProductManagement = () => {
                   ...prev,
                   description: e.target.value
                 }))}
-                className="w-full px-3 py-2 text-white rounded h-24 bg-zinc-900"
+                placeholder="Enter product description. Use line breaks for formatting."
+                className="w-full px-3 py-2 text-white rounded h-32 bg-zinc-900"
               />
+              <div className="text-sm text-gray-400 mt-1">
+                Tip: Press Enter for line breaks. Use **text** for bold and *text* for italic.
+              </div>
             </div>
 
             <div>

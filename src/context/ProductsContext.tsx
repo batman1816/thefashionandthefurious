@@ -1,5 +1,4 @@
 
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Product } from '../types/Product';
 import { supabase } from '../integrations/supabase/client';
@@ -22,6 +21,7 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchProducts = async () => {
     try {
+      console.log('Fetching products from database...');
       const { data, error } = await supabase
         .from('products')
         .select('*')
@@ -38,6 +38,7 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
         is_active: product.is_active !== undefined ? product.is_active : true
       }));
 
+      console.log('Fetched products:', transformedProducts);
       setProducts(transformedProducts);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -53,6 +54,7 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
 
   const updateProduct = async (updatedProduct: Product) => {
     try {
+      console.log('Updating product:', updatedProduct);
       const { error } = await supabase
         .from('products')
         .update({
@@ -72,6 +74,7 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
 
       setProducts(prev => prev.map(p => p.id === updatedProduct.id ? updatedProduct : p));
       toast.success('Product updated successfully');
+      console.log('Product updated in database successfully');
     } catch (error) {
       console.error('Error updating product:', error);
       toast.error('Failed to update product');
@@ -131,6 +134,7 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const refreshProducts = async () => {
+    console.log('Refreshing products...');
     await fetchProducts();
   };
 
@@ -155,4 +159,3 @@ export const useProducts = () => {
   }
   return context;
 };
-

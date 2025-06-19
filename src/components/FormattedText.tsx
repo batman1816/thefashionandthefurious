@@ -5,6 +5,8 @@ interface FormattedTextProps {
 }
 
 const FormattedText = ({ text, className = "" }: FormattedTextProps) => {
+  if (!text) return null;
+  
   return (
     <div 
       className={`whitespace-pre-wrap ${className}`}
