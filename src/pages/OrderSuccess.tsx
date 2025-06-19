@@ -53,9 +53,7 @@ const OrderSuccess = () => {
                   <span>{item.product.name} (Size: {item.size}) × {item.quantity}</span>
                   <span>TK{(item.product.price * item.quantity).toFixed(2)}</span>
                 </div>
-              )) : (
-                <p>No items found</p>
-              )}
+              )) : null}
             </div>
           </div>
 
