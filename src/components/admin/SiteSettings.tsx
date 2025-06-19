@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Save, Upload } from 'lucide-react';
 import { supabase } from '../../integrations/supabase/client';
@@ -206,7 +205,7 @@ const SiteSettings = () => {
                 <div className="text-sm text-gray-400">Products</div>
               </div>
               <div className="bg-gray-700 p-4 rounded text-center">
-                <div className="text-2xl font-bold text-blue-400">TK{analytics.total_revenue.toFixed(2)}</div>
+                <div className="text-2xl font-bold text-white">TK{analytics.total_revenue.toFixed(2)}</div>
                 <div className="text-sm text-gray-400">Revenue</div>
               </div>
               <div className="bg-gray-700 p-4 rounded text-center">
