@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Plus, Edit, Trash2, Upload, X } from 'lucide-react';
 import { useProducts } from '../../context/ProductsContext';
@@ -6,6 +7,8 @@ import { uploadImage, deleteImage } from '../../utils/imageUpload';
 import { toast } from 'sonner';
 
 type ProductCategory = 'drivers' | 'f1-classic' | 'teams';
+
+const AVAILABLE_TAGS = ['Teams', 'Drivers', 'F1 Classic', 'New'];
 
 const ProductManagement = () => {
   const {
@@ -25,7 +28,8 @@ const ProductManagement = () => {
     category: 'drivers' as ProductCategory,
     sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
     image_url: '',
-    images: [] as string[]
+    images: [] as string[],
+    tags: [] as string[]
   });
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,6 +67,15 @@ const ProductManagement = () => {
     });
   };
 
+  const handleTagChange = (tag: string) => {
+    setFormData(prev => ({
+      ...prev,
+      tags: prev.tags.includes(tag)
+        ? prev.tags.filter(t => t !== tag)
+        : [...prev.tags, tag]
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.price || !formData.image_url) {
@@ -77,7 +90,8 @@ const ProductManagement = () => {
       category: formData.category,
       sizes: formData.sizes,
       image_url: formData.image_url,
-      images: formData.images
+      images: formData.images,
+      tags: formData.tags
     };
 
     console.log('Submitting product data:', productData);
@@ -101,7 +115,8 @@ const ProductManagement = () => {
         category: 'drivers',
         sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
         image_url: '',
-        images: []
+        images: [],
+        tags: []
       });
     } catch (error) {
       console.error('Error saving product:', error);
@@ -117,7 +132,8 @@ const ProductManagement = () => {
       category: product.category as ProductCategory,
       sizes: product.sizes,
       image_url: product.image_url || '',
-      images: product.images || []
+      images: product.images || [],
+      tags: product.tags || []
     });
     setEditingProduct(product);
     setIsAddingProduct(true);
@@ -133,14 +149,15 @@ const ProductManagement = () => {
       category: 'drivers',
       sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
       image_url: '',
-      images: []
+      images: [],
+      tags: []
     });
   };
 
   const handleDelete = async (product: Product) => {
     try {
       // Delete image from storage if it's hosted on Supabase
-      if (product.image_url.includes('supabase')) {
+      if (product.image_url && product.image_url.includes('supabase')) {
         await deleteImage(product.image_url, 'product-images');
       }
       await deleteProduct(product.id);
@@ -204,6 +221,23 @@ const ProductManagement = () => {
                 <option value="f1-classic">F1 Classic</option>
                 <option value="teams">Teams</option>
               </select>
+            </div>
+
+            <div>
+              <label className="block text-white mb-2">Tags</label>
+              <div className="grid grid-cols-2 gap-2">
+                {AVAILABLE_TAGS.map(tag => (
+                  <label key={tag} className="flex items-center space-x-2 text-white">
+                    <input
+                      type="checkbox"
+                      checked={formData.tags.includes(tag)}
+                      onChange={() => handleTagChange(tag)}
+                      className="rounded"
+                    />
+                    <span>{tag}</span>
+                  </label>
+                ))}
+              </div>
             </div>
 
             <div>
@@ -280,6 +314,7 @@ const ProductManagement = () => {
                 <th className="px-6 py-3 text-left text-white bg-zinc-800">Image</th>
                 <th className="px-6 py-3 text-left text-white bg-zinc-800">Name</th>
                 <th className="px-6 py-3 text-left text-white bg-zinc-800">Category</th>
+                <th className="px-6 py-3 text-left text-white bg-zinc-800">Tags</th>
                 <th className="px-6 py-3 text-left text-white bg-zinc-800">Price</th>
                 <th className="px-6 py-3 text-left text-white bg-zinc-800">Actions</th>
               </tr>
@@ -291,6 +326,19 @@ const ProductManagement = () => {
                   </td>
                   <td className="px-6 py-4 text-white bg-zinc-800">{product.name}</td>
                   <td className="px-6 py-4 text-gray-300 capitalize bg-zinc-800">{product.category}</td>
+                  <td className="px-6 py-4 text-gray-300 bg-zinc-800">
+                    {product.tags && product.tags.length > 0 ? (
+                      <div className="flex flex-wrap gap-1">
+                        {product.tags.map(tag => (
+                          <span key={tag} className="bg-blue-600 text-white text-xs px-2 py-1 rounded">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-gray-500">No tags</span>
+                    )}
+                  </td>
                   <td className="px-6 py-4 text-white bg-zinc-800">৳{product.price}</td>
                   <td className="px-6 py-4 bg-zinc-800">
                     <div className="flex gap-2">

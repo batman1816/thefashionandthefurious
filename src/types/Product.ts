@@ -7,6 +7,7 @@ export interface Product {
   sizes: string[];
   image_url?: string;
   images?: string[]; // Array of image URLs for multiple images
+  tags?: string[]; // Array of tags for the product
   created_at?: string;
   updated_at?: string;
 }
