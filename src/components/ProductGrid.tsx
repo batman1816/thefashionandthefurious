@@ -10,6 +10,9 @@ interface ProductGridProps {
 const ProductGrid = ({ products }: ProductGridProps) => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
+  // Filter to only show active products
+  const activeProducts = products.filter(product => product.is_active !== false);
+
   const handleChooseOptions = (product: Product, e: React.MouseEvent) => {
     e.stopPropagation();
     setSelectedProduct(product);
@@ -18,7 +21,7 @@ const ProductGrid = ({ products }: ProductGridProps) => {
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {products.map((product) => {
+        {activeProducts.map((product) => {
           const primaryImage = product.images && product.images.length > 0 ? product.images[0] : product.image_url;
           const hoverImage = product.images && product.images.length > 1 ? product.images[1] : primaryImage;
           

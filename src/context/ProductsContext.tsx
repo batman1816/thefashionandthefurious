@@ -33,7 +33,8 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
         ...product,
         category: product.category as 'drivers' | 'f1-classic' | 'teams',
         images: product.images || (product.image_url ? [product.image_url] : []),
-        tags: product.tags || []
+        tags: product.tags || [],
+        is_active: product.is_active !== undefined ? product.is_active : true
       }));
 
       setProducts(transformedProducts);
@@ -61,7 +62,8 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
           sizes: updatedProduct.sizes,
           image_url: updatedProduct.image_url,
           images: updatedProduct.images,
-          tags: updatedProduct.tags
+          tags: updatedProduct.tags,
+          is_active: updatedProduct.is_active
         })
         .eq('id', updatedProduct.id);
 
@@ -87,7 +89,8 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
           sizes: newProduct.sizes,
           image_url: newProduct.image_url,
           images: newProduct.images,
-          tags: newProduct.tags
+          tags: newProduct.tags,
+          is_active: newProduct.is_active !== undefined ? newProduct.is_active : true
         })
         .select()
         .single();
@@ -98,7 +101,8 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
         ...data, 
         category: data.category as 'drivers' | 'f1-classic' | 'teams',
         images: data.images || (data.image_url ? [data.image_url] : []),
-        tags: data.tags || []
+        tags: data.tags || [],
+        is_active: data.is_active !== undefined ? data.is_active : true
       };
       setProducts(prev => [product, ...prev]);
       toast.success('Product added successfully');

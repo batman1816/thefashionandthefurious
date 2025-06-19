@@ -8,6 +8,7 @@ export interface Product {
   image_url?: string;
   images?: string[]; // Array of image URLs for multiple images
   tags?: string[]; // Array of tags for the product
+  is_active?: boolean; // Add is_active field for visibility control
   created_at?: string;
   updated_at?: string;
 }
