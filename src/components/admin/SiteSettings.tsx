@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Save, Upload } from 'lucide-react';
 import { supabase } from '../../integrations/supabase/client';
@@ -143,7 +144,7 @@ const SiteSettings = () => {
               <h4 className="font-medium mb-2">Current Logo Preview</h4>
               <div className="p-4 rounded text-center bg-zinc-900">
                 {settings.logo_url ? <img src={settings.logo_url} alt="Logo" className="max-h-16 mx-auto" /> : <div className="text-xl font-bold">
-                    <div className="text-red-400">THE FASHION</div>
+                    <div className="text-white">THE FASHION</div>
                     <div className="text-white">& THE FURIOUS</div>
                   </div>}
               </div>
@@ -161,7 +162,7 @@ const SiteSettings = () => {
                 <div className="text-sm text-gray-400">Total Orders</div>
               </div>
               <div className="p-4 rounded text-center bg-zinc-900">
-                <div className="text-2xl font-bold text-green-400">{analytics.total_products}</div>
+                <div className="text-2xl font-bold text-white">{analytics.total_products}</div>
                 <div className="text-sm text-gray-400">Products</div>
               </div>
               <div className="p-4 rounded text-center bg-zinc-900">
@@ -169,7 +170,7 @@ const SiteSettings = () => {
                 <div className="text-sm text-gray-400">Revenue</div>
               </div>
               <div className="p-4 rounded text-center bg-zinc-900">
-                <div className="text-2xl font-bold text-purple-400">{analytics.total_visitors}</div>
+                <div className="text-2xl font-bold text-white">{analytics.total_visitors}</div>
                 <div className="text-sm text-gray-400">Visitors</div>
               </div>
             </div>}
