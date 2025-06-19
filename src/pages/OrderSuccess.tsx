@@ -41,8 +41,8 @@ const OrderSuccess = () => {
             <h2 className="text-xl font-semibold mb-4">Order Details</h2>
             
             <div className="space-y-2 mb-4">
-              <p><strong>Order ID:</strong> #{order.id}</p>
-              <p><strong>Total:</strong> TK{order.total.toFixed(2)}</p>
+              <p className="text-white"><strong>Order ID:</strong> #{order.id}</p>
+              <p><strong>Total:</strong> TK {order.total.toFixed(2)}</p>
               <p><strong>Date:</strong> {order.created_at ? new Date(order.created_at).toLocaleDateString() : 'N/A'}</p>
             </div>
 
