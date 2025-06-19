@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Minus, Plus } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import FormattedText from '../components/FormattedText';
 import { useProducts } from '../context/ProductsContext';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
@@ -73,7 +74,7 @@ const ProductDetail = () => {
             </div>
 
             <div className="prose text-gray-600 mb-8">
-              <p>{product.description}</p>
+              <FormattedText text={product.description} />
             </div>
 
             {/* Size Selection */}

@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Product } from '../types/Product';
 import ProductModal from './ProductModal';
+import FormattedText from './FormattedText';
 
 interface ProductGridProps {
   products: Product[];
@@ -53,6 +54,12 @@ const ProductGrid = ({ products }: ProductGridProps) => {
                 <h3 className="text-base font-normal text-black leading-tight text-center">
                   {product.name}
                 </h3>
+                {product.description && (
+                  <FormattedText 
+                    text={product.description} 
+                    className="text-sm text-gray-600 mt-2"
+                  />
+                )}
                 <div className="text-base font-normal text-black">
                   Tk {product.price}.00 BDT
                 </div>
