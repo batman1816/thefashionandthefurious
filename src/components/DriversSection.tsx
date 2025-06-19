@@ -70,20 +70,20 @@ const DriversSection = () => {
                 </div>
                 
                 {/* Product Info */}
-                <div className="text-center space-y-2">
-                  <div className="text-sm text-gray-500 uppercase tracking-wider font-light">
+                <div className="text-left space-y-1">
+                  <div className="text-sm text-gray-500 uppercase tracking-wide font-normal">
                     T-SHIRT / {product.category.replace('-', ' ').toUpperCase()}
                   </div>
-                  <h3 className="text-lg font-medium text-black leading-tight">
+                  <h3 className="text-base font-normal text-black leading-tight">
                     {product.name}
                   </h3>
-                  <div className="text-lg font-semibold text-black">
+                  <div className="text-base font-normal text-black">
                     Tk {product.price}.00 BDT
                   </div>
                   <div className="pt-2">
                     <button 
                       onClick={(e) => handleAddToCart(product, e)}
-                      className="w-full border border-gray-300 text-black py-3 px-4 text-sm font-normal hover:bg-gray-50 transition-colors duration-200 uppercase tracking-wide"
+                      className="w-full border border-gray-400 text-black py-2 px-4 text-sm font-normal hover:bg-gray-50 transition-colors duration-200"
                     >
                       Choose options
                     </button>
