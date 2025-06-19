@@ -1,7 +1,9 @@
+
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const {
@@ -41,7 +43,11 @@ const Header = () => {
 
           {/* Cart Icon */}
           <Link to="/cart" className="relative">
-            <ShoppingCart size={20} className="text-white hover:text-red-500 transition-colors" />
+            <img 
+              src="/lovable-uploads/2b396435-490b-451c-afad-7ce4f4954ee2.png" 
+              alt="Shopping Cart" 
+              className="w-5 h-5 filter invert hover:opacity-75 transition-opacity" 
+            />
             {cartItemsCount > 0 && <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
                 {cartItemsCount}
               </span>}
@@ -65,4 +71,5 @@ const Header = () => {
       </div>
     </header>;
 };
+
 export default Header;
