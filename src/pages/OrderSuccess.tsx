@@ -42,7 +42,7 @@ const OrderSuccess = () => {
             
             <div className="space-y-2 mb-4">
               <p><strong>Order ID:</strong> #{order.id}</p>
-              <p><strong>Total:</strong> ${order.total.toFixed(2)}</p>
+              <p><strong>Total:</strong> TK{order.total.toFixed(2)}</p>
               <p><strong>Date:</strong> {order.date.toLocaleDateString()}</p>
             </div>
 
@@ -51,7 +51,7 @@ const OrderSuccess = () => {
               {order.items.map((item: any, index: number) => (
                 <div key={index} className="flex justify-between">
                   <span>{item.product.name} (Size: {item.size}) × {item.quantity}</span>
-                  <span>${(item.product.price * item.quantity).toFixed(2)}</span>
+                  <span>TK{(item.product.price * item.quantity).toFixed(2)}</span>
                 </div>
               ))}
             </div>

@@ -7,6 +7,7 @@ import { useCart } from '../context/CartContext';
 import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group';
 import { Label } from '../components/ui/label';
 import { toast } from 'sonner';
+import { supabase } from '../integrations/supabase/client';
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -20,8 +21,7 @@ const Checkout = () => {
     phone: '',
     address: '',
     city: '',
-    zipCode: '',
-    country: ''
+    zipCode: ''
   });
 
   const shippingOptions = [
@@ -52,8 +52,6 @@ const Checkout = () => {
     setIsSubmitting(true);
 
     try {
-      // Here you would typically send the order to your backend
-      // For now, we'll simulate the order process
       const order = {
         id: Date.now().toString(),
         customer: formData,
@@ -65,6 +63,16 @@ const Checkout = () => {
         date: new Date(),
         status: 'pending' as const
       };
+
+      // Send order notification email
+      const { error: emailError } = await supabase.functions.invoke('send-order-notification', {
+        body: { order }
+      });
+
+      if (emailError) {
+        console.error('Email notification error:', emailError);
+        // Don't fail the order if email fails
+      }
 
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
@@ -156,7 +164,7 @@ const Checkout = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     City *
@@ -184,20 +192,6 @@ const Checkout = () => {
                     className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600"
                   />
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Country *
-                  </label>
-                  <input
-                    type="text"
-                    name="country"
-                    value={formData.country}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600"
-                  />
-                </div>
               </div>
 
               {/* Shipping Options */}
@@ -212,7 +206,7 @@ const Checkout = () => {
                       <Label htmlFor={option.value} className="flex-1 cursor-pointer">
                         <div className="flex justify-between items-center">
                           <span className="font-medium">{option.label}</span>
-                          <span className="text-lg font-bold text-gray-900">৳{option.cost}</span>
+                          <span className="text-lg font-bold text-gray-900">TK{option.cost}</span>
                         </div>
                       </Label>
                     </div>
@@ -243,7 +237,7 @@ const Checkout = () => {
                       <p className="text-sm text-gray-600">Size: {item.size} | Qty: {item.quantity}</p>
                     </div>
                     <span className="font-medium">
-                      ৳{(item.product.price * item.quantity).toFixed(2)}
+                      TK{(item.product.price * item.quantity).toFixed(2)}
                     </span>
                   </div>
                 ))}
@@ -252,17 +246,17 @@ const Checkout = () => {
               <div className="border-t pt-4 space-y-2">
                 <div className="flex justify-between">
                   <span>Subtotal:</span>
-                  <span>৳{getCartTotal().toFixed(2)}</span>
+                  <span>TK{getCartTotal().toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping:</span>
                   <span>
-                    {shippingOption ? `৳${getShippingCost()}` : 'Select shipping option'}
+                    {shippingOption ? `TK${getShippingCost()}` : 'Select shipping option'}
                   </span>
                 </div>
                 <div className="flex justify-between font-bold text-lg border-t pt-2">
                   <span>Total:</span>
-                  <span>৳{(getCartTotal() + getShippingCost()).toFixed(2)}</span>
+                  <span>TK{(getCartTotal() + getShippingCost()).toFixed(2)}</span>
                 </div>
               </div>
             </div>

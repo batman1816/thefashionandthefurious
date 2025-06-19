@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Minus, Plus } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { products } = useProducts();
   const { addToCart } = useCart();
   const [selectedSize, setSelectedSize] = useState('');
@@ -42,6 +43,8 @@ const ProductDetail = () => {
     }
     addToCart(product, selectedSize, quantity);
     toast.success(`Added ${product.name} to cart!`);
+    // Redirect to checkout after adding to cart
+    navigate('/checkout');
   };
 
   return (
@@ -66,7 +69,7 @@ const ProductDetail = () => {
             </h1>
             
             <div className="text-2xl font-bold text-gray-900 mb-6">
-              ৳{product.price}
+              TK{product.price}
             </div>
 
             <div className="prose text-gray-600 mb-8">
@@ -116,12 +119,12 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            {/* Add to Cart Button */}
+            {/* Buy Now Button */}
             <button
               onClick={handleAddToCart}
               className="w-full bg-black hover:bg-gray-800 text-white py-4 px-8 font-semibold transition-colors duration-300 mb-4"
             >
-              ADD TO CART
+              BUY NOW
             </button>
 
             {/* Product Details */}

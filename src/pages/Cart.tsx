@@ -52,7 +52,7 @@ const Cart = () => {
                     </h3>
                     <p className="text-gray-600 mb-2">Size: {item.size}</p>
                     <p className="text-lg font-bold text-gray-900">
-                      ৳{item.product.price}
+                      TK{item.product.price}
                     </p>
                   </div>
 
@@ -85,7 +85,7 @@ const Cart = () => {
 
                     {/* Item Total */}
                     <p className="font-bold text-gray-900">
-                      ৳{(item.product.price * item.quantity).toFixed(2)}
+                      TK{(item.product.price * item.quantity).toFixed(2)}
                     </p>
                   </div>
                 </div>
@@ -101,7 +101,7 @@ const Cart = () => {
               <div className="space-y-2 mb-6">
                 <div className="flex justify-between font-bold text-lg">
                   <span>Subtotal:</span>
-                  <span>৳{getCartTotal().toFixed(2)}</span>
+                  <span>TK{getCartTotal().toFixed(2)}</span>
                 </div>
                 <p className="text-sm text-gray-600">
                   Shipping will be calculated at checkout
