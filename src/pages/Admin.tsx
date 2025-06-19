@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminLogin from '../components/admin/AdminLogin';
 import AdminDashboard from '../components/admin/AdminDashboard';
@@ -8,18 +8,9 @@ const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Check if admin is already logged in
-    const adminAuth = localStorage.getItem('adminAuth');
-    if (adminAuth === 'true') {
-      setIsAuthenticated(true);
-    }
-  }, []);
-
   const handleLogin = (password: string) => {
     if (password === 'yUsrA@#$2618') {
       setIsAuthenticated(true);
-      localStorage.setItem('adminAuth', 'true');
     } else {
       throw new Error('Invalid password');
     }
@@ -27,7 +18,6 @@ const Admin = () => {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    localStorage.removeItem('adminAuth');
     navigate('/');
   };
 
