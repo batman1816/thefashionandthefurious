@@ -6,6 +6,7 @@ export interface Product {
   category: string;
   sizes: string[];
   image_url?: string;
+  images?: string[]; // Array of image URLs for multiple images
   created_at?: string;
   updated_at?: string;
 }

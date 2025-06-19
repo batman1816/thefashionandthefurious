@@ -9,47 +9,54 @@ interface ProductGridProps {
 
 const ProductGrid = ({ products }: ProductGridProps) => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);
 
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {products.map((product) => (
-          <div 
-            key={product.id} 
-            className="group bg-white border border-gray-100 hover:border-gray-200 transition-all duration-300 cursor-pointer overflow-hidden"
-            onClick={() => setSelectedProduct(product)}
-            onMouseEnter={() => setHoveredProduct(product.id)}
-            onMouseLeave={() => setHoveredProduct(null)}
-          >
-            <div className="aspect-square overflow-hidden bg-gray-50 relative">
-              <img
-                src={product.image_url}
-                alt={product.name}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              {/* Quick view overlay on hover */}
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
-                <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm font-medium">
-                  Quick View
-                </span>
+        {products.map((product) => {
+          const primaryImage = product.images && product.images.length > 0 ? product.images[0] : product.image_url;
+          const hoverImage = product.images && product.images.length > 1 ? product.images[1] : primaryImage;
+          
+          return (
+            <div 
+              key={product.id} 
+              className="group cursor-pointer"
+              onClick={() => setSelectedProduct(product)}
+            >
+              {/* Product Image */}
+              <div className="aspect-square overflow-hidden bg-gray-50 relative mb-4">
+                <img
+                  src={primaryImage}
+                  alt={product.name}
+                  className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0"
+                />
+                <img
+                  src={hoverImage}
+                  alt={product.name}
+                  className="w-full h-full object-cover absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                />
+              </div>
+              
+              {/* Product Info */}
+              <div className="text-left">
+                <div className="text-xs text-gray-500 uppercase tracking-wider mb-1 font-light">
+                  T-SHIRT / {product.category.replace('-', ' ').toUpperCase()}
+                </div>
+                <h3 className="text-base font-medium text-black mb-2 leading-tight">
+                  {product.name}
+                </h3>
+                <div className="text-base font-medium text-black">
+                  Tk {product.price}.00 BDT
+                </div>
+                <div className="mt-3">
+                  <button className="w-full border border-gray-300 text-black py-2 px-4 text-sm font-normal hover:bg-gray-50 transition-colors duration-200">
+                    Choose options
+                  </button>
+                </div>
               </div>
             </div>
-            <div className="p-4 text-center">
-              <h3 className="font-normal text-gray-900 mb-2 text-sm group-hover:text-gray-600 transition-colors line-clamp-2">
-                {product.name}
-              </h3>
-              <div className="space-y-1">
-                <p className="text-lg font-medium text-gray-900">
-                  ৳{product.price}.00 BDT
-                </p>
-                <p className="text-xs text-gray-500 uppercase tracking-wide">
-                  {product.category.replace('-', ' ')}
-                </p>
-              </div>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {selectedProduct && (

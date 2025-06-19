@@ -1,6 +1,5 @@
-
 import { useState } from 'react';
-import { Plus, Edit, Trash2, Upload } from 'lucide-react';
+import { Plus, Edit, Trash2, Upload, X } from 'lucide-react';
 import { useProducts } from '../../context/ProductsContext';
 import { Product } from '../../types/Product';
 import { uploadImage, deleteImage } from '../../utils/imageUpload';
@@ -25,29 +24,43 @@ const ProductManagement = () => {
     price: '',
     category: 'drivers' as ProductCategory,
     sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
-    image_url: ''
+    image_url: '',
+    images: [] as string[]
   });
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
-    console.log('Starting image upload for product:', file.name);
     setUploading(true);
     try {
-      const imageUrl = await uploadImage(file, 'product-images');
-      console.log('Image uploaded successfully:', imageUrl);
+      const uploadPromises = Array.from(files).map(file => uploadImage(file, 'product-images'));
+      const imageUrls = await Promise.all(uploadPromises);
+      
       setFormData(prev => ({
         ...prev,
-        image_url: imageUrl
+        images: [...prev.images, ...imageUrls],
+        image_url: prev.images.length === 0 ? imageUrls[0] : prev.image_url
       }));
-      toast.success('Image uploaded successfully');
+      
+      toast.success(`${imageUrls.length} image(s) uploaded successfully`);
     } catch (error) {
-      console.error('Failed to upload image:', error);
-      toast.error('Failed to upload image');
+      console.error('Failed to upload images:', error);
+      toast.error('Failed to upload images');
     } finally {
       setUploading(false);
     }
+  };
+
+  const removeImage = (indexToRemove: number) => {
+    setFormData(prev => {
+      const newImages = prev.images.filter((_, index) => index !== indexToRemove);
+      return {
+        ...prev,
+        images: newImages,
+        image_url: newImages.length > 0 ? newImages[0] : ''
+      };
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -63,7 +76,8 @@ const ProductManagement = () => {
       price: parseInt(formData.price),
       category: formData.category,
       sizes: formData.sizes,
-      image_url: formData.image_url
+      image_url: formData.image_url,
+      images: formData.images
     };
 
     console.log('Submitting product data:', productData);
@@ -86,7 +100,8 @@ const ProductManagement = () => {
         price: '',
         category: 'drivers',
         sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
-        image_url: ''
+        image_url: '',
+        images: []
       });
     } catch (error) {
       console.error('Error saving product:', error);
@@ -101,7 +116,8 @@ const ProductManagement = () => {
       price: product.price.toString(),
       category: product.category as ProductCategory,
       sizes: product.sizes,
-      image_url: product.image_url
+      image_url: product.image_url || '',
+      images: product.images || []
     });
     setEditingProduct(product);
     setIsAddingProduct(true);
@@ -116,7 +132,8 @@ const ProductManagement = () => {
       price: '',
       category: 'drivers',
       sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
-      image_url: ''
+      image_url: '',
+      images: []
     });
   };
 
@@ -190,25 +207,55 @@ const ProductManagement = () => {
             </div>
 
             <div>
-              <label className="block text-white mb-2">Product Image *</label>
+              <label className="block text-white mb-2">Product Images *</label>
               <div className="space-y-4">
                 <div className="border-2 border-dashed border-gray-600 rounded-lg p-4">
-                  <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id="image-upload" disabled={uploading} />
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    multiple
+                    onChange={handleImageUpload} 
+                    className="hidden" 
+                    id="image-upload" 
+                    disabled={uploading} 
+                  />
                   <label htmlFor="image-upload" className={`cursor-pointer flex flex-col items-center justify-center text-gray-400 hover:text-white transition-colors ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
                     <Upload size={32} className="mb-2" />
                     <span className="text-center">
-                      {uploading ? 'Uploading...' : 'Click to upload product image'}
+                      {uploading ? 'Uploading...' : 'Click to upload multiple product images'}
                       <br />
-                      <span className="text-sm text-gray-500">Supports JPG, PNG, WebP</span>
+                      <span className="text-sm text-gray-500">First image will be the main display image</span>
                     </span>
                   </label>
                 </div>
                 
-                {formData.image_url && <div className="mt-4">
-                    <img src={formData.image_url} alt="Preview" className="w-32 h-32 object-cover rounded border-2 border-gray-600" onError={e => {
-                console.error('Image failed to load:', formData.image_url);
-                e.currentTarget.src = 'https://via.placeholder.com/128x128?text=Image+Error';
-              }} />
+                {formData.images.length > 0 && <div className="grid grid-cols-4 gap-4">
+                    {formData.images.map((imageUrl, index) => (
+                      <div key={index} className="relative">
+                        <img 
+                          src={imageUrl} 
+                          alt={`Product ${index + 1}`} 
+                          className="w-full h-24 object-cover rounded border-2 border-gray-600" 
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeImage(index)}
+                          className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700"
+                        >
+                          <X size={14} />
+                        </button>
+                        {index === 0 && (
+                          <div className="absolute bottom-0 left-0 right-0 bg-blue-600 text-white text-xs text-center py-1">
+                            Main Image
+                          </div>
+                        )}
+                        {index === 1 && (
+                          <div className="absolute bottom-0 left-0 right-0 bg-green-600 text-white text-xs text-center py-1">
+                            Hover Image
+                          </div>
+                        )}
+                      </div>
+                    ))}
                   </div>}
               </div>
             </div>

@@ -31,7 +31,8 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
       // Transform database fields to match our Product interface
       const transformedProducts = data.map(product => ({
         ...product,
-        category: product.category as 'drivers' | 'f1-classic' | 'teams'
+        category: product.category as 'drivers' | 'f1-classic' | 'teams',
+        images: product.images || (product.image_url ? [product.image_url] : [])
       }));
 
       setProducts(transformedProducts);
@@ -57,7 +58,8 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
           price: updatedProduct.price,
           category: updatedProduct.category,
           sizes: updatedProduct.sizes,
-          image_url: updatedProduct.image_url
+          image_url: updatedProduct.image_url,
+          images: updatedProduct.images
         })
         .eq('id', updatedProduct.id);
 
@@ -81,7 +83,8 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
           price: newProduct.price,
           category: newProduct.category,
           sizes: newProduct.sizes,
-          image_url: newProduct.image_url
+          image_url: newProduct.image_url,
+          images: newProduct.images
         })
         .select()
         .single();
@@ -90,7 +93,8 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
 
       const product = { 
         ...data, 
-        category: data.category as 'drivers' | 'f1-classic' | 'teams'
+        category: data.category as 'drivers' | 'f1-classic' | 'teams',
+        images: data.images || (data.image_url ? [data.image_url] : [])
       };
       setProducts(prev => [product, ...prev]);
       toast.success('Product added successfully');
