@@ -52,7 +52,7 @@ const DriversSection = () => {
             return (
               <div 
                 key={product.id} 
-                className="group cursor-pointer"
+                className="group cursor-pointer bg-white"
                 onClick={() => handleProductClick(product)}
               >
                 {/* Product Image */}
@@ -70,22 +70,22 @@ const DriversSection = () => {
                 </div>
                 
                 {/* Product Info */}
-                <div className="text-left">
-                  <div className="text-xs text-gray-500 uppercase tracking-wider mb-1 font-light">
+                <div className="text-center space-y-2">
+                  <div className="text-sm text-gray-500 uppercase tracking-wider font-light">
                     T-SHIRT / {product.category.replace('-', ' ').toUpperCase()}
                   </div>
-                  <h3 className="text-base font-medium text-black mb-2 leading-tight">
+                  <h3 className="text-lg font-medium text-black leading-tight">
                     {product.name}
                   </h3>
-                  <div className="text-base font-medium text-black mb-3">
+                  <div className="text-lg font-semibold text-black">
                     Tk {product.price}.00 BDT
                   </div>
-                  <div className="space-y-2">
+                  <div className="pt-2">
                     <button 
                       onClick={(e) => handleAddToCart(product, e)}
-                      className="w-full bg-black text-white py-2 px-4 text-sm font-normal hover:bg-gray-800 transition-colors duration-200"
+                      className="w-full border border-gray-300 text-black py-3 px-4 text-sm font-normal hover:bg-gray-50 transition-colors duration-200 uppercase tracking-wide"
                     >
-                      Add to Cart
+                      Choose options
                     </button>
                   </div>
                 </div>
