@@ -47,7 +47,7 @@ const AdminDashboard = ({
       <header className="bg-black border-b border-gray-800">
         <div className="px-6 py-4 flex justify-between items-center">
           <h1 className="text-white text-2xl font-bold">Admin Panel</h1>
-          <button onClick={onLogout} className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition-colors">
+          <button onClick={onLogout} className="flex items-center gap-2 px-4 py-2 rounded transition-colors text-slate-50 bg-zinc-800 hover:bg-zinc-700 font-normal">
             <LogOut size={20} />
             Logout
           </button>
