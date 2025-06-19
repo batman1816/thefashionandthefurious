@@ -1,13 +1,10 @@
-
 import { useLocation, Link } from 'react-router-dom';
 import { CheckCircle } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-
 const OrderSuccess = () => {
   const location = useLocation();
   const order = location.state?.order;
-
   if (!order) {
     return <div className="min-h-screen bg-white">
         <Header />
@@ -18,11 +15,10 @@ const OrderSuccess = () => {
         <Footer />
       </div>;
   }
-
   return <div className="min-h-screen bg-white">
       <Header />
       
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-16 bg-zinc-950">
         <div className="max-w-2xl mx-auto text-center">
           <CheckCircle className="mx-auto mb-6 text-green-600" size={64} />
           
@@ -63,5 +59,4 @@ const OrderSuccess = () => {
       <Footer />
     </div>;
 };
-
 export default OrderSuccess;
