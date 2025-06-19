@@ -6,6 +6,7 @@ import { uploadImage } from '../../utils/imageUpload';
 import { toast } from 'sonner';
 import { useSiteSettings } from '../../hooks/useSiteSettings';
 import SalesChart from './SalesChart';
+
 const SiteSettings = () => {
   const {
     analytics,
@@ -20,9 +21,11 @@ const SiteSettings = () => {
   });
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+
   useEffect(() => {
     fetchSettings();
   }, []);
+
   const fetchSettings = async () => {
     try {
       const {
@@ -49,6 +52,7 @@ const SiteSettings = () => {
       setLoading(false);
     }
   };
+
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -76,11 +80,13 @@ const SiteSettings = () => {
       setUploading(false);
     }
   };
+
   if (loading) {
     return <div className="flex justify-center items-center h-64">
         <div className="text-white">Loading settings...</div>
       </div>;
   }
+
   return <div className="text-white">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold">Site Settings</h2>
@@ -151,7 +157,7 @@ const SiteSettings = () => {
           
           {analyticsLoading ? <div className="text-center text-gray-400">Loading analytics...</div> : <div className="grid grid-cols-2 gap-4">
               <div className="p-4 rounded text-center bg-zinc-900">
-                <div className="text-2xl font-bold text-red-400">{analytics.total_orders}</div>
+                <div className="text-2xl font-bold text-white">{analytics.total_orders}</div>
                 <div className="text-sm text-gray-400">Total Orders</div>
               </div>
               <div className="p-4 rounded text-center bg-zinc-900">
@@ -177,4 +183,5 @@ const SiteSettings = () => {
       </div>
     </div>;
 };
+
 export default SiteSettings;
