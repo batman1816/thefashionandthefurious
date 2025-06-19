@@ -84,7 +84,6 @@ export type Database = {
           created_at: string
           id: string
           logo_url: string | null
-          shipping_cost: number
           site_name: string
           support_email: string
           updated_at: string
@@ -94,7 +93,6 @@ export type Database = {
           created_at?: string
           id?: string
           logo_url?: string | null
-          shipping_cost?: number
           site_name?: string
           support_email?: string
           updated_at?: string
@@ -104,7 +102,6 @@ export type Database = {
           created_at?: string
           id?: string
           logo_url?: string | null
-          shipping_cost?: number
           site_name?: string
           support_email?: string
           updated_at?: string

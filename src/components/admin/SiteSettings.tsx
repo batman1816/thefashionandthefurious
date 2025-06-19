@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Save, Upload } from 'lucide-react';
 import { supabase } from '../../integrations/supabase/client';
@@ -11,7 +12,6 @@ const SiteSettings = () => {
     site_name: 'The Fashion & Furious',
     contact_email: 'orders@thefashionandfurious.com',
     support_email: 'support@thefashionandfurious.com',
-    shipping_cost: 500,
     logo_url: ''
   });
   const [loading, setLoading] = useState(true);
@@ -26,7 +26,7 @@ const SiteSettings = () => {
     try {
       const { data, error } = await supabase
         .from('site_settings')
-        .select('id, site_name, contact_email, support_email, shipping_cost, logo_url')
+        .select('id, site_name, contact_email, support_email, logo_url')
         .single();
 
       if (error && error.code !== 'PGRST116') {
@@ -40,7 +40,6 @@ const SiteSettings = () => {
           site_name: data.site_name || 'The Fashion & Furious',
           contact_email: data.contact_email || 'orders@thefashionandfurious.com',
           support_email: data.support_email || 'support@thefashionandfurious.com',
-          shipping_cost: data.shipping_cost || 500,
           logo_url: data.logo_url || ''
         };
         setSettings(settingsData);
@@ -57,7 +56,7 @@ const SiteSettings = () => {
     const { name, value } = e.target;
     setSettings(prev => ({
       ...prev,
-      [name]: name === 'shipping_cost' ? parseInt(value) || 0 : value
+      [name]: value
     }));
   };
 
@@ -90,7 +89,6 @@ const SiteSettings = () => {
             site_name: settings.site_name,
             contact_email: settings.contact_email,
             support_email: settings.support_email,
-            shipping_cost: settings.shipping_cost,
             logo_url: settings.logo_url
           })
           .eq('id', settings.id);
@@ -104,10 +102,9 @@ const SiteSettings = () => {
             site_name: settings.site_name,
             contact_email: settings.contact_email,
             support_email: settings.support_email,
-            shipping_cost: settings.shipping_cost,
             logo_url: settings.logo_url
           })
-          .select('id, site_name, contact_email, support_email, shipping_cost, logo_url')
+          .select('id, site_name, contact_email, support_email, logo_url')
           .single();
 
         if (error) throw error;
@@ -117,7 +114,6 @@ const SiteSettings = () => {
             site_name: data.site_name,
             contact_email: data.contact_email,
             support_email: data.support_email,
-            shipping_cost: data.shipping_cost,
             logo_url: data.logo_url || ''
           };
           setSettings(newSettings);
@@ -183,19 +179,6 @@ const SiteSettings = () => {
                 name="support_email"
                 value={settings.support_email}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-red-600"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">Shipping Cost (৳)</label>
-              <input
-                type="number"
-                name="shipping_cost"
-                value={settings.shipping_cost}
-                onChange={handleInputChange}
-                min="0"
-                step="1"
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-red-600"
               />
             </div>

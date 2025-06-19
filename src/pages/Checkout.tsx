@@ -4,12 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useCart } from '../context/CartContext';
+import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group';
+import { Label } from '../components/ui/label';
 import { toast } from 'sonner';
 
 const Checkout = () => {
   const navigate = useNavigate();
   const { cartItems, getCartTotal, clearCart } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [shippingOption, setShippingOption] = useState<string>('');
   
   const [formData, setFormData] = useState({
     name: '',
@@ -21,6 +24,16 @@ const Checkout = () => {
     country: ''
   });
 
+  const shippingOptions = [
+    { value: 'inside-dhaka', label: 'Inside Dhaka', cost: 70 },
+    { value: 'outside-dhaka', label: 'Outside Dhaka', cost: 140 }
+  ];
+
+  const getShippingCost = () => {
+    const option = shippingOptions.find(opt => opt.value === shippingOption);
+    return option ? option.cost : 0;
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
@@ -30,6 +43,12 @@ const Checkout = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!shippingOption) {
+      toast.error('Please select a shipping option');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -39,7 +58,10 @@ const Checkout = () => {
         id: Date.now().toString(),
         customer: formData,
         items: cartItems,
-        total: getCartTotal() + 10, // including shipping
+        subtotal: getCartTotal(),
+        shippingCost: getShippingCost(),
+        total: getCartTotal() + getShippingCost(),
+        shippingOption: shippingOptions.find(opt => opt.value === shippingOption)?.label,
         date: new Date(),
         status: 'pending' as const
       };
@@ -75,33 +97,35 @@ const Checkout = () => {
           <div>
             <h2 className="text-xl font-bold text-gray-900 mb-6">Billing Information</h2>
             
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Full Name *
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600"
-                />
-              </div>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600"
+                  />
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email Address *
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600"
-                />
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600"
+                  />
+                </div>
               </div>
 
               <div>
@@ -132,7 +156,7 @@ const Checkout = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     City *
@@ -160,20 +184,40 @@ const Checkout = () => {
                     className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600"
                   />
                 </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Country *
+                  </label>
+                  <input
+                    type="text"
+                    name="country"
+                    value={formData.country}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600"
+                  />
+                </div>
               </div>
 
+              {/* Shipping Options */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Country *
+                <label className="block text-sm font-medium text-gray-700 mb-4">
+                  Shipping Option *
                 </label>
-                <input
-                  type="text"
-                  name="country"
-                  value={formData.country}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600"
-                />
+                <RadioGroup value={shippingOption} onValueChange={setShippingOption} className="space-y-3">
+                  {shippingOptions.map((option) => (
+                    <div key={option.value} className="flex items-center space-x-3 border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
+                      <RadioGroupItem value={option.value} id={option.value} />
+                      <Label htmlFor={option.value} className="flex-1 cursor-pointer">
+                        <div className="flex justify-between items-center">
+                          <span className="font-medium">{option.label}</span>
+                          <span className="text-lg font-bold text-gray-900">৳{option.cost}</span>
+                        </div>
+                      </Label>
+                    </div>
+                  ))}
+                </RadioGroup>
               </div>
 
               <button
@@ -199,7 +243,7 @@ const Checkout = () => {
                       <p className="text-sm text-gray-600">Size: {item.size} | Qty: {item.quantity}</p>
                     </div>
                     <span className="font-medium">
-                      ${(item.product.price * item.quantity).toFixed(2)}
+                      ৳{(item.product.price * item.quantity).toFixed(2)}
                     </span>
                   </div>
                 ))}
@@ -208,15 +252,17 @@ const Checkout = () => {
               <div className="border-t pt-4 space-y-2">
                 <div className="flex justify-between">
                   <span>Subtotal:</span>
-                  <span>${getCartTotal().toFixed(2)}</span>
+                  <span>৳{getCartTotal().toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping:</span>
-                  <span>$10.00</span>
+                  <span>
+                    {shippingOption ? `৳${getShippingCost()}` : 'Select shipping option'}
+                  </span>
                 </div>
                 <div className="flex justify-between font-bold text-lg border-t pt-2">
                   <span>Total:</span>
-                  <span>${(getCartTotal() + 10).toFixed(2)}</span>
+                  <span>৳{(getCartTotal() + getShippingCost()).toFixed(2)}</span>
                 </div>
               </div>
             </div>
