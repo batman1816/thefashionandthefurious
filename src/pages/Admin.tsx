@@ -17,7 +17,7 @@ const Admin = () => {
   }, []);
 
   const handleLogin = (password: string) => {
-    if (password === '321') {
+    if (password === 'yUsrA@#$2618') {
       setIsAuthenticated(true);
       localStorage.setItem('adminAuth', 'true');
     } else {
