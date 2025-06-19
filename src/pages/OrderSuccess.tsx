@@ -43,17 +43,19 @@ const OrderSuccess = () => {
             <div className="space-y-2 mb-4">
               <p><strong>Order ID:</strong> #{order.id}</p>
               <p><strong>Total:</strong> TK{order.total.toFixed(2)}</p>
-              <p><strong>Date:</strong> {order.date.toLocaleDateString()}</p>
+              <p><strong>Date:</strong> {order.created_at ? new Date(order.created_at).toLocaleDateString() : 'N/A'}</p>
             </div>
 
             <h3 className="font-semibold mb-2">Items Ordered:</h3>
             <div className="space-y-2">
-              {order.items.map((item: any, index: number) => (
+              {order.items && Array.isArray(order.items) ? order.items.map((item: any, index: number) => (
                 <div key={index} className="flex justify-between">
                   <span>{item.product.name} (Size: {item.size}) × {item.quantity}</span>
                   <span>TK{(item.product.price * item.quantity).toFixed(2)}</span>
                 </div>
-              ))}
+              )) : (
+                <p>No items found</p>
+              )}
             </div>
           </div>
 
