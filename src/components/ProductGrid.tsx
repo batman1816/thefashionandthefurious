@@ -42,7 +42,7 @@ const ProductGrid = ({ products }: ProductGridProps) => {
                 <div className="text-sm text-gray-500 uppercase tracking-wide font-normal">
                   T-SHIRT / {product.category.replace('-', ' ').toUpperCase()}
                 </div>
-                <h3 className="text-base font-normal text-black leading-tight">
+                <h3 className="text-base font-normal text-black leading-tight text-center">
                   {product.name}
                 </h3>
                 <div className="text-base font-normal text-black">
