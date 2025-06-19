@@ -246,10 +246,10 @@ const ProductManagement = () => {
             </div>
 
             <div className="flex gap-4 pt-4">
-              <button type="submit" disabled={uploading || !formData.image_url} className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed">
+              <button type="submit" disabled={uploading || !formData.image_url} className="text-white px-6 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed bg-zinc-900 hover:bg-zinc-800">
                 {editingProduct ? 'Update Product' : 'Add Product'}
               </button>
-              <button type="button" onClick={handleCancel} className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded">
+              <button type="button" onClick={handleCancel} className="text-white px-6 py-2 rounded bg-zinc-900 hover:bg-zinc-800">
                 Cancel
               </button>
             </div>
