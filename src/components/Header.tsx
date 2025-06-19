@@ -10,9 +10,7 @@ const Header = () => {
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0);
   return <header className="bg-black shadow-sm border-b border-gray-800">
       {/* Top Bar */}
-      <div className="bg-gray-900 text-white text-center py-1 text-xs">
-        
-      </div>
+      
 
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-2">
