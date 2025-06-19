@@ -35,7 +35,7 @@ const Index = () => {
               to="/drivers" 
               className="inline-block bg-black hover:bg-gray-800 text-white px-8 py-3 font-semibold transition-colors duration-300 uppercase tracking-wide"
             >
-              VIEW ALL PRODUCTS
+              VIEW ALL
             </Link>
           </div>
         </div>
