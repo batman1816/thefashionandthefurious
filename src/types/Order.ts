@@ -1,4 +1,6 @@
 
+import { Json } from '../integrations/supabase/types';
+
 export interface Order {
   id: string;
   customer_name: string;
@@ -7,7 +9,7 @@ export interface Order {
   customer_address: string;
   customer_city: string;
   customer_zip_code: string;
-  items: any[]; // JSON array of cart items
+  items: Json; // Use Json type from Supabase
   subtotal: number;
   shipping_cost: number;
   total: number;

@@ -70,27 +70,32 @@ const Checkout = () => {
         customer_address: formData.address,
         customer_city: formData.city,
         customer_zip_code: formData.zipCode,
-        items: cartItems,
+        items: JSON.stringify(cartItems), // Convert to JSON string for database
         subtotal: subtotal,
         shipping_cost: shippingCost,
         total: total,
         shipping_option: shippingOptions.find(opt => opt.value === shippingOption)?.label || 'Standard',
-        status: 'pending'
+        status: 'pending' as const
       };
 
-      // Save order to database
+      // Save order to database - insert single object, not array
       const { error: dbError } = await supabase
         .from('orders')
-        .insert([order]);
+        .insert(order);
 
       if (dbError) {
         console.error('Database error:', dbError);
         throw new Error('Failed to save order to database');
       }
 
-      // Send order notification email
+      // Send order notification email with original cartItems for the email
       const { error: emailError } = await supabase.functions.invoke('send-order-notification', {
-        body: { order }
+        body: { 
+          order: {
+            ...order,
+            items: cartItems // Use original cartItems for email
+          }
+        }
       });
 
       if (emailError) {
@@ -101,7 +106,14 @@ const Checkout = () => {
       // Clear cart and redirect to success page
       clearCart();
       toast.success('Order placed successfully!');
-      navigate('/order-success', { state: { order } });
+      navigate('/order-success', { 
+        state: { 
+          order: {
+            ...order,
+            items: cartItems // Use original cartItems for success page
+          }
+        }
+      });
     } catch (error) {
       console.error('Order submission error:', error);
       toast.error('Failed to place order. Please try again.');

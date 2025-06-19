@@ -24,7 +24,8 @@ export const useOrders = () => {
 
       if (error) throw error;
 
-      const ordersData = data || [];
+      // Cast the data to Order[] type
+      const ordersData = (data || []) as Order[];
       setOrders(ordersData);
 
       // Calculate stats

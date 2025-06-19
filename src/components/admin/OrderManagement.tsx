@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Check, Clock, Eye, X } from 'lucide-react';
 import { useOrders } from '../../hooks/useOrders';
@@ -160,17 +159,32 @@ const OrderManagement = () => {
               <div>
                 <h4 className="text-lg font-semibold mb-3">Order Items</h4>
                 <div className="space-y-3">
-                  {Array.isArray(selectedOrder.items) && selectedOrder.items.map((item: any, index: number) => (
-                    <div key={index} className="bg-gray-700 p-4 rounded flex justify-between">
-                      <div>
-                        <p className="font-medium">{item.product?.name || item.name}</p>
-                        <p className="text-gray-400">Size: {item.size} | Qty: {item.quantity}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium">TK{((item.product?.price || item.price) * item.quantity).toFixed(2)}</p>
-                      </div>
-                    </div>
-                  ))}
+                  {(() => {
+                    try {
+                      const items = typeof selectedOrder.items === 'string' 
+                        ? JSON.parse(selectedOrder.items) 
+                        : selectedOrder.items;
+                      
+                      if (Array.isArray(items)) {
+                        return items.map((item: any, index: number) => (
+                          <div key={index} className="bg-gray-700 p-4 rounded flex justify-between">
+                            <div>
+                              <p className="font-medium">{item.product?.name || item.name}</p>
+                              <p className="text-gray-400">Size: {item.size} | Qty: {item.quantity}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-medium">TK{((item.product?.price || item.price) * item.quantity).toFixed(2)}</p>
+                            </div>
+                          </div>
+                        ));
+                      } else {
+                        return <p className="text-gray-400">No items found</p>;
+                      }
+                    } catch (error) {
+                      console.error('Error parsing order items:', error);
+                      return <p className="text-gray-400">Error loading items</p>;
+                    }
+                  })()}
                 </div>
               </div>
 
