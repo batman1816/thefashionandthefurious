@@ -22,7 +22,7 @@ const ShippingOptions: React.FC<ShippingOptionsProps> = ({ shippingOption, onShi
               id="inside-dhaka"
               className="border-gray-600 text-red-600 focus:ring-red-500"
             />
-            <label htmlFor="inside-dhaka" className="text-sm text-gray-300 cursor-pointer">
+            <label htmlFor="inside-dhaka" className="text-base text-gray-300 cursor-pointer">
               Inside Dhaka (TK 70)
             </label>
           </div>
@@ -32,7 +32,7 @@ const ShippingOptions: React.FC<ShippingOptionsProps> = ({ shippingOption, onShi
               id="outside-dhaka"
               className="border-gray-600 text-red-600 focus:ring-red-500"
             />
-            <label htmlFor="outside-dhaka" className="text-sm text-gray-300 cursor-pointer">
+            <label htmlFor="outside-dhaka" className="text-base text-gray-300 cursor-pointer">
               Outside Dhaka (TK 140)
             </label>
           </div>
