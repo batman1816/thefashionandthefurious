@@ -9,9 +9,9 @@ import ShippingOptions from './ShippingOptions';
 import OrderSummary from './OrderSummary';
 
 interface CustomerInfo {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  phone: string;
   address: string;
   city: string;
   zipCode: string;
@@ -22,9 +22,9 @@ const CheckoutForm = () => {
   const navigate = useNavigate();
 
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
-    phone: '',
     address: '',
     city: '',
     zipCode: ''
@@ -32,13 +32,16 @@ const CheckoutForm = () => {
   const [shippingOption, setShippingOption] = useState('standard');
   const [shippingCost, setShippingCost] = useState(50);
   const [subtotal, setSubtotal] = useState(0);
+  const [tax, setTax] = useState(0);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const cartSubtotal = getCartTotal();
+    const calculatedTax = cartSubtotal * 0.08; // 8% tax
     setSubtotal(cartSubtotal);
-    setTotal(cartSubtotal + shippingCost);
+    setTax(calculatedTax);
+    setTotal(cartSubtotal + shippingCost + calculatedTax);
   }, [cartItems, shippingCost, getCartTotal]);
 
   useEffect(() => {
@@ -64,8 +67,8 @@ const CheckoutForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!customerInfo.name || !customerInfo.email || !customerInfo.phone || !customerInfo.address || !customerInfo.city || !customerInfo.zipCode) {
-      toast.error('Please fill in all customer information fields.');
+    if (!customerInfo.firstName || !customerInfo.lastName || !customerInfo.email || !customerInfo.address || !customerInfo.city || !customerInfo.zipCode) {
+      toast.error('Please fill in all required fields.');
       return;
     }
 
@@ -85,9 +88,9 @@ const CheckoutForm = () => {
 
       const orderData = {
         id: orderId,
-        customer_name: customerInfo.name,
+        customer_name: `${customerInfo.firstName} ${customerInfo.lastName}`,
         customer_email: customerInfo.email,
-        customer_phone: customerInfo.phone,
+        customer_phone: '', // Not collected in new form
         customer_address: customerInfo.address,
         customer_city: customerInfo.city,
         customer_zip_code: customerInfo.zipCode,
@@ -117,35 +120,37 @@ const CheckoutForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-      <div className="space-y-4">
-        <CustomerInfoForm 
-          customerInfo={customerInfo} 
-          onInputChange={handleInputChange}
-        />
+    <div className="max-w-6xl mx-auto">
+      <form onSubmit={handleSubmit}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Billing Information */}
+          <div className="bg-gray-800 rounded-lg p-6">
+            <h2 className="text-xl font-semibold text-white mb-6">Billing Information</h2>
+            <CustomerInfoForm 
+              customerInfo={customerInfo} 
+              onInputChange={handleInputChange}
+            />
+            <ShippingOptions 
+              shippingOption={shippingOption}
+              onShippingOptionChange={setShippingOption}
+            />
+          </div>
 
-        <ShippingOptions 
-          shippingOption={shippingOption}
-          onShippingOptionChange={setShippingOption}
-        />
-
-        <OrderSummary 
-          subtotal={subtotal}
-          shippingCost={shippingCost}
-          total={total}
-        />
-
-        <div>
-          <button
-            type="submit"
-            className={`w-full py-3 px-4 rounded-md shadow-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-            disabled={loading}
-          >
-            {loading ? 'Placing Order...' : 'Place Order'}
-          </button>
+          {/* Order Summary */}
+          <div className="bg-gray-800 rounded-lg p-6">
+            <h2 className="text-xl font-semibold text-white mb-6">Order Summary</h2>
+            <OrderSummary 
+              cartItems={cartItems}
+              subtotal={subtotal}
+              shippingCost={shippingCost}
+              tax={tax}
+              total={total}
+              loading={loading}
+            />
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 };
 

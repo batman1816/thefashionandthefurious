@@ -1,10 +1,12 @@
 
 import React from 'react';
+import { Input } from '../ui/input';
+import { Textarea } from '../ui/textarea';
 
 interface CustomerInfo {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  phone: string;
   address: string;
   city: string;
   zipCode: string;
@@ -17,85 +19,106 @@ interface CustomerInfoFormProps {
 
 const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({ customerInfo, onInputChange }) => {
   return (
-    <>
-      <div>
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-          Name
-        </label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          value={customerInfo.name}
-          onChange={onInputChange}
-          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
-        />
+    <div className="space-y-4">
+      {/* First Name and Last Name Row */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="firstName" className="block text-sm font-medium text-gray-300 mb-2">
+            First Name <span className="text-red-500">*</span>
+          </label>
+          <Input
+            type="text"
+            id="firstName"
+            name="firstName"
+            value={customerInfo.firstName}
+            onChange={onInputChange}
+            className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-gray-500"
+            placeholder="John"
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="lastName" className="block text-sm font-medium text-gray-300 mb-2">
+            Last Name <span className="text-red-500">*</span>
+          </label>
+          <Input
+            type="text"
+            id="lastName"
+            name="lastName"
+            value={customerInfo.lastName}
+            onChange={onInputChange}
+            className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-gray-500"
+            placeholder="Doe"
+            required
+          />
+        </div>
       </div>
+
+      {/* Email */}
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-          Email
+        <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+          Email <span className="text-red-500">*</span>
         </label>
-        <input
+        <Input
           type="email"
           id="email"
           name="email"
           value={customerInfo.email}
           onChange={onInputChange}
-          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
+          className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-gray-500"
+          placeholder="john@example.com"
+          required
         />
       </div>
+
+      {/* Address */}
       <div>
-        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-          Phone
-        </label>
-        <input
-          type="tel"
-          id="phone"
-          name="phone"
-          value={customerInfo.phone}
-          onChange={onInputChange}
-          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
-        />
-      </div>
-      <div>
-        <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="address" className="block text-sm font-medium text-gray-300 mb-2">
           Address
         </label>
-        <textarea
+        <Textarea
           id="address"
           name="address"
           value={customerInfo.address}
           onChange={onInputChange}
-          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
+          className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-gray-500"
+          placeholder="123 Main St"
+          rows={3}
         />
       </div>
-      <div>
-        <label htmlFor="city" className="block text-sm font-medium text-gray-700">
-          City
-        </label>
-        <input
-          type="text"
-          id="city"
-          name="city"
-          value={customerInfo.city}
-          onChange={onInputChange}
-          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
-        />
+
+      {/* City and ZIP Code Row */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="city" className="block text-sm font-medium text-gray-300 mb-2">
+            City
+          </label>
+          <Input
+            type="text"
+            id="city"
+            name="city"
+            value={customerInfo.city}
+            onChange={onInputChange}
+            className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-gray-500"
+            placeholder="New York"
+          />
+        </div>
+        <div>
+          <label htmlFor="zipCode" className="block text-sm font-medium text-gray-300 mb-2">
+            ZIP Code
+          </label>
+          <Input
+            type="text"
+            id="zipCode"
+            name="zipCode"
+            value={customerInfo.zipCode}
+            onChange={onInputChange}
+            className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-gray-500"
+            placeholder="10001"
+          />
+        </div>
       </div>
-      <div>
-        <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700">
-          ZIP Code
-        </label>
-        <input
-          type="text"
-          id="zipCode"
-          name="zipCode"
-          value={customerInfo.zipCode}
-          onChange={onInputChange}
-          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
-        />
-      </div>
-    </>
+    </div>
   );
 };
 
