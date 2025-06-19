@@ -12,9 +12,9 @@ const SiteSettings = () => {
   const { analytics, loading: analyticsLoading } = useSiteSettings();
   const [settings, setSettings] = useState<SiteSettingsType>({
     id: '',
-    site_name: 'The Fashion & Furious',
-    contact_email: 'orders@thefashionandfurious.com',
-    support_email: 'support@thefashionandfurious.com',
+    site_name: 'The Fashion & The Furious',
+    contact_email: 'thefashionnfurious@gmail.com',
+    support_email: 'thefashionnfurious@gmail.com',
     logo_url: ''
   });
   const [loading, setLoading] = useState(true);
@@ -38,9 +38,9 @@ const SiteSettings = () => {
       if (data) {
         const settingsData: SiteSettingsType = {
           id: data.id || '',
-          site_name: data.site_name || 'The Fashion & Furious',
-          contact_email: data.contact_email || 'orders@thefashionandfurious.com',
-          support_email: data.support_email || 'support@thefashionandfurious.com',
+          site_name: data.site_name || 'The Fashion & The Furious',
+          contact_email: data.contact_email || 'thefashionnfurious@gmail.com',
+          support_email: data.support_email || 'thefashionnfurious@gmail.com',
           logo_url: data.logo_url || ''
         };
         setSettings(settingsData);
@@ -103,7 +103,7 @@ const SiteSettings = () => {
               <label className="block text-sm font-medium mb-2">Site Name</label>
               <input
                 type="text"
-                value={settings.site_name}
+                value="The Fashion & The Furious"
                 readOnly
                 className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded text-gray-300 cursor-not-allowed"
               />
@@ -114,7 +114,7 @@ const SiteSettings = () => {
               <label className="block text-sm font-medium mb-2">Contact Email</label>
               <input
                 type="email"
-                value={settings.contact_email}
+                value="thefashionnfurious@gmail.com"
                 readOnly
                 className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded text-gray-300 cursor-not-allowed"
               />
@@ -125,7 +125,7 @@ const SiteSettings = () => {
               <label className="block text-sm font-medium mb-2">Support Email</label>
               <input
                 type="email"
-                value={settings.support_email}
+                value="thefashionnfurious@gmail.com"
                 readOnly
                 className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded text-gray-300 cursor-not-allowed"
               />
@@ -181,7 +181,7 @@ const SiteSettings = () => {
                 ) : (
                   <div className="text-xl font-bold">
                     <div className="text-red-400">THE FASHION</div>
-                    <div className="text-white">& FURIOUS</div>
+                    <div className="text-white">& THE FURIOUS</div>
                   </div>
                 )}
               </div>
