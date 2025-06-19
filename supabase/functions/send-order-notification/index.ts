@@ -62,7 +62,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send notification email to admin
     const adminEmailResponse = await resend.emails.send({
       from: "Order Notifications <onboarding@resend.dev>",
-      to: ["orders@thefashionandfurious.com"], // Replace with your admin email
+      to: ["thefashionnfurious@gmail.com"],
       subject: `New Order Received - #${order.id}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
