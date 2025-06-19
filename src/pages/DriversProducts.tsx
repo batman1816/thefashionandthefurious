@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useProducts } from '../context/ProductsContext';
 import { useCart } from '../context/CartContext';
@@ -69,12 +70,12 @@ const DriversProducts = () => {
                       <img
                         src={primaryImage}
                         alt={product.name}
-                        className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0"
+                        className="w-full h-full object-cover transition-opacity duration-500 ease-in-out group-hover:opacity-0"
                       />
                       <img
                         src={hoverImage}
                         alt={product.name}
-                        className="w-full h-full object-cover absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                        className="w-full h-full object-cover absolute inset-0 opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100"
                       />
                     </div>
                     
