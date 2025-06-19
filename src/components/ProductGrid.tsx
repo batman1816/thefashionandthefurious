@@ -10,6 +10,11 @@ interface ProductGridProps {
 const ProductGrid = ({ products }: ProductGridProps) => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
+  const handleChooseOptions = (product: Product, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectedProduct(product);
+  };
+
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -49,7 +54,10 @@ const ProductGrid = ({ products }: ProductGridProps) => {
                   Tk {product.price}.00 BDT
                 </div>
                 <div className="pt-2">
-                  <button className="w-full border border-gray-400 text-black py-2 px-4 text-sm font-normal hover:bg-gray-50 transition-colors duration-200">
+                  <button 
+                    onClick={(e) => handleChooseOptions(product, e)}
+                    className="w-full border border-gray-400 text-black py-2 px-4 text-sm font-normal hover:bg-gray-50 transition-colors duration-200"
+                  >
                     Choose options
                   </button>
                 </div>
