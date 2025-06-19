@@ -1,7 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
 import { supabase } from '../integrations/supabase/client';
 import { toast } from 'sonner';
 import Header from '../components/Header';
@@ -17,13 +17,12 @@ interface CustomerInfo {
 }
 
 const Checkout = () => {
-  const { cartItems, clearCart, subtotal } = useCart();
-  const { user } = useAuth();
+  const { cartItems, clearCart, getCartTotal } = useCart();
   const navigate = useNavigate();
 
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
-    name: user?.user_metadata?.name || '',
-    email: user?.email || '',
+    name: '',
+    email: '',
     phone: '',
     address: '',
     city: '',
@@ -31,12 +30,15 @@ const Checkout = () => {
   });
   const [shippingOption, setShippingOption] = useState('standard');
   const [shippingCost, setShippingCost] = useState(50);
-  const [total, setTotal] = useState(subtotal + shippingCost);
+  const [subtotal, setSubtotal] = useState(0);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setTotal(subtotal + shippingCost);
-  }, [subtotal, shippingCost]);
+    const cartSubtotal = getCartTotal();
+    setSubtotal(cartSubtotal);
+    setTotal(cartSubtotal + shippingCost);
+  }, [cartItems, shippingCost, getCartTotal]);
 
   useEffect(() => {
     if (shippingOption === 'express') {
@@ -73,9 +75,9 @@ const Checkout = () => {
       const orderId = generateOrderId().toString();
       const orderItems = cartItems.map(item => ({
         product: {
-          id: item.id,
-          name: item.name,
-          price: item.price
+          id: item.product.id,
+          name: item.product.name,
+          price: item.product.price
         },
         size: item.size,
         quantity: item.quantity
