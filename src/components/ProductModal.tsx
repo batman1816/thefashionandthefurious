@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { X, Minus, Plus } from 'lucide-react';
@@ -74,9 +73,9 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-2">
-          {/* Product Image - Repositioned lower and center-left */}
-          <div className="flex items-center justify-start pl-8 pt-16 pb-8">
-            <div className="aspect-square w-4/5 overflow-hidden bg-gray-50">
+          {/* Product Image - Bigger and centered */}
+          <div className="flex items-center justify-center p-8">
+            <div className="aspect-square w-full max-w-md overflow-hidden bg-gray-50">
               <img
                 src={primaryImage}
                 alt={product.name}
