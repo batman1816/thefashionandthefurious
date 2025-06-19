@@ -1,9 +1,7 @@
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, ShoppingCart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const {
@@ -12,7 +10,7 @@ const Header = () => {
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0);
   return <header className="bg-black shadow-sm border-b border-gray-800">
       {/* Top Bar */}
-      <div className="bg-gray-900 text-white text-center py-1 text-xs">
+      <div className="text-white text-center py-1 text-xs bg-zinc-950">
         
       </div>
 
@@ -67,5 +65,4 @@ const Header = () => {
       </div>
     </header>;
 };
-
 export default Header;
