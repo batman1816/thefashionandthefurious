@@ -1,67 +1,13 @@
+
 import { useState } from 'react';
-import { Check, Clock, Eye } from 'lucide-react';
-import { Order } from '../../types/Product';
+import { Check, Clock, Eye, X } from 'lucide-react';
+import { useOrders } from '../../hooks/useOrders';
+import OrderSearch from './OrderSearch';
+import { Order } from '../../types/Order';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
 const OrderManagement = () => {
-  const [orders] = useState<Order[]>([
-    {
-      id: '1001',
-      customer: {
-        name: 'John Doe',
-        email: 'john@example.com',
-        phone: '+1 555-0123',
-        address: '123 Racing Street, Monaco City, Monaco 98000'
-      },
-      items: [
-        {
-          product: {
-            id: '1',
-            name: 'Lewis Hamilton Championship Tee',
-            description: '',
-            price: 45,
-            image_url: '',
-            category: 'drivers',
-            sizes: [],
-            stock: 0
-          },
-          size: 'L',
-          quantity: 2
-        }
-      ],
-      total: 100,
-      date: new Date('2024-01-15'),
-      status: 'pending'
-    },
-    {
-      id: '1002',
-      customer: {
-        name: 'Sarah Wilson',
-        email: 'sarah@example.com',
-        phone: '+1 555-0456',
-        address: '456 Speed Avenue, Barcelona, Spain 08001'
-      },
-      items: [
-        {
-          product: {
-            id: '3',
-            name: 'Ferrari Scuderia Heritage Tee',
-            description: '',
-            price: 40,
-            image_url: '',
-            category: 'teams',
-            sizes: [],
-            stock: 0
-          },
-          size: 'M',
-          quantity: 1
-        }
-      ],
-      total: 50,
-      date: new Date('2024-01-14'),
-      status: 'fulfilled'
-    }
-  ]);
-
+  const { orders, stats, loading, searchTerm, setSearchTerm, updateOrderStatus } = useOrders();
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   const getStatusColor = (status: string) => {
@@ -70,6 +16,8 @@ const OrderManagement = () => {
         return 'text-yellow-400';
       case 'fulfilled':
         return 'text-green-400';
+      case 'cancelled':
+        return 'text-red-400';
       default:
         return 'text-gray-400';
     }
@@ -81,85 +29,103 @@ const OrderManagement = () => {
         return <Clock size={16} />;
       case 'fulfilled':
         return <Check size={16} />;
+      case 'cancelled':
+        return <X size={16} />;
       default:
         return <Clock size={16} />;
     }
   };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-white">Loading orders...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="text-white">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold">Order Management</h2>
         <div className="text-gray-400">
-          Total Orders: {orders.length}
+          Total Orders: {stats.total_orders} | Pending: {stats.pending_orders} | Fulfilled: {stats.fulfilled_orders}
         </div>
+      </div>
+
+      {/* Search Bar */}
+      <div className="mb-6">
+        <OrderSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} />
       </div>
 
       {/* Orders Table */}
       <div className="bg-gray-800 rounded-lg overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-700">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                  Order ID
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                  Customer
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                  Total
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-700">
-              {orders.map(order => (
-                <tr key={order.id} className="hover:bg-gray-700">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-white">#{order.id}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-white">{order.customer.name}</div>
-                    <div className="text-sm text-gray-400">{order.customer.email}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-300">
-                      {order.date.toLocaleDateString()}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-white">
-                      ${order.total.toFixed(2)}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className={`flex items-center gap-1 text-sm ${getStatusColor(order.status)}`}>
-                      {getStatusIcon(order.status)}
-                      <span className="capitalize">{order.status}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <button
-                      onClick={() => setSelectedOrder(order)}
-                      className="text-blue-400 hover:text-blue-300 mr-3"
-                    >
-                      <Eye size={16} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table>
+          <TableHeader>
+            <TableRow className="border-gray-700">
+              <TableHead className="text-gray-300">Order ID</TableHead>
+              <TableHead className="text-gray-300">Customer</TableHead>
+              <TableHead className="text-gray-300">Date</TableHead>
+              <TableHead className="text-gray-300">Total</TableHead>
+              <TableHead className="text-gray-300">Status</TableHead>
+              <TableHead className="text-gray-300">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {orders.map(order => (
+              <TableRow key={order.id} className="border-gray-700 hover:bg-gray-700">
+                <TableCell>
+                  <div className="text-sm font-medium text-white">#{order.id}</div>
+                </TableCell>
+                <TableCell>
+                  <div className="text-sm text-white">{order.customer_name}</div>
+                  <div className="text-sm text-gray-400">{order.customer_email}</div>
+                  <div className="text-sm text-gray-400">{order.customer_phone}</div>
+                </TableCell>
+                <TableCell>
+                  <div className="text-sm text-gray-300">
+                    {formatDate(order.created_at)}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="text-sm font-medium text-white">
+                    TK{parseFloat(order.total.toString()).toFixed(2)}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className={`flex items-center gap-1 text-sm ${getStatusColor(order.status)}`}>
+                    {getStatusIcon(order.status)}
+                    <span className="capitalize">{order.status}</span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <button
+                    onClick={() => setSelectedOrder(order)}
+                    className="text-blue-400 hover:text-blue-300 mr-3"
+                  >
+                    <Eye size={16} />
+                  </button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+
+        {orders.length === 0 && (
+          <div className="text-center py-8 text-gray-400">
+            {searchTerm ? 'No orders found matching your search.' : 'No orders found.'}
+          </div>
+        )}
       </div>
 
       {/* Order Detail Modal */}
@@ -181,10 +147,12 @@ const OrderManagement = () => {
               <div>
                 <h4 className="text-lg font-semibold mb-3">Customer Information</h4>
                 <div className="bg-gray-700 p-4 rounded">
-                  <p><strong>Name:</strong> {selectedOrder.customer.name}</p>
-                  <p><strong>Email:</strong> {selectedOrder.customer.email}</p>
-                  <p><strong>Phone:</strong> {selectedOrder.customer.phone}</p>
-                  <p><strong>Address:</strong> {selectedOrder.customer.address}</p>
+                  <p><strong>Name:</strong> {selectedOrder.customer_name}</p>
+                  <p><strong>Email:</strong> {selectedOrder.customer_email}</p>
+                  <p><strong>Phone:</strong> {selectedOrder.customer_phone}</p>
+                  <p><strong>Address:</strong> {selectedOrder.customer_address}</p>
+                  <p><strong>City:</strong> {selectedOrder.customer_city}</p>
+                  <p><strong>ZIP:</strong> {selectedOrder.customer_zip_code}</p>
                 </div>
               </div>
 
@@ -192,14 +160,14 @@ const OrderManagement = () => {
               <div>
                 <h4 className="text-lg font-semibold mb-3">Order Items</h4>
                 <div className="space-y-3">
-                  {selectedOrder.items.map((item, index) => (
+                  {Array.isArray(selectedOrder.items) && selectedOrder.items.map((item: any, index: number) => (
                     <div key={index} className="bg-gray-700 p-4 rounded flex justify-between">
                       <div>
-                        <p className="font-medium">{item.product.name}</p>
+                        <p className="font-medium">{item.product?.name || item.name}</p>
                         <p className="text-gray-400">Size: {item.size} | Qty: {item.quantity}</p>
                       </div>
                       <div className="text-right">
-                        <p className="font-medium">${(item.product.price * item.quantity).toFixed(2)}</p>
+                        <p className="font-medium">TK{((item.product?.price || item.price) * item.quantity).toFixed(2)}</p>
                       </div>
                     </div>
                   ))}
@@ -212,15 +180,15 @@ const OrderManagement = () => {
                 <div className="bg-gray-700 p-4 rounded">
                   <div className="flex justify-between mb-2">
                     <span>Subtotal:</span>
-                    <span>${(selectedOrder.total - 10).toFixed(2)}</span>
+                    <span>TK{parseFloat(selectedOrder.subtotal.toString()).toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between mb-2">
-                    <span>Shipping:</span>
-                    <span>$10.00</span>
+                    <span>Shipping ({selectedOrder.shipping_option}):</span>
+                    <span>TK{parseFloat(selectedOrder.shipping_cost.toString()).toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between font-bold text-lg border-t border-gray-600 pt-2">
                     <span>Total:</span>
-                    <span>${selectedOrder.total.toFixed(2)}</span>
+                    <span>TK{parseFloat(selectedOrder.total.toString()).toFixed(2)}</span>
                   </div>
                 </div>
               </div>
@@ -230,6 +198,7 @@ const OrderManagement = () => {
                 <h4 className="text-lg font-semibold mb-3">Order Status</h4>
                 <div className="flex gap-3">
                   <button
+                    onClick={() => updateOrderStatus(selectedOrder.id, 'pending')}
                     className={`px-4 py-2 rounded transition-colors ${
                       selectedOrder.status === 'pending'
                         ? 'bg-yellow-600 text-white'
@@ -239,6 +208,7 @@ const OrderManagement = () => {
                     Mark as Pending
                   </button>
                   <button
+                    onClick={() => updateOrderStatus(selectedOrder.id, 'fulfilled')}
                     className={`px-4 py-2 rounded transition-colors ${
                       selectedOrder.status === 'fulfilled'
                         ? 'bg-green-600 text-white'
@@ -247,6 +217,25 @@ const OrderManagement = () => {
                   >
                     Mark as Fulfilled
                   </button>
+                  <button
+                    onClick={() => updateOrderStatus(selectedOrder.id, 'cancelled')}
+                    className={`px-4 py-2 rounded transition-colors ${
+                      selectedOrder.status === 'cancelled'
+                        ? 'bg-red-600 text-white'
+                        : 'bg-gray-600 hover:bg-red-600 text-white'
+                    }`}
+                  >
+                    Mark as Cancelled
+                  </button>
+                </div>
+              </div>
+
+              {/* Order Dates */}
+              <div>
+                <h4 className="text-lg font-semibold mb-3">Order Timeline</h4>
+                <div className="bg-gray-700 p-4 rounded">
+                  <p><strong>Created:</strong> {formatDate(selectedOrder.created_at)}</p>
+                  <p><strong>Last Updated:</strong> {formatDate(selectedOrder.updated_at)}</p>
                 </div>
               </div>
             </div>

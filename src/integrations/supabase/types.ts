@@ -39,6 +39,60 @@ export type Database = {
         }
         Relationships: []
       }
+      orders: {
+        Row: {
+          created_at: string
+          customer_address: string
+          customer_city: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string
+          customer_zip_code: string
+          id: string
+          items: Json
+          shipping_cost: number
+          shipping_option: string
+          status: string
+          subtotal: number
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_address: string
+          customer_city: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string
+          customer_zip_code: string
+          id: string
+          items: Json
+          shipping_cost?: number
+          shipping_option?: string
+          status?: string
+          subtotal: number
+          total: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_address?: string
+          customer_city?: string
+          customer_email?: string
+          customer_name?: string
+          customer_phone?: string
+          customer_zip_code?: string
+          id?: string
+          items?: Json
+          shipping_cost?: number
+          shipping_option?: string
+          status?: string
+          subtotal?: number
+          total?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           category: string
@@ -86,6 +140,9 @@ export type Database = {
           logo_url: string | null
           site_name: string
           support_email: string
+          total_orders: number | null
+          total_revenue: number | null
+          total_visitors: number | null
           updated_at: string
         }
         Insert: {
@@ -95,6 +152,9 @@ export type Database = {
           logo_url?: string | null
           site_name?: string
           support_email?: string
+          total_orders?: number | null
+          total_revenue?: number | null
+          total_visitors?: number | null
           updated_at?: string
         }
         Update: {
@@ -104,6 +164,9 @@ export type Database = {
           logo_url?: string | null
           site_name?: string
           support_email?: string
+          total_orders?: number | null
+          total_revenue?: number | null
+          total_visitors?: number | null
           updated_at?: string
         }
         Relationships: []

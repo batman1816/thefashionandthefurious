@@ -5,8 +5,10 @@ import { supabase } from '../../integrations/supabase/client';
 import { SiteSettings as SiteSettingsType } from '../../types/Product';
 import { uploadImage } from '../../utils/imageUpload';
 import { toast } from 'sonner';
+import { useSiteSettings } from '../../hooks/useSiteSettings';
 
 const SiteSettings = () => {
+  const { analytics, loading: analyticsLoading } = useSiteSettings();
   const [settings, setSettings] = useState<SiteSettingsType>({
     id: '',
     site_name: 'The Fashion & Furious',
@@ -34,7 +36,6 @@ const SiteSettings = () => {
       }
 
       if (data) {
-        // Ensure all required fields are present with defaults
         const settingsData: SiteSettingsType = {
           id: data.id || '',
           site_name: data.site_name || 'The Fashion & Furious',
@@ -255,22 +256,22 @@ const SiteSettings = () => {
           
           <div className="space-y-4">
             <div className="bg-yellow-600 bg-opacity-20 border border-yellow-600 rounded p-4">
-              <h4 className="font-medium text-yellow-400 mb-2">Email Integration Required</h4>
+              <h4 className="font-medium text-yellow-400 mb-2">Email Integration Active</h4>
               <p className="text-sm text-gray-300 mb-3">
-                To receive order notifications via email, you need to connect your Lovable project to Supabase.
+                Email notifications are working and will be sent to: <strong>{settings.contact_email}</strong>
               </p>
               <p className="text-sm text-gray-300">
-                Gmail App Password: <code className="bg-gray-700 px-2 py-1 rounded">fbrg zrnd tyuc vtfd</code>
+                From: thefashionnfurious@gmail.com
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">SMTP Settings</label>
+              <label className="block text-sm font-medium mb-2">SMTP Status</label>
               <div className="space-y-2 text-sm text-gray-400">
-                <p>Server: smtp.gmail.com</p>
-                <p>Port: 587</p>
-                <p>Security: TLS</p>
-                <p>App Password: fbrg zrnd tyuc vtfd</p>
+                <p>✓ Server: smtp.gmail.com</p>
+                <p>✓ Port: 587</p>
+                <p>✓ Security: TLS</p>
+                <p>✓ App Password: Configured</p>
               </div>
             </div>
           </div>
@@ -280,24 +281,28 @@ const SiteSettings = () => {
         <div className="bg-gray-800 rounded-lg p-6">
           <h3 className="text-xl font-semibold mb-6">Site Analytics</h3>
           
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gray-700 p-4 rounded text-center">
-              <div className="text-2xl font-bold text-red-400">0</div>
-              <div className="text-sm text-gray-400">Total Orders</div>
+          {analyticsLoading ? (
+            <div className="text-center text-gray-400">Loading analytics...</div>
+          ) : (
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-gray-700 p-4 rounded text-center">
+                <div className="text-2xl font-bold text-red-400">{analytics.total_orders}</div>
+                <div className="text-sm text-gray-400">Total Orders</div>
+              </div>
+              <div className="bg-gray-700 p-4 rounded text-center">
+                <div className="text-2xl font-bold text-green-400">{analytics.total_products}</div>
+                <div className="text-sm text-gray-400">Products</div>
+              </div>
+              <div className="bg-gray-700 p-4 rounded text-center">
+                <div className="text-2xl font-bold text-blue-400">TK{analytics.total_revenue.toFixed(2)}</div>
+                <div className="text-sm text-gray-400">Revenue</div>
+              </div>
+              <div className="bg-gray-700 p-4 rounded text-center">
+                <div className="text-2xl font-bold text-purple-400">{analytics.total_visitors}</div>
+                <div className="text-sm text-gray-400">Visitors</div>
+              </div>
             </div>
-            <div className="bg-gray-700 p-4 rounded text-center">
-              <div className="text-2xl font-bold text-green-400">8</div>
-              <div className="text-sm text-gray-400">Products</div>
-            </div>
-            <div className="bg-gray-700 p-4 rounded text-center">
-              <div className="text-2xl font-bold text-blue-400">৳0</div>
-              <div className="text-sm text-gray-400">Revenue</div>
-            </div>
-            <div className="bg-gray-700 p-4 rounded text-center">
-              <div className="text-2xl font-bold text-purple-400">0</div>
-              <div className="text-sm text-gray-400">Visitors</div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

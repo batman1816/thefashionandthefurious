@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
@@ -34,6 +33,12 @@ const Checkout = () => {
     return option ? option.cost : 0;
   };
 
+  const generateOrderId = () => {
+    const timestamp = Date.now();
+    const random = Math.floor(Math.random() * 1000);
+    return `${timestamp}${random}`;
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
@@ -52,17 +57,36 @@ const Checkout = () => {
     setIsSubmitting(true);
 
     try {
+      const orderId = generateOrderId();
+      const subtotal = getCartTotal();
+      const shippingCost = getShippingCost();
+      const total = subtotal + shippingCost;
+      
       const order = {
-        id: Date.now().toString(),
-        customer: formData,
+        id: orderId,
+        customer_name: formData.name,
+        customer_email: formData.email,
+        customer_phone: formData.phone,
+        customer_address: formData.address,
+        customer_city: formData.city,
+        customer_zip_code: formData.zipCode,
         items: cartItems,
-        subtotal: getCartTotal(),
-        shippingCost: getShippingCost(),
-        total: getCartTotal() + getShippingCost(),
-        shippingOption: shippingOptions.find(opt => opt.value === shippingOption)?.label,
-        date: new Date(),
-        status: 'pending' as const
+        subtotal: subtotal,
+        shipping_cost: shippingCost,
+        total: total,
+        shipping_option: shippingOptions.find(opt => opt.value === shippingOption)?.label || 'Standard',
+        status: 'pending'
       };
+
+      // Save order to database
+      const { error: dbError } = await supabase
+        .from('orders')
+        .insert([order]);
+
+      if (dbError) {
+        console.error('Database error:', dbError);
+        throw new Error('Failed to save order to database');
+      }
 
       // Send order notification email
       const { error: emailError } = await supabase.functions.invoke('send-order-notification', {
@@ -74,14 +98,12 @@ const Checkout = () => {
         // Don't fail the order if email fails
       }
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
       // Clear cart and redirect to success page
       clearCart();
       toast.success('Order placed successfully!');
       navigate('/order-success', { state: { order } });
     } catch (error) {
+      console.error('Order submission error:', error);
       toast.error('Failed to place order. Please try again.');
     } finally {
       setIsSubmitting(false);
