@@ -58,6 +58,8 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
     navigate(`/product/${product.id}`);
   };
 
+  const primaryImage = product.images && product.images.length > 0 ? product.images[0] : product.image_url;
+
   return (
     <div 
       className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
@@ -72,13 +74,15 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-2">
-          {/* Product Image */}
-          <div className="aspect-square overflow-hidden bg-gray-50">
-            <img
-              src={product.image_url}
-              alt={product.name}
-              className="w-full h-full object-cover"
-            />
+          {/* Product Image - Repositioned lower and center-left */}
+          <div className="flex items-center justify-start pl-8 pt-16 pb-8">
+            <div className="aspect-square w-4/5 overflow-hidden bg-gray-50">
+              <img
+                src={primaryImage}
+                alt={product.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
 
           {/* Product Info */}
@@ -95,15 +99,15 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
               Shipping calculated at checkout.
             </p>
 
-            {/* Size Selection */}
+            {/* Size Selection - Single Row */}
             <div className="mb-8">
               <h3 className="text-sm font-normal mb-4 text-black">SIZE</h3>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 max-w-full overflow-x-auto">
                 {product.sizes.map(size => (
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    className={`px-6 py-3 text-sm font-normal transition-all duration-200 border ${
+                    className={`flex-shrink-0 px-4 py-2 text-sm font-normal transition-all duration-200 border ${
                       selectedSize === size
                         ? 'bg-black text-white border-black'
                         : 'bg-white text-black border-gray-300 hover:border-black'
@@ -138,17 +142,17 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
               </div>
             </div>
 
-            {/* Buttons */}
+            {/* Buttons with click animations */}
             <div className="space-y-4 mb-8">
               <button
                 onClick={handleAddToCart}
-                className="w-full bg-white border border-black text-black py-4 px-8 font-normal transition-all duration-300 hover:bg-gray-50 transform hover:scale-[1.01] active:scale-[0.99]"
+                className="w-full bg-white border border-black text-black py-4 px-8 font-normal transition-all duration-200 hover:bg-gray-50 transform hover:scale-[1.01] active:scale-[0.97] active:-translate-y-1"
               >
                 Add to cart
               </button>
               <button
                 onClick={handleBuyNow}
-                className="w-full bg-black text-white py-4 px-8 font-normal transition-all duration-300 hover:bg-gray-800 transform hover:scale-[1.01] active:scale-[0.99]"
+                className="w-full bg-black text-white py-4 px-8 font-normal transition-all duration-200 hover:bg-gray-800 transform hover:scale-[1.01] active:scale-[0.97] active:-translate-y-1"
               >
                 Buy it now
               </button>
