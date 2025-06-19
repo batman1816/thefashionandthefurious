@@ -1,4 +1,3 @@
-
 export interface Product {
   id: string;
   name: string;
@@ -6,7 +5,6 @@ export interface Product {
   price: number;
   category: string;
   sizes: string[];
-  stock: number;
   image_url?: string;
   created_at?: string;
   updated_at?: string;

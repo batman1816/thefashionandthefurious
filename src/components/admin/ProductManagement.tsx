@@ -1,10 +1,13 @@
+
 import { useState } from 'react';
 import { Plus, Edit, Trash2, Upload } from 'lucide-react';
 import { useProducts } from '../../context/ProductsContext';
 import { Product } from '../../types/Product';
 import { uploadImage, deleteImage } from '../../utils/imageUpload';
 import { toast } from 'sonner';
+
 type ProductCategory = 'drivers' | 'f1-classic' | 'teams';
+
 const ProductManagement = () => {
   const {
     products,
@@ -22,12 +25,13 @@ const ProductManagement = () => {
     price: '',
     category: 'drivers' as ProductCategory,
     sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
-    stock: '10',
     image_url: ''
   });
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
     console.log('Starting image upload for product:', file.name);
     setUploading(true);
     try {
@@ -45,21 +49,23 @@ const ProductManagement = () => {
       setUploading(false);
     }
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.price || !formData.image_url) {
       toast.error('Please fill in all required fields and upload an image');
       return;
     }
+
     const productData = {
       name: formData.name,
       description: formData.description,
       price: parseInt(formData.price),
       category: formData.category,
       sizes: formData.sizes,
-      stock: parseInt(formData.stock),
       image_url: formData.image_url
     };
+
     console.log('Submitting product data:', productData);
     try {
       if (editingProduct) {
@@ -80,7 +86,6 @@ const ProductManagement = () => {
         price: '',
         category: 'drivers',
         sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
-        stock: '10',
         image_url: ''
       });
     } catch (error) {
@@ -88,6 +93,7 @@ const ProductManagement = () => {
       toast.error('Failed to save product');
     }
   };
+
   const handleEdit = (product: Product) => {
     setFormData({
       name: product.name,
@@ -95,12 +101,12 @@ const ProductManagement = () => {
       price: product.price.toString(),
       category: product.category as ProductCategory,
       sizes: product.sizes,
-      stock: product.stock.toString(),
       image_url: product.image_url
     });
     setEditingProduct(product);
     setIsAddingProduct(true);
   };
+
   const handleCancel = () => {
     setIsAddingProduct(false);
     setEditingProduct(null);
@@ -110,10 +116,10 @@ const ProductManagement = () => {
       price: '',
       category: 'drivers',
       sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
-      stock: '10',
       image_url: ''
     });
   };
+
   const handleDelete = async (product: Product) => {
     try {
       // Delete image from storage if it's hosted on Supabase
@@ -125,11 +131,13 @@ const ProductManagement = () => {
       console.error('Error deleting product:', error);
     }
   };
+
   if (loading) {
     return <div className="flex justify-center items-center h-64">
         <div className="text-white">Loading products...</div>
       </div>;
   }
+
   return <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-white">Product Management</h2>
@@ -169,25 +177,16 @@ const ProductManagement = () => {
           }))} className="w-full px-3 py-2 bg-gray-700 text-white rounded h-24" />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-white mb-2">Category</label>
-                <select value={formData.category} onChange={e => setFormData(prev => ({
-              ...prev,
-              category: e.target.value as any
-            }))} className="w-full px-3 py-2 bg-gray-700 text-white rounded">
-                  <option value="drivers">Drivers</option>
-                  <option value="f1-classic">F1 Classic</option>
-                  <option value="teams">Teams</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-white mb-2">Stock</label>
-                <input type="number" value={formData.stock} onChange={e => setFormData(prev => ({
-              ...prev,
-              stock: e.target.value
-            }))} className="w-full px-3 py-2 bg-gray-700 text-white rounded" />
-              </div>
+            <div>
+              <label className="block text-white mb-2">Category</label>
+              <select value={formData.category} onChange={e => setFormData(prev => ({
+            ...prev,
+            category: e.target.value as any
+          }))} className="w-full px-3 py-2 bg-gray-700 text-white rounded">
+                <option value="drivers">Drivers</option>
+                <option value="f1-classic">F1 Classic</option>
+                <option value="teams">Teams</option>
+              </select>
             </div>
 
             <div>
@@ -235,7 +234,6 @@ const ProductManagement = () => {
                 <th className="px-6 py-3 text-left text-white bg-zinc-800">Name</th>
                 <th className="px-6 py-3 text-left text-white bg-zinc-800">Category</th>
                 <th className="px-6 py-3 text-left text-white bg-zinc-800">Price</th>
-                <th className="px-6 py-3 text-left text-white bg-zinc-800">Stock</th>
                 <th className="px-6 py-3 text-left text-white bg-zinc-800">Actions</th>
               </tr>
             </thead>
@@ -247,7 +245,6 @@ const ProductManagement = () => {
                   <td className="px-6 py-4 text-white bg-zinc-800">{product.name}</td>
                   <td className="px-6 py-4 text-gray-300 capitalize bg-zinc-800">{product.category}</td>
                   <td className="px-6 py-4 text-white bg-zinc-800">৳{product.price}</td>
-                  <td className="px-6 py-4 text-gray-300 bg-zinc-800">{product.stock}</td>
                   <td className="px-6 py-4 bg-zinc-800">
                     <div className="flex gap-2">
                       <button onClick={() => handleEdit(product)} className="text-white p-2 rounded bg-slate-700 hover:bg-slate-600">
@@ -268,4 +265,5 @@ const ProductManagement = () => {
       </div>
     </div>;
 };
+
 export default ProductManagement;

@@ -57,7 +57,6 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
           price: updatedProduct.price,
           category: updatedProduct.category,
           sizes: updatedProduct.sizes,
-          stock: updatedProduct.stock,
           image_url: updatedProduct.image_url
         })
         .eq('id', updatedProduct.id);
@@ -82,7 +81,6 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
           price: newProduct.price,
           category: newProduct.category,
           sizes: newProduct.sizes,
-          stock: newProduct.stock,
           image_url: newProduct.image_url
         })
         .select()

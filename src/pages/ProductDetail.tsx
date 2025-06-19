@@ -134,10 +134,6 @@ const ProductDetail = () => {
                   <span className="font-medium">Category:</span>
                   <span className="uppercase">{product.category}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="font-medium">Stock:</span>
-                  <span>{product.stock} units available</span>
-                </div>
               </div>
             </div>
           </div>
