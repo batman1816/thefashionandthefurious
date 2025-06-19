@@ -29,7 +29,7 @@ const RotatingBanner = () => {
 
   if (activeBanners.length === 0) {
     return (
-      <section className="relative bg-gradient-to-r from-red-600 via-black to-red-600 text-white py-20">
+      <section className="relative bg-gradient-to-r from-red-600 via-black to-red-600 text-white py-32 min-h-[80vh] flex items-center">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
             PREMIUM F1 INSPIRED<br />APPAREL
@@ -59,7 +59,7 @@ const RotatingBanner = () => {
   const currentBanner = activeBanners[currentBannerIndex];
 
   return (
-    <section className="relative h-[60vh] overflow-hidden">
+    <section className="relative h-[80vh] min-h-[600px] overflow-hidden">
       <div className="relative w-full h-full">
         <img
           src={currentBanner.image_url}
