@@ -7,7 +7,7 @@ const Footer = () => {
           {/* Brand */}
           <div>
             <div className="mb-4">
-              <img src="/lovable-uploads/1bfadb02-757f-46dc-b0c2-f866a1969b54.png" alt="The Fashion & The Furious" className="h-16 object-contain" />
+              <img src="/lovable-uploads/1bfadb02-757f-46dc-b0c2-f866a1969b54.png" alt="The Fashion & The Furious" className="h-20 object-contain" />
             </div>
             <p className="text-gray-400 mb-4">Premium Formula 1 inspired apparel for racing enthusiasts.</p>
           </div>
