@@ -1,15 +1,11 @@
-
 import { useState } from 'react';
 import { Plus, Edit, Trash2, Upload, X } from 'lucide-react';
 import { useProducts } from '../../context/ProductsContext';
 import { Product } from '../../types/Product';
 import { uploadImage, deleteImage } from '../../utils/imageUpload';
 import { toast } from 'sonner';
-
 type ProductCategory = 'drivers' | 'f1-classic' | 'teams';
-
 const AVAILABLE_TAGS = ['Teams', 'Drivers', 'F1 Classic', 'New'];
-
 const ProductManagement = () => {
   const {
     products,
@@ -31,22 +27,18 @@ const ProductManagement = () => {
     images: [] as string[],
     tags: [] as string[]
   });
-
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
-
     setUploading(true);
     try {
       const uploadPromises = Array.from(files).map(file => uploadImage(file, 'product-images'));
       const imageUrls = await Promise.all(uploadPromises);
-      
       setFormData(prev => ({
         ...prev,
         images: [...prev.images, ...imageUrls],
         image_url: prev.images.length === 0 ? imageUrls[0] : prev.image_url
       }));
-      
       toast.success(`${imageUrls.length} image(s) uploaded successfully`);
     } catch (error) {
       console.error('Failed to upload images:', error);
@@ -55,7 +47,6 @@ const ProductManagement = () => {
       setUploading(false);
     }
   };
-
   const removeImage = (indexToRemove: number) => {
     setFormData(prev => {
       const newImages = prev.images.filter((_, index) => index !== indexToRemove);
@@ -66,23 +57,18 @@ const ProductManagement = () => {
       };
     });
   };
-
   const handleTagChange = (tag: string) => {
     setFormData(prev => ({
       ...prev,
-      tags: prev.tags.includes(tag)
-        ? prev.tags.filter(t => t !== tag)
-        : [...prev.tags, tag]
+      tags: prev.tags.includes(tag) ? prev.tags.filter(t => t !== tag) : [...prev.tags, tag]
     }));
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.price || !formData.image_url) {
       toast.error('Please fill in all required fields and upload an image');
       return;
     }
-
     const productData = {
       name: formData.name,
       description: formData.description,
@@ -93,7 +79,6 @@ const ProductManagement = () => {
       images: formData.images,
       tags: formData.tags
     };
-
     console.log('Submitting product data:', productData);
     try {
       if (editingProduct) {
@@ -123,7 +108,6 @@ const ProductManagement = () => {
       toast.error('Failed to save product');
     }
   };
-
   const handleEdit = (product: Product) => {
     setFormData({
       name: product.name,
@@ -138,7 +122,6 @@ const ProductManagement = () => {
     setEditingProduct(product);
     setIsAddingProduct(true);
   };
-
   const handleCancel = () => {
     setIsAddingProduct(false);
     setEditingProduct(null);
@@ -153,7 +136,6 @@ const ProductManagement = () => {
       tags: []
     });
   };
-
   const handleDelete = async (product: Product) => {
     try {
       // Delete image from storage if it's hosted on Supabase
@@ -165,13 +147,11 @@ const ProductManagement = () => {
       console.error('Error deleting product:', error);
     }
   };
-
   if (loading) {
     return <div className="flex justify-center items-center h-64">
         <div className="text-white">Loading products...</div>
       </div>;
   }
-
   return <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-white">Product Management</h2>
@@ -181,7 +161,7 @@ const ProductManagement = () => {
           </button>}
       </div>
 
-      {isAddingProduct && <div className="bg-gray-800 p-6 rounded-lg">
+      {isAddingProduct && <div className="p-6 rounded-lg bg-zinc-800">
           <h3 className="text-xl font-semibold text-white mb-4">
             {editingProduct ? 'Edit Product' : 'Add New Product'}
           </h3>
@@ -192,14 +172,14 @@ const ProductManagement = () => {
                 <input type="text" value={formData.name} onChange={e => setFormData(prev => ({
               ...prev,
               name: e.target.value
-            }))} className="w-full px-3 py-2 bg-gray-700 text-white rounded" required />
+            }))} required className="w-full px-3 py-2 text-white rounded bg-zinc-900" />
               </div>
               <div>
                 <label className="block text-white mb-2">Price (Taka) *</label>
                 <input type="number" value={formData.price} onChange={e => setFormData(prev => ({
               ...prev,
               price: e.target.value
-            }))} className="w-full px-3 py-2 bg-gray-700 text-white rounded" required />
+            }))} required className="w-full px-3 py-2 text-white rounded bg-zinc-900" />
               </div>
             </div>
 
@@ -208,7 +188,7 @@ const ProductManagement = () => {
               <textarea value={formData.description} onChange={e => setFormData(prev => ({
             ...prev,
             description: e.target.value
-          }))} className="w-full px-3 py-2 bg-gray-700 text-white rounded h-24" />
+          }))} className="w-full px-3 py-2 text-white rounded h-24 bg-zinc-900" />
             </div>
 
             <div>
@@ -216,7 +196,7 @@ const ProductManagement = () => {
               <select value={formData.category} onChange={e => setFormData(prev => ({
             ...prev,
             category: e.target.value as any
-          }))} className="w-full px-3 py-2 bg-gray-700 text-white rounded">
+          }))} className="w-full px-3 py-2 text-white rounded bg-zinc-900">
                 <option value="drivers">Drivers</option>
                 <option value="f1-classic">F1 Classic</option>
                 <option value="teams">Teams</option>
@@ -226,17 +206,10 @@ const ProductManagement = () => {
             <div>
               <label className="block text-white mb-2">Tags</label>
               <div className="grid grid-cols-2 gap-2">
-                {AVAILABLE_TAGS.map(tag => (
-                  <label key={tag} className="flex items-center space-x-2 text-white">
-                    <input
-                      type="checkbox"
-                      checked={formData.tags.includes(tag)}
-                      onChange={() => handleTagChange(tag)}
-                      className="rounded"
-                    />
+                {AVAILABLE_TAGS.map(tag => <label key={tag} className="flex items-center space-x-2 text-white">
+                    <input type="checkbox" checked={formData.tags.includes(tag)} onChange={() => handleTagChange(tag)} className="rounded" />
                     <span>{tag}</span>
-                  </label>
-                ))}
+                  </label>)}
               </div>
             </div>
 
@@ -244,15 +217,7 @@ const ProductManagement = () => {
               <label className="block text-white mb-2">Product Images *</label>
               <div className="space-y-4">
                 <div className="border-2 border-dashed border-gray-600 rounded-lg p-4">
-                  <input 
-                    type="file" 
-                    accept="image/*" 
-                    multiple
-                    onChange={handleImageUpload} 
-                    className="hidden" 
-                    id="image-upload" 
-                    disabled={uploading} 
-                  />
+                  <input type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" id="image-upload" disabled={uploading} />
                   <label htmlFor="image-upload" className={`cursor-pointer flex flex-col items-center justify-center text-gray-400 hover:text-white transition-colors ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
                     <Upload size={32} className="mb-2" />
                     <span className="text-center">
@@ -264,32 +229,18 @@ const ProductManagement = () => {
                 </div>
                 
                 {formData.images.length > 0 && <div className="grid grid-cols-4 gap-4">
-                    {formData.images.map((imageUrl, index) => (
-                      <div key={index} className="relative">
-                        <img 
-                          src={imageUrl} 
-                          alt={`Product ${index + 1}`} 
-                          className="w-full h-24 object-cover rounded border-2 border-gray-600" 
-                        />
-                        <button
-                          type="button"
-                          onClick={() => removeImage(index)}
-                          className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700"
-                        >
+                    {formData.images.map((imageUrl, index) => <div key={index} className="relative">
+                        <img src={imageUrl} alt={`Product ${index + 1}`} className="w-full h-24 object-cover rounded border-2 border-gray-600" />
+                        <button type="button" onClick={() => removeImage(index)} className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700">
                           <X size={14} />
                         </button>
-                        {index === 0 && (
-                          <div className="absolute bottom-0 left-0 right-0 bg-blue-600 text-white text-xs text-center py-1">
+                        {index === 0 && <div className="absolute bottom-0 left-0 right-0 bg-blue-600 text-white text-xs text-center py-1">
                             Main Image
-                          </div>
-                        )}
-                        {index === 1 && (
-                          <div className="absolute bottom-0 left-0 right-0 bg-green-600 text-white text-xs text-center py-1">
+                          </div>}
+                        {index === 1 && <div className="absolute bottom-0 left-0 right-0 bg-green-600 text-white text-xs text-center py-1">
                             Hover Image
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                          </div>}
+                      </div>)}
                   </div>}
               </div>
             </div>
@@ -327,17 +278,11 @@ const ProductManagement = () => {
                   <td className="px-6 py-4 text-white bg-zinc-800">{product.name}</td>
                   <td className="px-6 py-4 text-gray-300 capitalize bg-zinc-800">{product.category}</td>
                   <td className="px-6 py-4 text-gray-300 bg-zinc-800">
-                    {product.tags && product.tags.length > 0 ? (
-                      <div className="flex flex-wrap gap-1">
-                        {product.tags.map(tag => (
-                          <span key={tag} className="bg-blue-600 text-white text-xs px-2 py-1 rounded">
+                    {product.tags && product.tags.length > 0 ? <div className="flex flex-wrap gap-1">
+                        {product.tags.map(tag => <span key={tag} className="bg-blue-600 text-white text-xs px-2 py-1 rounded">
                             {tag}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      <span className="text-gray-500">No tags</span>
-                    )}
+                          </span>)}
+                      </div> : <span className="text-gray-500">No tags</span>}
                   </td>
                   <td className="px-6 py-4 text-white bg-zinc-800">৳{product.price}</td>
                   <td className="px-6 py-4 bg-zinc-800">
@@ -360,5 +305,4 @@ const ProductManagement = () => {
       </div>
     </div>;
 };
-
 export default ProductManagement;
