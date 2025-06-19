@@ -88,7 +88,7 @@ const SiteSettings = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* General Settings */}
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="rounded-lg p-6 bg-zinc-800">
           <h3 className="text-xl font-semibold mb-6">General Settings</h3>
           
           <div className="space-y-4">
@@ -113,7 +113,7 @@ const SiteSettings = () => {
         </div>
 
         {/* Branding */}
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="rounded-lg p-6 bg-zinc-800">
           <h3 className="text-xl font-semibold mb-6">Branding</h3>
           
           <div className="space-y-6">
@@ -146,23 +146,23 @@ const SiteSettings = () => {
         </div>
 
         {/* Analytics */}
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="rounded-lg p-6 bg-zinc-800">
           <h3 className="text-xl font-semibold mb-6">Site Analytics</h3>
           
           {analyticsLoading ? <div className="text-center text-gray-400">Loading analytics...</div> : <div className="grid grid-cols-2 gap-4">
-              <div className="bg-gray-700 p-4 rounded text-center">
+              <div className="p-4 rounded text-center bg-zinc-900">
                 <div className="text-2xl font-bold text-red-400">{analytics.total_orders}</div>
                 <div className="text-sm text-gray-400">Total Orders</div>
               </div>
-              <div className="bg-gray-700 p-4 rounded text-center">
+              <div className="p-4 rounded text-center bg-zinc-900">
                 <div className="text-2xl font-bold text-green-400">{analytics.total_products}</div>
                 <div className="text-sm text-gray-400">Products</div>
               </div>
-              <div className="bg-gray-700 p-4 rounded text-center">
+              <div className="p-4 rounded text-center bg-zinc-900">
                 <div className="text-2xl font-bold text-white">TK{analytics.total_revenue.toFixed(2)}</div>
                 <div className="text-sm text-gray-400">Revenue</div>
               </div>
-              <div className="bg-gray-700 p-4 rounded text-center">
+              <div className="p-4 rounded text-center bg-zinc-900">
                 <div className="text-2xl font-bold text-purple-400">{analytics.total_visitors}</div>
                 <div className="text-sm text-gray-400">Visitors</div>
               </div>
