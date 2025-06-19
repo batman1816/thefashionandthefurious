@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { X, Minus, Plus } from 'lucide-react';
@@ -16,6 +17,8 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
   const { addToCart } = useCart();
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
+
+  console.log('ProductModal rendered for:', product.name);
 
   useEffect(() => {
     if (product && product.sizes.length > 0) {
@@ -48,6 +51,7 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
+      console.log('Backdrop clicked, closing modal');
       onClose();
     }
   };

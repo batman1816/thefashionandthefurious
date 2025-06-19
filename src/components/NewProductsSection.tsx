@@ -5,6 +5,7 @@ import { useProducts } from '../context/ProductsContext';
 import { useCart } from '../context/CartContext';
 import ProductModal from './ProductModal';
 import { Product } from '../types/Product';
+import { toast } from 'sonner';
 
 const NewProductsSection = () => {
   const { products } = useProducts();
@@ -18,10 +19,22 @@ const NewProductsSection = () => {
 
   const handleAddToCart = (product: Product, e: React.MouseEvent) => {
     e.stopPropagation();
+    console.log('Add to cart clicked for:', product.name);
     // Add with default size (first available size)
     if (product.sizes && product.sizes.length > 0) {
       addToCart(product, product.sizes[0], 1);
+      toast.success(`Added ${product.name} to cart!`);
     }
+  };
+
+  const handleProductClick = (product: Product) => {
+    console.log('Product clicked:', product.name);
+    setSelectedProduct(product);
+  };
+
+  const handleCloseModal = () => {
+    console.log('Modal closed');
+    setSelectedProduct(null);
   };
 
   return (
@@ -40,7 +53,7 @@ const NewProductsSection = () => {
               <div 
                 key={product.id} 
                 className="group cursor-pointer"
-                onClick={() => setSelectedProduct(product)}
+                onClick={() => handleProductClick(product)}
               >
                 {/* Product Image */}
                 <div className="aspect-square overflow-hidden bg-gray-50 relative mb-4">
@@ -95,7 +108,7 @@ const NewProductsSection = () => {
       {selectedProduct && (
         <ProductModal 
           product={selectedProduct} 
-          onClose={() => setSelectedProduct(null)} 
+          onClose={handleCloseModal} 
         />
       )}
     </section>
