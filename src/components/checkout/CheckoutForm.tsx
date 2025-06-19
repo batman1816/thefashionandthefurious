@@ -33,16 +33,13 @@ const CheckoutForm = () => {
   const [shippingOption, setShippingOption] = useState('inside-dhaka');
   const [shippingCost, setShippingCost] = useState(70);
   const [subtotal, setSubtotal] = useState(0);
-  const [tax, setTax] = useState(0);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const cartSubtotal = getCartTotal();
-    const calculatedTax = cartSubtotal * 0.08; // 8% tax
     setSubtotal(cartSubtotal);
-    setTax(calculatedTax);
-    setTotal(cartSubtotal + shippingCost + calculatedTax);
+    setTotal(cartSubtotal + shippingCost);
   }, [cartItems, shippingCost, getCartTotal]);
 
   useEffect(() => {
@@ -155,7 +152,6 @@ const CheckoutForm = () => {
                   cartItems={cartItems}
                   subtotal={subtotal}
                   shippingCost={shippingCost}
-                  tax={tax}
                   total={total}
                   loading={loading}
                 />

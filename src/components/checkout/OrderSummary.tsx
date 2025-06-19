@@ -6,7 +6,6 @@ interface OrderSummaryProps {
   cartItems: CartItem[];
   subtotal: number;
   shippingCost: number;
-  tax: number;
   total: number;
   loading: boolean;
 }
@@ -15,7 +14,6 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   cartItems, 
   subtotal, 
   shippingCost, 
-  tax, 
   total, 
   loading 
 }) => {
@@ -40,10 +38,6 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         <div className="flex justify-between text-gray-300">
           <span>Shipping</span>
           <span>TK {shippingCost.toFixed(2)}</span>
-        </div>
-        <div className="flex justify-between text-gray-300">
-          <span>Tax</span>
-          <span>TK {tax.toFixed(2)}</span>
         </div>
         <div className="flex justify-between font-semibold text-white text-lg border-t border-gray-600 pt-2">
           <span>Total</span>
