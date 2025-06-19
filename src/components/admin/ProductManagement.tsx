@@ -1,9 +1,12 @@
+
 import { useState } from 'react';
 import { Plus, Edit, Trash2, Upload } from 'lucide-react';
 import { useProducts } from '../../context/ProductsContext';
 import { Product } from '../../types/Product';
 import { uploadImage, deleteImage } from '../../utils/imageUpload';
 import { toast } from 'sonner';
+
+type ProductCategory = 'drivers' | 'f1-classic' | 'teams';
 
 const ProductManagement = () => {
   const { products, loading, addProduct, updateProduct, deleteProduct } = useProducts();
@@ -15,7 +18,7 @@ const ProductManagement = () => {
     name: '',
     description: '',
     price: '',
-    category: 'drivers' as 'drivers' | 'f1-classic' | 'teams',
+    category: 'drivers' as ProductCategory,
     sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
     stock: '10',
     image_url: ''
@@ -90,7 +93,7 @@ const ProductManagement = () => {
       name: product.name,
       description: product.description,
       price: product.price.toString(),
-      category: product.category,
+      category: product.category as ProductCategory,
       sizes: product.sizes,
       stock: product.stock.toString(),
       image_url: product.image_url

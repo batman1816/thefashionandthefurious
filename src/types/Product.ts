@@ -35,3 +35,19 @@ export interface SiteSettings {
   support_email: string;
   logo_url?: string;
 }
+
+export interface Customer {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+}
+
+export interface Order {
+  id: string;
+  customer: Customer;
+  items: CartItem[];
+  total: number;
+  date: Date;
+  status: 'pending' | 'fulfilled';
+}
