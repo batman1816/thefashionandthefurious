@@ -2,14 +2,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useProducts } from '../context/ProductsContext';
-import { useCart } from '../context/CartContext';
 import ProductModal from './ProductModal';
 import { Product } from '../types/Product';
-import { toast } from 'sonner';
 
 const NewProductsSection = () => {
   const { products } = useProducts();
-  const { addToCart } = useCart();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   // Filter products with "New" tag and take only the first 4
@@ -17,14 +14,10 @@ const NewProductsSection = () => {
     .filter(product => product.tags?.includes('New'))
     .slice(0, 4);
 
-  const handleAddToCart = (product: Product, e: React.MouseEvent) => {
+  const handleChooseOptions = (product: Product, e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log('Add to cart clicked for:', product.name);
-    // Add with default size (first available size)
-    if (product.sizes && product.sizes.length > 0) {
-      addToCart(product, product.sizes[0], 1);
-      toast.success(`Added ${product.name} to cart!`);
-    }
+    console.log('Choose options clicked for:', product.name);
+    setSelectedProduct(product);
   };
 
   const handleProductClick = (product: Product) => {
@@ -82,7 +75,7 @@ const NewProductsSection = () => {
                   </div>
                   <div className="pt-2">
                     <button 
-                      onClick={(e) => handleAddToCart(product, e)}
+                      onClick={(e) => handleChooseOptions(product, e)}
                       className="w-full border border-gray-400 text-black py-2 px-4 text-sm font-normal hover:bg-gray-50 transition-colors duration-200"
                     >
                       Choose options
