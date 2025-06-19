@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useProducts } from '../context/ProductsContext';
 import { useCart } from '../context/CartContext';
@@ -15,8 +14,10 @@ const NewProducts = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Filter products with "New" tag
-  const newProducts = products.filter(product => product.tags?.includes('New'));
+  // Filter products with "New" tag AND active status
+  const newProducts = products.filter(product => 
+    product.tags?.includes('New') && product.is_active === true
+  );
   
   const totalPages = Math.ceil(newProducts.length / PRODUCTS_PER_PAGE);
   const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;

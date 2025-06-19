@@ -11,7 +11,7 @@ const ProductGrid = ({ products }: ProductGridProps) => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   // Filter to only show active products
-  const activeProducts = products.filter(product => product.is_active !== false);
+  const activeProducts = products.filter(product => product.is_active === true);
 
   const handleChooseOptions = (product: Product, e: React.MouseEvent) => {
     e.stopPropagation();
