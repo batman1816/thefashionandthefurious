@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import { Instagram, Facebook, MessageCircle } from 'lucide-react';
 
@@ -65,7 +64,6 @@ const Footer = () => {
             <ul className="space-y-2 text-gray-400">
               <li><Link to="/shipping" className="hover:text-white transition-colors">Shipping Info</Link></li>
               <li><Link to="/returns" className="hover:text-white transition-colors">Returns</Link></li>
-              <li><Link to="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
             </ul>
           </div>
         </div>
