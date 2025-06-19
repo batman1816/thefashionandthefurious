@@ -84,7 +84,7 @@ const NewProducts = () => {
                       <h3 className="text-base font-medium text-black mb-2 leading-tight">
                         {product.name}
                       </h3>
-                      <div className="text-base font-medium text-black mb-3">
+                      <div className="text-base font-normal text-black mb-3">
                         Tk {product.price}.00 BDT
                       </div>
                       <button 

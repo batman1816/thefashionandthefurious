@@ -51,8 +51,8 @@ const Cart = () => {
                       {item.product.name}
                     </h3>
                     <p className="text-gray-600 mb-2">Size: {item.size}</p>
-                    <p className="text-lg font-bold text-gray-900">
-                      TK{item.product.price}
+                    <p className="text-lg font-normal text-gray-900">
+                      TK {item.product.price}
                     </p>
                   </div>
 
@@ -84,8 +84,8 @@ const Cart = () => {
                     </button>
 
                     {/* Item Total */}
-                    <p className="font-bold text-gray-900">
-                      TK{(item.product.price * item.quantity).toFixed(2)}
+                    <p className="font-normal text-gray-900">
+                      TK {(item.product.price * item.quantity).toFixed(2)}
                     </p>
                   </div>
                 </div>
@@ -99,9 +99,9 @@ const Cart = () => {
               <h2 className="text-xl font-bold text-gray-900 mb-6">Order Summary</h2>
               
               <div className="space-y-2 mb-6">
-                <div className="flex justify-between font-bold text-lg">
+                <div className="flex justify-between font-normal text-lg">
                   <span>Subtotal:</span>
-                  <span>TK{getCartTotal().toFixed(2)}</span>
+                  <span>TK {getCartTotal().toFixed(2)}</span>
                 </div>
                 <p className="text-sm text-gray-600">
                   Shipping will be calculated at checkout
