@@ -1,28 +1,21 @@
-
 import { useLocation, Link } from 'react-router-dom';
 import { CheckCircle } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-
 const OrderSuccess = () => {
   const location = useLocation();
   const order = location.state?.order;
-
   if (!order) {
-    return (
-      <div className="min-h-screen bg-white">
+    return <div className="min-h-screen bg-white">
         <Header />
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-2xl font-bold text-gray-900">Order not found</h1>
           <Link to="/" className="text-red-600 hover:underline">Return to home</Link>
         </div>
         <Footer />
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="min-h-screen bg-white">
+  return <div className="min-h-screen bg-white">
       <Header />
       
       <div className="container mx-auto px-4 py-16">
@@ -37,31 +30,26 @@ const OrderSuccess = () => {
             Thank you for your order. We'll send you a confirmation email shortly.
           </p>
 
-          <div className="bg-gray-50 rounded-lg p-6 mb-8 text-left">
+          <div className="rounded-lg p-6 mb-8 text-left bg-zinc-950">
             <h2 className="text-xl font-semibold mb-4">Order Details</h2>
             
             <div className="space-y-2 mb-4">
-              <p className="text-white"><strong>Order ID:</strong> #{order.id}</p>
-              <p className="text-white"><strong>Total:</strong> TK {order.total.toFixed(2)}</p>
+              <p className="text-gray-950"><strong>Order ID:</strong> #{order.id}</p>
+              <p className="text-zinc-950"><strong>Total:</strong> TK {order.total.toFixed(2)}</p>
               <p><strong>Date:</strong> {order.created_at ? new Date(order.created_at).toLocaleDateString() : 'N/A'}</p>
             </div>
 
             <h3 className="font-semibold mb-2">Items Ordered:</h3>
             <div className="space-y-2">
-              {order.items && Array.isArray(order.items) ? order.items.map((item: any, index: number) => (
-                <div key={index} className="flex justify-between">
+              {order.items && Array.isArray(order.items) ? order.items.map((item: any, index: number) => <div key={index} className="flex justify-between">
                   <span>{item.product.name} (Size: {item.size}) × {item.quantity}</span>
                   <span>TK{(item.product.price * item.quantity).toFixed(2)}</span>
-                </div>
-              )) : null}
+                </div>) : null}
             </div>
           </div>
 
           <div className="space-y-4">
-            <Link
-              to="/"
-              className="inline-block bg-red-600 hover:bg-red-700 text-white px-8 py-3 font-semibold transition-colors duration-300"
-            >
+            <Link to="/" className="inline-block bg-red-600 hover:bg-red-700 text-white px-8 py-3 font-semibold transition-colors duration-300">
               CONTINUE SHOPPING
             </Link>
           </div>
@@ -69,8 +57,6 @@ const OrderSuccess = () => {
       </div>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default OrderSuccess;
