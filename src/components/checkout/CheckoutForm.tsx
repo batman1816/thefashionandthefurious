@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { supabase } from '../../integrations/supabase/client';
 import { toast } from 'sonner';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import CustomerInfoForm from './CustomerInfoForm';
 import ShippingOptions from './ShippingOptions';
 import OrderSummary from './OrderSummary';
@@ -124,12 +125,19 @@ const CheckoutForm = () => {
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Billing Information */}
-          <div className="bg-gray-800 rounded-lg p-6">
-            <h2 className="text-xl font-semibold text-white mb-6">Billing Information</h2>
-            <CustomerInfoForm 
-              customerInfo={customerInfo} 
-              onInputChange={handleInputChange}
-            />
+          <div className="space-y-6">
+            <Card className="bg-gray-800 border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-xl font-semibold text-white">Billing Information</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CustomerInfoForm 
+                  customerInfo={customerInfo} 
+                  onInputChange={handleInputChange}
+                />
+              </CardContent>
+            </Card>
+            
             <ShippingOptions 
               shippingOption={shippingOption}
               onShippingOptionChange={setShippingOption}
@@ -137,16 +145,22 @@ const CheckoutForm = () => {
           </div>
 
           {/* Order Summary */}
-          <div className="bg-gray-800 rounded-lg p-6">
-            <h2 className="text-xl font-semibold text-white mb-6">Order Summary</h2>
-            <OrderSummary 
-              cartItems={cartItems}
-              subtotal={subtotal}
-              shippingCost={shippingCost}
-              tax={tax}
-              total={total}
-              loading={loading}
-            />
+          <div>
+            <Card className="bg-gray-800 border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-xl font-semibold text-white">Order Summary</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <OrderSummary 
+                  cartItems={cartItems}
+                  subtotal={subtotal}
+                  shippingCost={shippingCost}
+                  tax={tax}
+                  total={total}
+                  loading={loading}
+                />
+              </CardContent>
+            </Card>
           </div>
         </div>
       </form>
