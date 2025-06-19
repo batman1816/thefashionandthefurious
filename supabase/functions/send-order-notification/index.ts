@@ -43,102 +43,119 @@ const sendGmailEmail = async (to: string, subject: string, htmlBody: string) => 
     throw new Error("Gmail app password not configured");
   }
 
+  console.log("Attempting to send email via Gmail SMTP");
+
+  // Use a simple email service that accepts Gmail credentials
+  // This is a workaround since Deno doesn't have built-in SMTP support
   const emailData = {
+    service: 'gmail',
+    auth: {
+      user: gmailUser,
+      pass: gmailPassword
+    },
     from: gmailUser,
     to: to,
     subject: subject,
-    html: htmlBody,
+    html: htmlBody
   };
 
-  // Create the email message in RFC 2822 format
-  const boundary = "boundary_" + Math.random().toString(36).substr(2, 9);
-  const emailMessage = [
-    `From: ${emailData.from}`,
-    `To: ${emailData.to}`,
-    `Subject: ${emailData.subject}`,
-    `MIME-Version: 1.0`,
-    `Content-Type: multipart/alternative; boundary="${boundary}"`,
-    ``,
-    `--${boundary}`,
-    `Content-Type: text/html; charset=UTF-8`,
-    `Content-Transfer-Encoding: base64`,
-    ``,
-    btoa(unescape(encodeURIComponent(emailData.html))),
-    `--${boundary}--`,
-  ].join('\r\n');
+  console.log("Email data prepared:", { from: emailData.from, to: emailData.to, subject: emailData.subject });
 
-  // Send via Gmail SMTP
-  const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      service_id: 'gmail',
-      template_id: 'template_html',
-      user_id: 'user_gmail',
-      template_params: {
-        from_name: 'The Fashion & Furious',
-        from_email: gmailUser,
-        to_email: to,
-        subject: subject,
-        html_message: htmlBody,
-      },
-      accessToken: gmailPassword,
-    }),
-  });
-
-  if (!response.ok) {
-    // Fallback: Use nodemailer-like approach with Gmail SMTP
-    const smtpResponse = await fetch('https://smtp.gmail.com:587', {
+  // Use EmailJS-like service or direct SMTP approach
+  try {
+    // First attempt: Use a simple HTTP-based email service
+    const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
       headers: {
-        'Authorization': `Basic ${btoa(`${gmailUser}:${gmailPassword}`)}`,
-        'Content-Type': 'text/plain',
+        'Content-Type': 'application/json',
       },
-      body: emailMessage,
-    }).catch(async () => {
-      // Final fallback: Use a simple SMTP service
-      const nodemailerData = {
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false,
-        auth: {
-          user: gmailUser,
-          pass: gmailPassword,
+      body: JSON.stringify({
+        service_id: 'gmail',
+        template_id: 'template_1',
+        user_id: 'public_key',
+        template_params: {
+          from_name: 'The Fashion & Furious',
+          from_email: gmailUser,
+          to_email: to,
+          subject: subject,
+          message_html: htmlBody,
         },
-        from: gmailUser,
-        to: to,
-        subject: subject,
-        html: htmlBody,
-      };
-
-      // Use fetch to send via a mail service API
-      const mailResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send-form', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          service_id: 'gmail',
-          user_id: gmailUser,
-          template_params: {
-            from_email: gmailUser,
-            to_email: to,
-            subject: subject,
-            message_html: htmlBody,
-            access_token: gmailPassword,
-          },
-        }),
-      });
-
-      return mailResponse;
+        access_token: gmailPassword,
+      }),
     });
 
-    console.log('Email sent via SMTP');
+    if (response.ok) {
+      console.log('Email sent successfully via EmailJS');
+      return { success: true };
+    }
+  } catch (error) {
+    console.log('EmailJS failed, trying alternative method:', error);
   }
 
-  return { success: true };
+  // Alternative: Use Nodemailer-style approach with a web service
+  try {
+    const nodemailerResponse = await fetch('https://smtp-relay.sendinblue.com/api/smtp/email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Basic ${btoa(`${gmailUser}:${gmailPassword}`)}`,
+      },
+      body: JSON.stringify({
+        sender: { email: gmailUser, name: 'The Fashion & Furious' },
+        to: [{ email: to }],
+        subject: subject,
+        htmlContent: htmlBody,
+      }),
+    });
+
+    if (nodemailerResponse.ok) {
+      console.log('Email sent successfully via SMTP relay');
+      return { success: true };
+    }
+  } catch (error) {
+    console.log('SMTP relay failed:', error);
+  }
+
+  // Final fallback: Create email manually using Gmail's REST API approach
+  try {
+    // Create raw email message
+    const boundary = "boundary_" + Math.random().toString(36).substr(2, 9);
+    const rawEmail = [
+      `From: ${gmailUser}`,
+      `To: ${to}`,
+      `Subject: ${subject}`,
+      `MIME-Version: 1.0`,
+      `Content-Type: text/html; charset=UTF-8`,
+      ``,
+      htmlBody
+    ].join('\r\n');
+
+    // Base64 encode the email
+    const encodedEmail = btoa(unescape(encodeURIComponent(rawEmail)));
+
+    // Send via Gmail API (simplified)
+    const gmailResponse = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${gmailPassword}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        raw: encodedEmail
+      }),
+    });
+
+    if (gmailResponse.ok) {
+      console.log('Email sent successfully via Gmail API');
+      return { success: true };
+    }
+  } catch (error) {
+    console.log('Gmail API failed:', error);
+  }
+
+  // If all methods fail, log the error but don't fail the order
+  console.error('All email sending methods failed, but order will still be processed');
+  return { success: false, error: 'Email sending failed but order was processed' };
 };
 
 const handler = async (req: Request): Promise<Response> => {
@@ -151,6 +168,7 @@ const handler = async (req: Request): Promise<Response> => {
     const { order }: OrderNotificationRequest = await req.json();
 
     console.log("Processing order notification for order:", order.id);
+    console.log("Gmail app password available:", !!Deno.env.get("GMAIL_APP_PASSWORD"));
 
     // Create order items HTML
     const orderItemsHtml = order.items.map(item => `
@@ -219,15 +237,15 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     // Send email to yourself using Gmail
-    await sendGmailEmail(
+    const emailResult = await sendGmailEmail(
       "thefashionnfurious@gmail.com",
       `New Order Received - #${order.id}`,
       emailHtml
     );
 
-    console.log("Gmail notification sent successfully");
+    console.log("Email sending result:", emailResult);
 
-    return new Response(JSON.stringify({ success: true }), {
+    return new Response(JSON.stringify({ success: true, emailResult }), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
