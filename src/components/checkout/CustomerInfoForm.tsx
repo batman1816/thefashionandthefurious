@@ -36,7 +36,7 @@ const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
             value={customerInfo.firstName}
             onChange={onInputChange}
             required
-            className="border-gray-600 text-white placeholder-gray-400 focus:border-gray-500 bg-zinc-200"
+            className="border-gray-600 text-black placeholder-gray-400 focus:border-gray-500 bg-zinc-200"
           />
         </div>
         <div>
@@ -50,7 +50,7 @@ const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
             value={customerInfo.lastName}
             onChange={onInputChange}
             required
-            className="border-gray-600 text-white placeholder-gray-400 focus:border-gray-500 bg-zinc-200"
+            className="border-gray-600 text-black placeholder-gray-400 focus:border-gray-500 bg-zinc-200"
           />
         </div>
       </div>
@@ -67,7 +67,7 @@ const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
           value={customerInfo.email}
           onChange={onInputChange}
           required
-          className="border-gray-600 text-white placeholder-gray-400 focus:border-gray-500 bg-zinc-200"
+          className="border-gray-600 text-black placeholder-gray-400 focus:border-gray-500 bg-zinc-200"
         />
       </div>
 
@@ -83,7 +83,7 @@ const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
           onChange={onInputChange}
           rows={3}
           required
-          className="border-gray-600 text-white placeholder-gray-400 focus:border-gray-500 bg-zinc-200"
+          className="border-gray-600 text-black placeholder-gray-400 focus:border-gray-500 bg-zinc-200"
         />
       </div>
 
@@ -100,7 +100,7 @@ const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
             value={customerInfo.city}
             onChange={onInputChange}
             required
-            className="border-gray-600 text-white placeholder-gray-400 focus:border-gray-500 bg-zinc-200"
+            className="border-gray-600 text-black placeholder-gray-400 focus:border-gray-500 bg-zinc-200"
           />
         </div>
         <div>
@@ -114,7 +114,7 @@ const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
             value={customerInfo.zipCode}
             onChange={onInputChange}
             required
-            className="border-gray-600 text-white placeholder-gray-400 focus:border-gray-500 bg-zinc-200"
+            className="border-gray-600 text-black placeholder-gray-400 focus:border-gray-500 bg-zinc-200"
           />
         </div>
       </div>
