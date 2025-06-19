@@ -15,30 +15,30 @@ const ShippingOptions: React.FC<ShippingOptionsProps> = ({ shippingOption, onShi
       <div className="space-y-3">
         <div className="flex items-center">
           <input
-            id="standard"
+            id="inside-dhaka"
             name="shippingOption"
             type="radio"
-            value="standard"
-            checked={shippingOption === 'standard'}
+            value="inside-dhaka"
+            checked={shippingOption === 'inside-dhaka'}
             onChange={(e) => onShippingOptionChange(e.target.value)}
             className="h-4 w-4 text-red-600 border-gray-600 bg-gray-700 focus:ring-red-500"
           />
-          <label htmlFor="standard" className="ml-3 block text-sm text-gray-300">
-            Standard Shipping (TK50)
+          <label htmlFor="inside-dhaka" className="ml-3 block text-sm text-gray-300">
+            Inside Dhaka (TK 70)
           </label>
         </div>
         <div className="flex items-center">
           <input
-            id="express"
+            id="outside-dhaka"
             name="shippingOption"
             type="radio"
-            value="express"
-            checked={shippingOption === 'express'}
+            value="outside-dhaka"
+            checked={shippingOption === 'outside-dhaka'}
             onChange={(e) => onShippingOptionChange(e.target.value)}
             className="h-4 w-4 text-red-600 border-gray-600 bg-gray-700 focus:ring-red-500"
           />
-          <label htmlFor="express" className="ml-3 block text-sm text-gray-300">
-            Express Shipping (TK100)
+          <label htmlFor="outside-dhaka" className="ml-3 block text-sm text-gray-300">
+            Outside Dhaka (TK 140)
           </label>
         </div>
       </div>

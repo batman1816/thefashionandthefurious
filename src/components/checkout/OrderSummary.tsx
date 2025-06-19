@@ -26,7 +26,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         {cartItems.map((item, index) => (
           <div key={`${item.product.id}-${item.size}`} className="flex justify-between text-gray-300">
             <span>Product {index + 1}</span>
-            <span>৳{(item.product.price * item.quantity).toFixed(2)}</span>
+            <span>TK {(item.product.price * item.quantity).toFixed(2)}</span>
           </div>
         ))}
       </div>
@@ -35,19 +35,19 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
       <div className="border-t border-gray-600 pt-4 space-y-2">
         <div className="flex justify-between text-gray-300">
           <span>Subtotal</span>
-          <span>৳{subtotal.toFixed(2)}</span>
+          <span>TK {subtotal.toFixed(2)}</span>
         </div>
         <div className="flex justify-between text-gray-300">
           <span>Shipping</span>
-          <span>৳{shippingCost.toFixed(2)}</span>
+          <span>TK {shippingCost.toFixed(2)}</span>
         </div>
         <div className="flex justify-between text-gray-300">
           <span>Tax</span>
-          <span>৳{tax.toFixed(2)}</span>
+          <span>TK {tax.toFixed(2)}</span>
         </div>
         <div className="flex justify-between font-semibold text-white text-lg border-t border-gray-600 pt-2">
           <span>Total</span>
-          <span>৳{total.toFixed(2)}</span>
+          <span>TK {total.toFixed(2)}</span>
         </div>
       </div>
 

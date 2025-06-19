@@ -24,7 +24,7 @@ const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({ customerInfo, onInp
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label htmlFor="firstName" className="block text-sm font-medium text-gray-300 mb-2">
-            First Name <span className="text-red-500">*</span>
+            First Name
           </label>
           <Input
             type="text"
@@ -39,7 +39,7 @@ const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({ customerInfo, onInp
         </div>
         <div>
           <label htmlFor="lastName" className="block text-sm font-medium text-gray-300 mb-2">
-            Last Name <span className="text-red-500">*</span>
+            Last Name
           </label>
           <Input
             type="text"
@@ -57,7 +57,7 @@ const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({ customerInfo, onInp
       {/* Email */}
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-          Email <span className="text-red-500">*</span>
+          Email
         </label>
         <Input
           type="email"
@@ -84,6 +84,7 @@ const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({ customerInfo, onInp
           className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-gray-500"
           placeholder="123 Main St"
           rows={3}
+          required
         />
       </div>
 
@@ -101,6 +102,7 @@ const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({ customerInfo, onInp
             onChange={onInputChange}
             className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-gray-500"
             placeholder="New York"
+            required
           />
         </div>
         <div>
@@ -115,6 +117,7 @@ const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({ customerInfo, onInp
             onChange={onInputChange}
             className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-gray-500"
             placeholder="10001"
+            required
           />
         </div>
       </div>

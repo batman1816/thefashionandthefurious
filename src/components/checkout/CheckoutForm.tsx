@@ -29,8 +29,8 @@ const CheckoutForm = () => {
     city: '',
     zipCode: ''
   });
-  const [shippingOption, setShippingOption] = useState('standard');
-  const [shippingCost, setShippingCost] = useState(50);
+  const [shippingOption, setShippingOption] = useState('inside-dhaka');
+  const [shippingCost, setShippingCost] = useState(70);
   const [subtotal, setSubtotal] = useState(0);
   const [tax, setTax] = useState(0);
   const [total, setTotal] = useState(0);
@@ -45,10 +45,10 @@ const CheckoutForm = () => {
   }, [cartItems, shippingCost, getCartTotal]);
 
   useEffect(() => {
-    if (shippingOption === 'express') {
-      setShippingCost(100);
+    if (shippingOption === 'outside-dhaka') {
+      setShippingCost(140);
     } else {
-      setShippingCost(50);
+      setShippingCost(70);
     }
   }, [shippingOption]);
 
