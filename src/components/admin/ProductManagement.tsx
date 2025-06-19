@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Plus, Edit, Trash2, Upload } from 'lucide-react';
 import { useProducts } from '../../context/ProductsContext';
@@ -26,12 +25,15 @@ const ProductManagement = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    console.log('Starting image upload for product:', file.name);
     setUploading(true);
     try {
       const imageUrl = await uploadImage(file, 'product-images');
+      console.log('Image uploaded successfully:', imageUrl);
       setFormData(prev => ({ ...prev, image_url: imageUrl }));
       toast.success('Image uploaded successfully');
     } catch (error) {
+      console.error('Failed to upload image:', error);
       toast.error('Failed to upload image');
     } finally {
       setUploading(false);
@@ -56,6 +58,8 @@ const ProductManagement = () => {
       image_url: formData.image_url
     };
 
+    console.log('Submitting product data:', productData);
+
     try {
       if (editingProduct) {
         await updateProduct({ ...productData, id: editingProduct.id });
@@ -77,6 +81,7 @@ const ProductManagement = () => {
       });
     } catch (error) {
       console.error('Error saving product:', error);
+      toast.error('Failed to save product');
     }
   };
 
@@ -219,10 +224,14 @@ const ProductManagement = () => {
                   />
                   <label
                     htmlFor="image-upload"
-                    className={`cursor-pointer flex flex-col items-center justify-center text-gray-400 hover:text-white ${uploading ? 'opacity-50' : ''}`}
+                    className={`cursor-pointer flex flex-col items-center justify-center text-gray-400 hover:text-white transition-colors ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     <Upload size={32} className="mb-2" />
-                    <span>{uploading ? 'Uploading...' : 'Click to upload image'}</span>
+                    <span className="text-center">
+                      {uploading ? 'Uploading...' : 'Click to upload product image'}
+                      <br />
+                      <span className="text-sm text-gray-500">Supports JPG, PNG, WebP</span>
+                    </span>
                   </label>
                 </div>
                 
@@ -232,6 +241,10 @@ const ProductManagement = () => {
                       src={formData.image_url}
                       alt="Preview"
                       className="w-32 h-32 object-cover rounded border-2 border-gray-600"
+                      onError={(e) => {
+                        console.error('Image failed to load:', formData.image_url);
+                        e.currentTarget.src = 'https://via.placeholder.com/128x128?text=Image+Error';
+                      }}
                     />
                   </div>
                 )}
@@ -241,8 +254,8 @@ const ProductManagement = () => {
             <div className="flex gap-4 pt-4">
               <button
                 type="submit"
-                disabled={uploading}
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded disabled:opacity-50"
+                disabled={uploading || !formData.image_url}
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {editingProduct ? 'Update Product' : 'Add Product'}
               </button>
