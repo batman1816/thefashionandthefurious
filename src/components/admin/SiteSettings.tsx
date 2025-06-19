@@ -26,7 +26,7 @@ const SiteSettings = () => {
     try {
       const { data, error } = await supabase
         .from('site_settings')
-        .select('*')
+        .select('id, site_name, contact_email, support_email, shipping_cost, logo_url')
         .single();
 
       if (error && error.code !== 'PGRST116') {
@@ -34,7 +34,16 @@ const SiteSettings = () => {
       }
 
       if (data) {
-        setSettings(data);
+        // Ensure all required fields are present with defaults
+        const settingsData: SiteSettingsType = {
+          id: data.id || '',
+          site_name: data.site_name || 'The Fashion & Furious',
+          contact_email: data.contact_email || 'orders@thefashionandfurious.com',
+          support_email: data.support_email || 'support@thefashionandfurious.com',
+          shipping_cost: data.shipping_cost || 500,
+          logo_url: data.logo_url || ''
+        };
+        setSettings(settingsData);
       }
     } catch (error) {
       console.error('Error fetching settings:', error);
@@ -98,11 +107,21 @@ const SiteSettings = () => {
             shipping_cost: settings.shipping_cost,
             logo_url: settings.logo_url
           })
-          .select()
+          .select('id, site_name, contact_email, support_email, shipping_cost, logo_url')
           .single();
 
         if (error) throw error;
-        if (data) setSettings(data);
+        if (data) {
+          const newSettings: SiteSettingsType = {
+            id: data.id,
+            site_name: data.site_name,
+            contact_email: data.contact_email,
+            support_email: data.support_email,
+            shipping_cost: data.shipping_cost,
+            logo_url: data.logo_url || ''
+          };
+          setSettings(newSettings);
+        }
       }
 
       toast.success('Settings saved successfully!');
