@@ -9,8 +9,7 @@ export const products: Product[] = [
     price: 2250,
     image_url: 'https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=500&h=500&fit=crop',
     category: 'drivers',
-    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-    stock: 50
+    sizes: ['S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: '2',
@@ -19,8 +18,7 @@ export const products: Product[] = [
     price: 3250,
     image_url: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=500&h=500&fit=crop',
     category: 'drivers',
-    sizes: ['S', 'M', 'L', 'XL'],
-    stock: 30
+    sizes: ['S', 'M', 'L', 'XL']
   },
   {
     id: '3',
@@ -29,8 +27,7 @@ export const products: Product[] = [
     price: 2000,
     image_url: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=500&h=500&fit=crop',
     category: 'teams',
-    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-    stock: 75
+    sizes: ['S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: '4',
@@ -39,8 +36,7 @@ export const products: Product[] = [
     price: 2750,
     image_url: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=500&h=500&fit=crop',
     category: 'teams',
-    sizes: ['S', 'M', 'L', 'XL'],
-    stock: 40
+    sizes: ['S', 'M', 'L', 'XL']
   },
   {
     id: '5',
@@ -49,8 +45,7 @@ export const products: Product[] = [
     price: 2500,
     image_url: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=500&h=500&fit=crop',
     category: 'f1-classic',
-    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-    stock: 60
+    sizes: ['S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: '6',
@@ -59,8 +54,7 @@ export const products: Product[] = [
     price: 2400,
     image_url: 'https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=500&h=500&fit=crop',
     category: 'f1-classic',
-    sizes: ['S', 'M', 'L', 'XL'],
-    stock: 35
+    sizes: ['S', 'M', 'L', 'XL']
   },
   {
     id: '7',
@@ -69,8 +63,7 @@ export const products: Product[] = [
     price: 2100,
     image_url: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=500&h=500&fit=crop',
     category: 'teams',
-    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-    stock: 45
+    sizes: ['S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: '8',
@@ -79,7 +72,6 @@ export const products: Product[] = [
     price: 2900,
     image_url: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=500&h=500&fit=crop',
     category: 'drivers',
-    sizes: ['S', 'M', 'L', 'XL'],
-    stock: 25
+    sizes: ['S', 'M', 'L', 'XL']
   }
 ];
