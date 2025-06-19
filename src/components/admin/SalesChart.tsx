@@ -114,13 +114,13 @@ const SalesChart = () => {
   return <div className="space-y-4">
       {/* Time Period Selector */}
       <div className="flex gap-2">
-        <button onClick={() => setTimePeriod('week')} className="bg-zinc-950 hover:bg-zinc-800">
+        <button onClick={() => setTimePeriod('week')} className="bg-transparent">
           Last Week
         </button>
-        <button onClick={() => setTimePeriod('month')} className="bg-zinc-950 hover:bg-zinc-800">
+        <button onClick={() => setTimePeriod('month')} className="bg-transparent">
           Last Month
         </button>
-        <button onClick={() => setTimePeriod('year')} className="bg-zinc-950 hover:bg-zinc-800 rounded-sm">
+        <button onClick={() => setTimePeriod('year')} className="rounded-sm bg-transparent">
           Last Year
         </button>
       </div>
