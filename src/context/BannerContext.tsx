@@ -21,13 +21,18 @@ export const BannerProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchBanners = async () => {
     try {
+      console.log('Fetching banners from database...');
       const { data, error } = await supabase
         .from('banners')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching banners:', error);
+        throw error;
+      }
 
+      console.log('Banners fetched successfully:', data);
       setBanners(data || []);
     } catch (error) {
       console.error('Error fetching banners:', error);
@@ -43,28 +48,35 @@ export const BannerProvider = ({ children }: { children: ReactNode }) => {
 
   const updateBanner = async (updatedBanner: Banner) => {
     try {
+      console.log('Updating banner:', updatedBanner);
       const { error } = await supabase
         .from('banners')
         .update({
           image_url: updatedBanner.image_url,
           button_text: updatedBanner.button_text,
           button_link: updatedBanner.button_link,
-          is_active: updatedBanner.is_active
+          is_active: updatedBanner.is_active,
+          updated_at: new Date().toISOString()
         })
         .eq('id', updatedBanner.id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error updating banner:', error);
+        throw error;
+      }
 
       setBanners(prev => prev.map(b => b.id === updatedBanner.id ? updatedBanner : b));
-      toast.success('Banner updated successfully');
+      console.log('Banner updated successfully');
     } catch (error) {
       console.error('Error updating banner:', error);
       toast.error('Failed to update banner');
+      throw error;
     }
   };
 
   const addBanner = async (newBanner: Omit<Banner, 'id'>) => {
     try {
+      console.log('Adding new banner:', newBanner);
       const { data, error } = await supabase
         .from('banners')
         .insert({
@@ -76,30 +88,39 @@ export const BannerProvider = ({ children }: { children: ReactNode }) => {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error adding banner:', error);
+        throw error;
+      }
 
       setBanners(prev => [data, ...prev]);
-      toast.success('Banner added successfully');
+      console.log('Banner added successfully:', data);
     } catch (error) {
       console.error('Error adding banner:', error);
       toast.error('Failed to add banner');
+      throw error;
     }
   };
 
   const deleteBanner = async (id: string) => {
     try {
+      console.log('Deleting banner:', id);
       const { error } = await supabase
         .from('banners')
         .delete()
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error deleting banner:', error);
+        throw error;
+      }
 
       setBanners(prev => prev.filter(b => b.id !== id));
-      toast.success('Banner deleted successfully');
+      console.log('Banner deleted successfully');
     } catch (error) {
       console.error('Error deleting banner:', error);
       toast.error('Failed to delete banner');
+      throw error;
     }
   };
 

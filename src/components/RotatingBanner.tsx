@@ -5,19 +5,27 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useBanners } from '../context/BannerContext';
 
 const RotatingBanner = () => {
-  const { banners } = useBanners();
+  const { banners, loading } = useBanners();
   const activeBanners = banners.filter(banner => banner.is_active);
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
 
+  // Auto-rotate banners every 5 seconds
   useEffect(() => {
     if (activeBanners.length > 1) {
       const interval = setInterval(() => {
         setCurrentBannerIndex((prev) => (prev + 1) % activeBanners.length);
-      }, 5000); // Auto-rotate every 5 seconds
+      }, 5000);
 
       return () => clearInterval(interval);
     }
   }, [activeBanners.length]);
+
+  // Reset index if it's out of bounds
+  useEffect(() => {
+    if (currentBannerIndex >= activeBanners.length && activeBanners.length > 0) {
+      setCurrentBannerIndex(0);
+    }
+  }, [activeBanners.length, currentBannerIndex]);
 
   const nextBanner = () => {
     setCurrentBannerIndex((prev) => (prev + 1) % activeBanners.length);
@@ -26,6 +34,16 @@ const RotatingBanner = () => {
   const prevBanner = () => {
     setCurrentBannerIndex((prev) => (prev - 1 + activeBanners.length) % activeBanners.length);
   };
+
+  if (loading) {
+    return (
+      <section className="relative bg-gradient-to-r from-red-600 via-black to-red-600 text-white py-32 min-h-[80vh] flex items-center">
+        <div className="container mx-auto px-4 text-center">
+          <div className="text-white">Loading...</div>
+        </div>
+      </section>
+    );
+  }
 
   if (activeBanners.length === 0) {
     return (
@@ -64,7 +82,11 @@ const RotatingBanner = () => {
         <img
           src={currentBanner.image_url}
           alt="Banner"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-opacity duration-500"
+          onError={(e) => {
+            console.error('Failed to load banner image:', currentBanner.image_url);
+            e.currentTarget.style.display = 'none';
+          }}
         />
         
         {/* Overlay for better text readability */}
@@ -84,27 +106,29 @@ const RotatingBanner = () => {
           </div>
         </div>
 
-        {/* Navigation arrows */}
+        {/* Navigation arrows - only show if more than one banner */}
         {activeBanners.length > 1 && (
           <>
             <button
               onClick={prevBanner}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-2 rounded-full transition-all duration-300"
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-2 rounded-full transition-all duration-300 z-10"
+              aria-label="Previous banner"
             >
               <ChevronLeft size={24} />
             </button>
             <button
               onClick={nextBanner}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-2 rounded-full transition-all duration-300"
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-2 rounded-full transition-all duration-300 z-10"
+              aria-label="Next banner"
             >
               <ChevronRight size={24} />
             </button>
           </>
         )}
 
-        {/* Dots indicator */}
+        {/* Dots indicator - only show if more than one banner */}
         {activeBanners.length > 1 && (
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
             {activeBanners.map((_, index) => (
               <button
                 key={index}
@@ -112,6 +136,7 @@ const RotatingBanner = () => {
                 className={`w-3 h-3 rounded-full transition-all duration-300 ${
                   index === currentBannerIndex ? 'bg-white' : 'bg-white bg-opacity-50'
                 }`}
+                aria-label={`Go to banner ${index + 1}`}
               />
             ))}
           </div>

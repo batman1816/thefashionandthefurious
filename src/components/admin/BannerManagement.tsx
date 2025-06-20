@@ -29,10 +29,11 @@ const BannerManagement = () => {
       } else {
         await addBanner(bannerData);
         toast.success('Banner added successfully');
-        setIsAddingBanner(false);
       }
+      setIsAddingBanner(false);
     } catch (error) {
       console.error('Error saving banner:', error);
+      toast.error(`Failed to ${('id' in bannerData) ? 'update' : 'add'} banner. Please try again.`);
       throw error;
     }
   };
@@ -53,6 +54,7 @@ const BannerManagement = () => {
         ...banner,
         is_active: !banner.is_active
       });
+      toast.success(`Banner ${banner.is_active ? 'deactivated' : 'activated'} successfully`);
     } catch (error) {
       console.error('Error toggling banner status:', error);
       toast.error('Failed to update banner status');
@@ -60,7 +62,7 @@ const BannerManagement = () => {
   };
 
   const handleDelete = async (banner: Banner) => {
-    if (!confirm('Are you sure you want to delete this banner?')) {
+    if (!confirm('Are you sure you want to delete this banner? This action cannot be undone.')) {
       return;
     }
 
@@ -69,12 +71,15 @@ const BannerManagement = () => {
       if (banner.image_url.includes('supabase')) {
         try {
           await deleteImage(banner.image_url, 'banner-images');
+          console.log('Banner image deleted from storage');
         } catch (error) {
-          console.error('Error deleting image:', error);
+          console.error('Error deleting image from storage:', error);
           // Continue with banner deletion even if image deletion fails
         }
       }
+      
       await deleteBanner(banner.id);
+      toast.success('Banner deleted successfully');
     } catch (error) {
       console.error('Error deleting banner:', error);
       toast.error('Failed to delete banner');
@@ -96,7 +101,7 @@ const BannerManagement = () => {
         {!isAddingBanner && (
           <button
             onClick={() => setIsAddingBanner(true)}
-            className="text-white px-4 py-2 rounded flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700"
+            className="text-white px-4 py-2 rounded flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 transition-colors"
           >
             <Plus size={20} />
             Add Banner
