@@ -26,6 +26,7 @@ const BannerManagement = () => {
   });
 
   const predefinedLinks = [
+    { value: '', label: 'No Link' },
     { value: '/drivers', label: 'Drivers Collection' },
     { value: '/f1-classic', label: 'F1 Classic Collection' },
     { value: '/teams', label: 'Teams Collection' },
@@ -38,9 +39,24 @@ const BannerManagement = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select a valid image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size must be less than 5MB');
+      return;
+    }
+
     setUploading(true);
     try {
+      console.log('Starting image upload for banner...');
       const imageUrl = await uploadImage(file, 'banner-images');
+      console.log('Banner image uploaded successfully:', imageUrl);
+      
       setFormData(prev => ({
         ...prev,
         image_url: imageUrl
@@ -48,7 +64,7 @@ const BannerManagement = () => {
       toast.success('Banner image uploaded successfully');
     } catch (error) {
       console.error('Upload error:', error);
-      toast.error('Failed to upload banner image');
+      toast.error('Failed to upload banner image. Please try again.');
     } finally {
       setUploading(false);
     }
@@ -62,22 +78,31 @@ const BannerManagement = () => {
       return;
     }
 
-    const bannerData = {
-      image_url: formData.image_url,
-      button_text: formData.button_text || undefined,
-      button_link: formData.button_link || undefined,
-      is_active: formData.is_active
-    };
+    if (!formData.image_url.trim()) {
+      toast.error('Please upload a valid banner image');
+      return;
+    }
 
     try {
+      const bannerData = {
+        image_url: formData.image_url,
+        button_text: formData.button_text || null,
+        button_link: formData.button_link || null,
+        is_active: formData.is_active
+      };
+
+      console.log('Submitting banner data:', bannerData);
+
       if (editingBanner) {
         await updateBanner({
           ...bannerData,
           id: editingBanner.id
         });
         setEditingBanner(null);
+        toast.success('Banner updated successfully');
       } else {
         await addBanner(bannerData);
+        toast.success('Banner added successfully');
         setIsAddingBanner(false);
       }
 
@@ -90,7 +115,7 @@ const BannerManagement = () => {
       });
     } catch (error) {
       console.error('Error saving banner:', error);
-      toast.error('Failed to save banner');
+      toast.error(`Failed to ${editingBanner ? 'update' : 'add'} banner. Please try again.`);
     }
   };
 
@@ -158,7 +183,7 @@ const BannerManagement = () => {
     }
   };
 
-  const isCustomLink = !predefinedLinks.some(link => link.value === formData.button_link) || formData.button_link === '';
+  const isCustomLink = formData.button_link && !predefinedLinks.some(link => link.value === formData.button_link && link.value !== 'custom');
 
   if (loading) {
     return (
@@ -203,12 +228,16 @@ const BannerManagement = () => {
                   />
                   <label
                     htmlFor="banner-upload"
-                    className={`cursor-pointer flex flex-col items-center justify-center text-gray-400 hover:text-white ${
-                      uploading ? 'opacity-50' : ''
+                    className={`cursor-pointer flex flex-col items-center justify-center text-gray-400 hover:text-white transition-colors ${
+                      uploading ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                   >
                     <Upload size={32} className="mb-2" />
-                    <span>{uploading ? 'Uploading...' : 'Click to upload banner image'}</span>
+                    <span className="text-center">
+                      {uploading ? 'Uploading...' : 'Click to upload banner image'}
+                      <br />
+                      <small className="text-gray-500">Max size: 5MB</small>
+                    </span>
                   </label>
                 </div>
                 
@@ -216,8 +245,12 @@ const BannerManagement = () => {
                   <div className="mt-4">
                     <img
                       src={formData.image_url}
-                      alt="Preview"
+                      alt="Banner Preview"
                       className="w-full max-w-md h-32 object-cover rounded border-2 border-gray-600"
+                      onError={(e) => {
+                        console.error('Failed to load banner preview image');
+                        e.currentTarget.style.display = 'none';
+                      }}
                     />
                   </div>
                 )}
@@ -234,8 +267,9 @@ const BannerManagement = () => {
                     ...prev,
                     button_text: e.target.value
                   }))}
-                  className="w-full px-3 py-2 bg-gray-700 text-white rounded"
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-gray-500 focus:outline-none"
                   placeholder="e.g., Shop Now"
+                  maxLength={50}
                 />
               </div>
               <div>
@@ -243,9 +277,8 @@ const BannerManagement = () => {
                 <select
                   value={isCustomLink ? 'custom' : formData.button_link}
                   onChange={(e) => handleLinkChange(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-700 text-white rounded mb-2"
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded mb-2 border border-gray-600 focus:border-gray-500 focus:outline-none"
                 >
-                  <option value="">Select a page...</option>
                   {predefinedLinks.map(link => (
                     <option key={link.value} value={link.value}>
                       {link.label}
@@ -260,7 +293,7 @@ const BannerManagement = () => {
                       ...prev,
                       button_link: e.target.value
                     }))}
-                    className="w-full px-3 py-2 bg-gray-700 text-white rounded"
+                    className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-gray-500 focus:outline-none"
                     placeholder="Enter custom link (e.g., /custom-page)"
                   />
                 )}
@@ -284,8 +317,8 @@ const BannerManagement = () => {
             <div className="flex gap-4 pt-4">
               <button
                 type="submit"
-                disabled={uploading}
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded disabled:opacity-50"
+                disabled={uploading || !formData.image_url}
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {editingBanner ? 'Update Banner' : 'Add Banner'}
               </button>
