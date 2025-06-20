@@ -7,6 +7,7 @@ interface CustomerInfo {
   firstName: string;
   lastName: string;
   email: string;
+  phone: string;
   address: string;
   city: string;
   zipCode: string;
@@ -65,6 +66,22 @@ const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
           id="email"
           name="email"
           value={customerInfo.email}
+          onChange={onInputChange}
+          required
+          className="border-gray-600 text-black placeholder-gray-400 focus:border-gray-500 bg-zinc-200"
+        />
+      </div>
+
+      {/* Phone Number */}
+      <div>
+        <label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-2">
+          Phone Number
+        </label>
+        <Input
+          type="tel"
+          id="phone"
+          name="phone"
+          value={customerInfo.phone}
           onChange={onInputChange}
           required
           className="border-gray-600 text-black placeholder-gray-400 focus:border-gray-500 bg-zinc-200"

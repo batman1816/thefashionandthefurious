@@ -1,10 +1,11 @@
 
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { X, Minus, Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { X, Minus, Plus, Ruler } from 'lucide-react';
 import { Product } from '../types/Product';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
+import ProductImageCarousel from './ProductImageCarousel';
 
 interface ProductModalProps {
   product: Product;
@@ -13,18 +14,20 @@ interface ProductModalProps {
 
 const ProductModal = ({ product, onClose }: ProductModalProps) => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { addToCart } = useCart();
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
 
   console.log('ProductModal rendered for:', product.name);
 
+  // Filter out XS from sizes
+  const availableSizes = product.sizes.filter(size => size.toUpperCase() !== 'XS');
+
   useEffect(() => {
-    if (product && product.sizes.length > 0) {
-      setSelectedSize(product.sizes[0]);
+    if (availableSizes.length > 0) {
+      setSelectedSize(availableSizes[0]);
     }
-  }, [product]);
+  }, [availableSizes]);
 
   const handleAddToCart = () => {
     if (!selectedSize) {
@@ -34,7 +37,6 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
     addToCart(product, selectedSize, quantity);
     toast.success(`Added ${product.name} to cart!`);
     onClose();
-    // Stay on the same page when adding to cart
   };
 
   const handleBuyNow = () => {
@@ -45,7 +47,6 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
     addToCart(product, selectedSize, quantity);
     toast.success(`Added ${product.name} to cart!`);
     onClose();
-    // Navigate to checkout
     navigate('/checkout');
   };
 
@@ -61,7 +62,12 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
     navigate(`/product/${product.id}`);
   };
 
-  const primaryImage = product.images && product.images.length > 0 ? product.images[0] : product.image_url;
+  // Prepare images for carousel
+  const carouselImages = product.images && product.images.length > 0 
+    ? product.images 
+    : product.image_url 
+      ? [product.image_url] 
+      : [];
 
   return (
     <div 
@@ -77,15 +83,13 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-2">
-          {/* Product Image - Bigger and centered */}
+          {/* Product Image Carousel */}
           <div className="flex items-center justify-center p-8">
-            <div className="aspect-square w-full max-w-md overflow-hidden bg-gray-50">
-              <img
-                src={primaryImage}
-                alt={product.name}
-                className="w-full h-full object-cover"
-              />
-            </div>
+            <ProductImageCarousel 
+              images={carouselImages}
+              productName={product.name}
+              className="aspect-square w-full max-w-md"
+            />
           </div>
 
           {/* Product Info */}
@@ -102,11 +106,11 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
               Shipping calculated at checkout.
             </p>
 
-            {/* Size Selection - Single Row */}
-            <div className="mb-8">
+            {/* Size Selection */}
+            <div className="mb-4">
               <h3 className="text-sm font-normal mb-4 text-black">SIZE</h3>
               <div className="flex flex-wrap gap-2 max-w-full overflow-x-auto">
-                {product.sizes.map(size => (
+                {availableSizes.map(size => (
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
@@ -120,6 +124,14 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* Size Chart */}
+            <div className="mb-8">
+              <button className="flex items-center text-sm font-normal text-black hover:text-gray-600 transition-colors duration-200">
+                <Ruler size={14} className="mr-2" />
+                Size Chart
+              </button>
             </div>
 
             {/* Quantity */}
@@ -145,7 +157,7 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
               </div>
             </div>
 
-            {/* Buttons with click animations */}
+            {/* Buttons */}
             <div className="space-y-4 mb-8">
               <button
                 onClick={handleAddToCart}

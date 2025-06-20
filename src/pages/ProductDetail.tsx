@@ -1,10 +1,11 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Minus, Plus } from 'lucide-react';
+import { Minus, Plus, Ruler } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import FormattedText from '../components/FormattedText';
+import ProductImageCarousel from '../components/ProductImageCarousel';
 import { useProducts } from '../context/ProductsContext';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
@@ -19,11 +20,14 @@ const ProductDetail = () => {
   
   const product = products.find(p => p.id === id);
 
+  // Filter out XS from sizes
+  const availableSizes = product ? product.sizes.filter(size => size.toUpperCase() !== 'XS') : [];
+
   useEffect(() => {
-    if (product && product.sizes.length > 0) {
-      setSelectedSize(product.sizes[0]);
+    if (availableSizes.length > 0) {
+      setSelectedSize(availableSizes[0]);
     }
-  }, [product]);
+  }, [availableSizes]);
 
   if (!product) {
     return (
@@ -44,9 +48,15 @@ const ProductDetail = () => {
     }
     addToCart(product, selectedSize, quantity);
     toast.success(`Added ${product.name} to cart!`);
-    // Redirect to checkout after adding to cart
     navigate('/checkout');
   };
+
+  // Prepare images for carousel
+  const carouselImages = product.images && product.images.length > 0 
+    ? product.images 
+    : product.image_url 
+      ? [product.image_url] 
+      : [];
 
   return (
     <div className="min-h-screen bg-white">
@@ -54,14 +64,12 @@ const ProductDetail = () => {
       
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Product Image */}
-          <div className="aspect-square overflow-hidden bg-gray-100">
-            <img
-              src={product.image_url}
-              alt={product.name}
-              className="w-full h-full object-cover"
-            />
-          </div>
+          {/* Product Image Carousel */}
+          <ProductImageCarousel 
+            images={carouselImages}
+            productName={product.name}
+            className="aspect-square"
+          />
 
           {/* Product Info */}
           <div className="flex flex-col">
@@ -78,10 +86,10 @@ const ProductDetail = () => {
             </div>
 
             {/* Size Selection */}
-            <div className="mb-6">
+            <div className="mb-4">
               <h3 className="text-lg font-semibold mb-3">Size</h3>
               <div className="flex flex-wrap gap-2">
-                {product.sizes.map(size => (
+                {availableSizes.map(size => (
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
@@ -95,6 +103,14 @@ const ProductDetail = () => {
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* Size Chart */}
+            <div className="mb-6">
+              <button className="flex items-center text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200">
+                <Ruler size={16} className="mr-2" />
+                Size Chart
+              </button>
             </div>
 
             {/* Quantity */}
