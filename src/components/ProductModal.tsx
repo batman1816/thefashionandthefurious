@@ -21,14 +21,14 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
 
   console.log('ProductModal rendered for:', product.name);
 
-  // Filter out XS from sizes
-  const availableSizes = product.sizes.filter(size => size.toUpperCase() !== 'XS');
+  // Filter out XS from sizes and memoize the result
+  const availableSizes = product.sizes?.filter(size => size.toUpperCase() !== 'XS') || [];
 
   useEffect(() => {
-    if (availableSizes.length > 0) {
+    if (availableSizes.length > 0 && !selectedSize) {
       setSelectedSize(availableSizes[0]);
     }
-  }, [availableSizes]);
+  }, [availableSizes, selectedSize]);
 
   const handleAddToCart = () => {
     if (!selectedSize) {
@@ -61,6 +61,10 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
   const handleViewDetails = () => {
     onClose();
     navigate(`/product/${product.id}`);
+  };
+
+  const handleSizeSelect = (size: string) => {
+    setSelectedSize(size);
   };
 
   // Prepare images for carousel
@@ -108,24 +112,26 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
             </p>
 
             {/* Size Selection */}
-            <div className="mb-4">
-              <h3 className="text-sm font-normal mb-4 text-black">SIZE</h3>
-              <div className="flex flex-wrap gap-2 max-w-full overflow-x-auto">
-                {availableSizes.map(size => (
-                  <button
-                    key={size}
-                    onClick={() => setSelectedSize(size)}
-                    className={`flex-shrink-0 px-4 py-2 text-sm font-normal transition-all duration-200 border ${
-                      selectedSize === size
-                        ? 'bg-black text-white border-black'
-                        : 'bg-white text-black border-gray-300 hover:border-black'
-                    }`}
-                  >
-                    {size}
-                  </button>
-                ))}
+            {availableSizes.length > 0 && (
+              <div className="mb-4">
+                <h3 className="text-sm font-normal mb-4 text-black">SIZE</h3>
+                <div className="flex flex-wrap gap-2 max-w-full overflow-x-auto">
+                  {availableSizes.map(size => (
+                    <button
+                      key={size}
+                      onClick={() => handleSizeSelect(size)}
+                      className={`flex-shrink-0 px-4 py-2 text-sm font-normal transition-all duration-200 border ${
+                        selectedSize === size
+                          ? 'bg-black text-white border-black'
+                          : 'bg-white text-black border-gray-300 hover:border-black'
+                      }`}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Size Chart */}
             <div className="mb-8">

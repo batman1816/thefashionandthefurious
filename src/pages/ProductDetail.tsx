@@ -25,10 +25,10 @@ const ProductDetail = () => {
   const availableSizes = product ? product.sizes.filter(size => size.toUpperCase() !== 'XS') : [];
 
   useEffect(() => {
-    if (availableSizes.length > 0) {
+    if (availableSizes.length > 0 && !selectedSize) {
       setSelectedSize(availableSizes[0]);
     }
-  }, [availableSizes]);
+  }, [availableSizes, selectedSize]);
 
   if (!product) {
     return (
@@ -50,6 +50,10 @@ const ProductDetail = () => {
     addToCart(product, selectedSize, quantity);
     toast.success(`Added ${product.name} to cart!`);
     navigate('/checkout');
+  };
+
+  const handleSizeSelect = (size: string) => {
+    setSelectedSize(size);
   };
 
   // Prepare images for carousel
@@ -87,24 +91,26 @@ const ProductDetail = () => {
             </div>
 
             {/* Size Selection */}
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold mb-3">Size</h3>
-              <div className="flex flex-wrap gap-2">
-                {availableSizes.map(size => (
-                  <button
-                    key={size}
-                    onClick={() => setSelectedSize(size)}
-                    className={`px-4 py-2 border-2 font-medium transition-colors ${
-                      selectedSize === size
-                        ? 'border-black bg-black text-white'
-                        : 'border-gray-300 hover:border-gray-400'
-                    }`}
-                  >
-                    {size}
-                  </button>
-                ))}
+            {availableSizes.length > 0 && (
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold mb-3">Size</h3>
+                <div className="flex flex-wrap gap-2">
+                  {availableSizes.map(size => (
+                    <button
+                      key={size}
+                      onClick={() => handleSizeSelect(size)}
+                      className={`px-4 py-2 border-2 font-medium transition-colors ${
+                        selectedSize === size
+                          ? 'border-black bg-black text-white'
+                          : 'border-gray-300 hover:border-gray-400'
+                      }`}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Size Chart */}
             <div className="mb-6">
