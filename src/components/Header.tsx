@@ -1,14 +1,18 @@
+
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, ShoppingCart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const {
     cartItems
   } = useCart();
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0);
-  return <header className="bg-black shadow-sm border-b border-gray-800">
+
+  return (
+    <header className="bg-black shadow-sm border-b border-black">
       {/* Top Bar */}
       <div className="text-white text-center py-1 text-xs bg-zinc-950">
         
@@ -42,14 +46,17 @@ const Header = () => {
           {/* Cart Icon */}
           <Link to="/cart" className="relative">
             <ShoppingCart size={20} className="text-white hover:text-red-500 transition-colors" />
-            {cartItemsCount > 0 && <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+            {cartItemsCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
                 {cartItemsCount}
-              </span>}
+              </span>
+            )}
           </Link>
         </div>
 
         {/* Mobile Navigation */}
-        {isMenuOpen && <nav className="md:hidden py-4 border-t border-gray-800">
+        {isMenuOpen && (
+          <nav className="md:hidden py-4 border-t border-gray-800">
             <div className="flex flex-col space-y-4">
               <Link to="/drivers" className="text-white hover:text-red-500 transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>
                 Drivers
@@ -61,8 +68,11 @@ const Header = () => {
                 Teams
               </Link>
             </div>
-          </nav>}
+          </nav>
+        )}
       </div>
-    </header>;
+    </header>
+  );
 };
+
 export default Header;
