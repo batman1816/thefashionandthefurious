@@ -1,11 +1,12 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Minus, Plus, Ruler } from 'lucide-react';
+import { X, Minus, Plus } from 'lucide-react';
 import { Product } from '../types/Product';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 import ProductImageCarousel from './ProductImageCarousel';
+import SizeChart from './SizeChart';
 
 interface ProductModalProps {
   product: Product;
@@ -128,10 +129,7 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
 
             {/* Size Chart */}
             <div className="mb-8">
-              <button className="flex items-center text-sm font-normal text-black hover:text-gray-600 transition-colors duration-200">
-                <Ruler size={14} className="mr-2" />
-                Size Chart
-              </button>
+              <SizeChart />
             </div>
 
             {/* Quantity */}

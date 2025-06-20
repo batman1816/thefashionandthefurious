@@ -1,11 +1,12 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Minus, Plus, Ruler } from 'lucide-react';
+import { Minus, Plus } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import FormattedText from '../components/FormattedText';
 import ProductImageCarousel from '../components/ProductImageCarousel';
+import SizeChart from '../components/SizeChart';
 import { useProducts } from '../context/ProductsContext';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
@@ -107,10 +108,7 @@ const ProductDetail = () => {
 
             {/* Size Chart */}
             <div className="mb-6">
-              <button className="flex items-center text-lg font-semibold text-gray-900 hover:text-gray-600 transition-colors duration-200">
-                <Ruler size={16} className="mr-2" />
-                Size Chart
-              </button>
+              <SizeChart />
             </div>
 
             {/* Quantity */}
