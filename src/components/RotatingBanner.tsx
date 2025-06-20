@@ -92,19 +92,17 @@ const RotatingBanner = () => {
         {/* Overlay for better text readability */}
         <div className="absolute inset-0 bg-black bg-opacity-30"></div>
         
-        {/* Banner Content */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center text-white z-10">
-            {currentBanner.button_text && currentBanner.button_link && (
-              <Link
-                to={currentBanner.button_link}
-                className="inline-block bg-red-600 hover:bg-red-700 text-white px-8 py-3 font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
-              >
-                {currentBanner.button_text}
-              </Link>
-            )}
+        {/* Banner Button - Bottom Center */}
+        {currentBanner.button_text && currentBanner.button_link && (
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">
+            <Link
+              to={currentBanner.button_link}
+              className="inline-block bg-transparent border-2 border-white text-white px-8 py-3 font-semibold text-lg tracking-wide hover:bg-white hover:text-black transition-all duration-300"
+            >
+              {currentBanner.button_text}
+            </Link>
           </div>
-        </div>
+        )}
 
         {/* Navigation arrows - only show if more than one banner */}
         {activeBanners.length > 1 && (
