@@ -15,7 +15,18 @@ const ProductGrid = ({ products }: ProductGridProps) => {
 
   const handleChooseOptions = (product: Product, e: React.MouseEvent) => {
     e.stopPropagation();
+    console.log('Choose options clicked for:', product.name);
     setSelectedProduct(product);
+  };
+
+  const handleProductClick = (product: Product) => {
+    console.log('Product clicked:', product.name);
+    setSelectedProduct(product);
+  };
+
+  const handleCloseModal = () => {
+    console.log('Modal closed');
+    setSelectedProduct(null);
   };
 
   return (
@@ -29,20 +40,36 @@ const ProductGrid = ({ products }: ProductGridProps) => {
             <div 
               key={product.id} 
               className="group cursor-pointer bg-white"
-              onClick={() => setSelectedProduct(product)}
+              onClick={() => handleProductClick(product)}
             >
               {/* Product Image */}
               <div className="aspect-square overflow-hidden bg-gray-50 relative mb-4">
-                <img
-                  src={primaryImage}
-                  alt={product.name}
-                  className="w-full h-full object-cover transition-opacity duration-500 ease-in-out group-hover:opacity-0"
-                />
-                <img
-                  src={hoverImage}
-                  alt={product.name}
-                  className="w-full h-full object-cover absolute inset-0 opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100"
-                />
+                {primaryImage ? (
+                  <>
+                    <img
+                      src={primaryImage}
+                      alt={product.name}
+                      className="w-full h-full object-cover transition-opacity duration-500 ease-in-out group-hover:opacity-0"
+                      onError={(e) => {
+                        console.log('Primary image failed to load for:', product.name);
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                    <img
+                      src={hoverImage}
+                      alt={product.name}
+                      className="w-full h-full object-cover absolute inset-0 opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100"
+                      onError={(e) => {
+                        console.log('Hover image failed to load for:', product.name);
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                  </>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-500">
+                    No Image
+                  </div>
+                )}
               </div>
               
               {/* Product Info */}
@@ -73,7 +100,7 @@ const ProductGrid = ({ products }: ProductGridProps) => {
       {selectedProduct && (
         <ProductModal 
           product={selectedProduct} 
-          onClose={() => setSelectedProduct(null)} 
+          onClose={handleCloseModal} 
         />
       )}
     </>
