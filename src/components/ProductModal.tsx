@@ -180,7 +180,7 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
             {/* View Details Link */}
             <button 
               onClick={handleViewDetails}
-              className="text-sm text-gray-500 hover:text-black transition-colors duration-200 underline text-left group flex items-center"
+              className="text-sm text-gray-500 hover:text-black transition-colors duration-200 text-left group flex items-center"
             >
               View full details 
               <span className="ml-2 inline-block transition-transform duration-200 group-hover:translate-x-1">→</span>
