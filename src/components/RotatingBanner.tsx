@@ -109,35 +109,19 @@ const RotatingBanner = () => {
           <>
             <button
               onClick={prevBanner}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-2 rounded-full transition-all duration-300 z-10"
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 transition-all duration-300 z-10"
               aria-label="Previous banner"
             >
-              <ChevronLeft size={24} />
+              <ChevronLeft size={32} />
             </button>
             <button
               onClick={nextBanner}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-2 rounded-full transition-all duration-300 z-10"
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 transition-all duration-300 z-10"
               aria-label="Next banner"
             >
-              <ChevronRight size={24} />
+              <ChevronRight size={32} />
             </button>
           </>
-        )}
-
-        {/* Dots indicator - only show if more than one banner */}
-        {activeBanners.length > 1 && (
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
-            {activeBanners.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentBannerIndex(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  index === currentBannerIndex ? 'bg-white' : 'bg-white bg-opacity-50'
-                }`}
-                aria-label={`Go to banner ${index + 1}`}
-              />
-            ))}
-          </div>
         )}
       </div>
     </section>
