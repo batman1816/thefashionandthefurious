@@ -1,12 +1,15 @@
 
 import { LogOut } from 'lucide-react';
 import SalesChart from './SalesChart';
+import { useSiteSettings } from '../../hooks/useSiteSettings';
 
 interface AdminDashboardProps {
   onLogout: () => void;
 }
 
 const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
+  const { analytics, loading } = useSiteSettings();
+
   return (
     <div className="min-h-screen bg-gray-950">
       {/* Header */}
@@ -28,6 +31,22 @@ const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
         <div className="rounded-lg p-6 bg-zinc-800">
           <h3 className="text-xl font-semibold mb-6 text-white">Sales Overview</h3>
           <SalesChart />
+          
+          {/* Total Sales and Orders Summary */}
+          <div className="grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-gray-700">
+            <div className="p-4 rounded text-center bg-zinc-900">
+              <div className="text-2xl font-bold text-white">
+                {loading ? '...' : `TK${analytics.total_revenue.toFixed(2)}`}
+              </div>
+              <div className="text-sm text-gray-400">Total Sales</div>
+            </div>
+            <div className="p-4 rounded text-center bg-zinc-900">
+              <div className="text-2xl font-bold text-white">
+                {loading ? '...' : analytics.total_orders}
+              </div>
+              <div className="text-sm text-gray-400">Total Orders</div>
+            </div>
+          </div>
         </div>
       </main>
     </div>
