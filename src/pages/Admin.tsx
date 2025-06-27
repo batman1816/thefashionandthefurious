@@ -59,7 +59,7 @@ const Admin = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
-          <div className="lg:w-64 bg-gray-800 rounded-lg p-6">
+          <div className="lg:w-64 rounded-lg p-6 bg-zinc-900">
             <h2 className="text-xl font-bold text-white mb-6">Admin Panel</h2>
             <nav className="space-y-2">
               {[{
@@ -94,7 +94,7 @@ const Admin = () => {
           </div>
 
           {/* Main Content */}
-          <div className="flex-1 bg-gray-800 rounded-lg p-8">
+          <div className="flex-1 rounded-lg p-8 bg-zinc-950">
             {renderContent()}
           </div>
         </div>
