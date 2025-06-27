@@ -33,6 +33,7 @@ const MakeWebhook = ({ onWebhookSave }: MakeWebhookProps) => {
     localStorage.setItem('make_webhook_url', webhookUrl);
     onWebhookSave?.(webhookUrl);
     toast.success('Make.com webhook URL saved successfully!');
+    console.log('✅ Webhook URL saved to localStorage:', webhookUrl);
   };
 
   const handleTestWebhook = async () => {
@@ -42,33 +43,58 @@ const MakeWebhook = ({ onWebhookSave }: MakeWebhookProps) => {
     }
 
     setIsLoading(true);
-    console.log('Testing Make.com webhook:', webhookUrl);
+    console.log('🧪 Testing Make.com webhook:', webhookUrl);
 
     try {
       const testData = {
         test: true,
         timestamp: new Date().toISOString(),
         message: 'Test webhook from The Fashion & Furious',
-        source: 'webhook_test'
+        source: 'webhook_test',
+        test_order: {
+          orderId: 'TEST-123',
+          customerName: 'Test Customer',
+          customerEmail: 'test@example.com',
+          total: 100,
+          items: [
+            {
+              productName: 'Test Product',
+              productPrice: 100,
+              size: 'M',
+              quantity: 1,
+              total: 100
+            }
+          ]
+        }
       };
 
-      await fetch(webhookUrl, {
+      console.log('🧪 Test payload:', JSON.stringify(testData, null, 2));
+
+      const response = await fetch(webhookUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        mode: 'no-cors',
         body: JSON.stringify(testData),
       });
 
-      toast.success('Test webhook sent! Check your Make.com scenario to see if it was received.');
+      console.log('🧪 Test response status:', response.status);
+      console.log('🧪 Test response ok:', response.ok);
+
+      if (response.ok) {
+        toast.success('Test webhook sent successfully! Check your Make.com scenario.');
+      } else {
+        toast.error(`Test webhook failed with status: ${response.status}`);
+      }
     } catch (error) {
-      console.error('Error testing webhook:', error);
+      console.error('❌ Error testing webhook:', error);
       toast.error('Failed to send test webhook. Please check the URL and try again.');
     } finally {
       setIsLoading(false);
     }
   };
+
+  const currentUrl = localStorage.getItem('make_webhook_url');
 
   return (
     <Card className="bg-gray-800 border-gray-700">
@@ -92,6 +118,14 @@ const MakeWebhook = ({ onWebhookSave }: MakeWebhookProps) => {
             Enter your Make.com webhook URL to receive order notifications
           </p>
         </div>
+
+        {currentUrl && (
+          <div className="bg-green-900/20 border border-green-700 rounded-lg p-3">
+            <p className="text-green-400 text-sm">
+              ✅ Webhook URL is configured: {currentUrl.substring(0, 50)}...
+            </p>
+          </div>
+        )}
         
         <div className="flex gap-3">
           <Button
@@ -118,7 +152,18 @@ const MakeWebhook = ({ onWebhookSave }: MakeWebhookProps) => {
             <li>Copy the webhook URL from Make.com</li>
             <li>Paste it above and click "Save Webhook"</li>
             <li>Use "Test Webhook" to verify the connection</li>
+            <li>Add an Email module after the webhook to send notifications</li>
           </ol>
+        </div>
+
+        <div className="bg-yellow-900/20 border border-yellow-700 rounded-lg p-4">
+          <h4 className="text-yellow-400 font-medium mb-2">Troubleshooting:</h4>
+          <ul className="text-sm text-yellow-300 space-y-1 list-disc list-inside">
+            <li>Check browser console for detailed webhook logs</li>
+            <li>Ensure your Make.com scenario is active</li>
+            <li>Verify the webhook URL is correct</li>
+            <li>Test with a real order after testing the webhook</li>
+          </ul>
         </div>
       </CardContent>
     </Card>

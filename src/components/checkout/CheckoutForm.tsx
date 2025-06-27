@@ -104,13 +104,16 @@ const CheckoutForm = () => {
         status: 'pending'
       };
 
-      console.log('About to insert order into database:', orderId);
+      console.log('🛒 CHECKOUT DEBUG: About to insert order into database:', orderId);
       const { error } = await supabase.from('orders').insert(orderData);
       
-      if (error) throw error;
-      console.log('Order successfully inserted into database:', orderId);
+      if (error) {
+        console.error('❌ Database error:', error);
+        throw error;
+      }
+      console.log('✅ Order successfully inserted into database:', orderId);
 
-      // Prepare data for Make.com webhook
+      // Prepare webhook data immediately after successful database insert
       const makeWebhookData: OrderWebhookData = {
         orderId: orderId,
         customerName: `${customerInfo.firstName} ${customerInfo.lastName}`,
@@ -134,23 +137,29 @@ const CheckoutForm = () => {
         status: 'pending'
       };
 
-      console.log('About to send order to Make.com webhook:', orderId);
-      // Send order to Make.com webhook (non-blocking)
-      sendOrderToMake(makeWebhookData).then(success => {
-        if (success) {
-          console.log('Order sent to Make.com successfully:', orderId);
+      console.log('🔗 CHECKOUT DEBUG: About to send order to Make.com webhook:', orderId);
+      
+      // Send to Make.com webhook - wait for the result
+      try {
+        const webhookSuccess = await sendOrderToMake(makeWebhookData);
+        if (webhookSuccess) {
+          console.log('✅ CHECKOUT DEBUG: Order sent to Make.com successfully:', orderId);
+          toast.success('Order placed and sent to Make.com successfully!');
         } else {
-          console.log('Failed to send order to Make.com:', orderId);
+          console.log('❌ CHECKOUT DEBUG: Failed to send order to Make.com:', orderId);
+          toast.success('Order placed successfully! (Webhook delivery failed - check console)');
         }
-      }).catch(error => {
-        console.error('Failed to send order to Make.com:', error);
-      });
+      } catch (webhookError) {
+        console.error('❌ CHECKOUT DEBUG: Webhook error:', webhookError);
+        toast.success('Order placed successfully! (Webhook delivery failed - check console)');
+      }
 
+      // Clear cart and navigate regardless of webhook status
       clearCart();
-      toast.success('Order placed successfully!');
       navigate('/order-success', { state: { order: orderData } });
+      
     } catch (error) {
-      console.error('Error placing order:', error);
+      console.error('❌ CHECKOUT DEBUG: Error placing order:', error);
       toast.error('Failed to place order');
     } finally {
       setLoading(false);
