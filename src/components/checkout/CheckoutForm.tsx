@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import CustomerInfoForm from './CustomerInfoForm';
 import ShippingOptions from './ShippingOptions';
 import OrderSummary from './OrderSummary';
+import { sendOrderToMake, OrderWebhookData } from '../../utils/makeWebhook';
 
 interface CustomerInfo {
   firstName: string;
@@ -105,6 +106,39 @@ const CheckoutForm = () => {
       const { error } = await supabase.from('orders').insert(orderData);
       
       if (error) throw error;
+
+      // Prepare data for Make.com webhook
+      const makeWebhookData: OrderWebhookData = {
+        orderId: orderId,
+        customerName: `${customerInfo.firstName} ${customerInfo.lastName}`,
+        customerEmail: customerInfo.email,
+        customerPhone: customerInfo.phone,
+        customerAddress: customerInfo.address,
+        customerCity: customerInfo.city,
+        customerZipCode: customerInfo.zipCode,
+        items: cartItems.map(item => ({
+          productName: item.product.name,
+          productPrice: item.product.price,
+          size: item.size,
+          quantity: item.quantity,
+          total: item.product.price * item.quantity
+        })),
+        subtotal: subtotal,
+        shippingCost: shippingCost,
+        total: total,
+        shippingOption: shippingOption,
+        orderDate: new Date().toISOString(),
+        status: 'pending'
+      };
+
+      // Send order to Make.com webhook (non-blocking)
+      sendOrderToMake(makeWebhookData).then(success => {
+        if (success) {
+          console.log('Order sent to Make.com successfully');
+        }
+      }).catch(error => {
+        console.error('Failed to send order to Make.com:', error);
+      });
 
       clearCart();
       toast.success('Order placed successfully!');
