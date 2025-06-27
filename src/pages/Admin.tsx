@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 import Header from '../components/Header';
@@ -26,6 +25,12 @@ const Admin = () => {
     }
   };
 
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setActiveTab('dashboard');
+    toast.success('Logged out successfully');
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gray-900">
@@ -41,7 +46,7 @@ const Admin = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <AdminDashboard />;
+        return <AdminDashboard onLogout={handleLogout} />;
       case 'products':
         return <ProductManagement />;
       case 'orders':
@@ -53,7 +58,7 @@ const Admin = () => {
       case 'settings':
         return <SiteSettings />;
       default:
-        return <AdminDashboard />;
+        return <AdminDashboard onLogout={handleLogout} />;
     }
   };
 
