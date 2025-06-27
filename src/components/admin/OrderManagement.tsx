@@ -120,7 +120,7 @@ const OrderManagement = () => {
 
       {/* Order Detail Modal */}
       {selectedOrder && <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-800 rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+          <div className="rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-zinc-900">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-2xl font-bold">Order #{selectedOrder.id}</h3>
               <button onClick={() => setSelectedOrder(null)} className="text-gray-400 hover:text-white text-2xl">
@@ -132,7 +132,7 @@ const OrderManagement = () => {
               {/* Customer Info */}
               <div>
                 <h4 className="text-lg font-semibold mb-3">Customer Information</h4>
-                <div className="bg-gray-700 p-4 rounded">
+                <div className="p-4 rounded bg-zinc-800">
                   <p><strong>Name:</strong> {selectedOrder.customer_name}</p>
                   <p><strong>Email:</strong> {selectedOrder.customer_email}</p>
                   <p><strong>Phone:</strong> {selectedOrder.customer_phone}</p>
@@ -150,7 +150,7 @@ const OrderManagement = () => {
                 try {
                   const items = typeof selectedOrder.items === 'string' ? JSON.parse(selectedOrder.items) : selectedOrder.items;
                   if (Array.isArray(items)) {
-                    return items.map((item: any, index: number) => <div key={index} className="bg-gray-700 p-4 rounded flex justify-between">
+                    return items.map((item: any, index: number) => <div key={index} className="p-4 rounded flex justify-between bg-zinc-800">
                             <div>
                               <p className="font-medium">{item.product?.name || item.name}</p>
                               <p className="text-gray-400">Size: {item.size} | Qty: {item.quantity}</p>
@@ -173,7 +173,7 @@ const OrderManagement = () => {
               {/* Order Summary */}
               <div>
                 <h4 className="text-lg font-semibold mb-3">Order Summary</h4>
-                <div className="bg-gray-700 p-4 rounded">
+                <div className="p-4 rounded bg-zinc-800">
                   <div className="flex justify-between mb-2">
                     <span>Subtotal:</span>
                     <span>TK{parseFloat(selectedOrder.subtotal.toString()).toFixed(2)}</span>
@@ -208,7 +208,7 @@ const OrderManagement = () => {
               {/* Order Dates */}
               <div>
                 <h4 className="text-lg font-semibold mb-3">Order Timeline</h4>
-                <div className="bg-gray-700 p-4 rounded">
+                <div className="p-4 rounded bg-zinc-800">
                   <p><strong>Created:</strong> {formatDate(selectedOrder.created_at)}</p>
                   <p><strong>Last Updated:</strong> {formatDate(selectedOrder.updated_at)}</p>
                 </div>
