@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
@@ -103,9 +104,11 @@ const CheckoutForm = () => {
         status: 'pending'
       };
 
+      console.log('About to insert order into database:', orderId);
       const { error } = await supabase.from('orders').insert(orderData);
       
       if (error) throw error;
+      console.log('Order successfully inserted into database:', orderId);
 
       // Prepare data for Make.com webhook
       const makeWebhookData: OrderWebhookData = {
@@ -131,10 +134,13 @@ const CheckoutForm = () => {
         status: 'pending'
       };
 
+      console.log('About to send order to Make.com webhook:', orderId);
       // Send order to Make.com webhook (non-blocking)
       sendOrderToMake(makeWebhookData).then(success => {
         if (success) {
-          console.log('Order sent to Make.com successfully');
+          console.log('Order sent to Make.com successfully:', orderId);
+        } else {
+          console.log('Failed to send order to Make.com:', orderId);
         }
       }).catch(error => {
         console.error('Failed to send order to Make.com:', error);

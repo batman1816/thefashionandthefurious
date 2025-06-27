@@ -1,12 +1,11 @@
 
 import { useState, useEffect } from 'react';
-import { Save, Upload } from 'lucide-react';
+import { Upload } from 'lucide-react';
 import { supabase } from '../../integrations/supabase/client';
 import { SiteSettings as SiteSettingsType } from '../../types/Product';
 import { uploadImage } from '../../utils/imageUpload';
 import { toast } from 'sonner';
 import { useSiteSettings } from '../../hooks/useSiteSettings';
-import SalesChart from './SalesChart';
 
 const SiteSettings = () => {
   const {
@@ -174,12 +173,6 @@ const SiteSettings = () => {
                 <div className="text-sm text-gray-400">Visitors</div>
               </div>
             </div>}
-        </div>
-
-        {/* Sales Chart */}
-        <div className="rounded-lg p-6 bg-zinc-800">
-          <h3 className="text-xl font-semibold mb-6">Sales Overview</h3>
-          <SalesChart />
         </div>
       </div>
     </div>;

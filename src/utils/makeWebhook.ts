@@ -25,13 +25,20 @@ export interface OrderWebhookData {
 export const sendOrderToMake = async (orderData: OrderWebhookData): Promise<boolean> => {
   const webhookUrl = localStorage.getItem('make_webhook_url');
   
+  console.log('Make.com webhook check - URL from localStorage:', webhookUrl);
+  
   if (!webhookUrl) {
     console.log('No Make.com webhook URL configured');
     return false;
   }
 
   try {
-    console.log('Sending order to Make.com:', orderData.orderId);
+    console.log('Sending order to Make.com:', {
+      orderId: orderData.orderId,
+      customerName: orderData.customerName,
+      total: orderData.total,
+      webhookUrl: webhookUrl
+    });
 
     const webhookPayload = {
       event: 'new_order',
@@ -40,7 +47,9 @@ export const sendOrderToMake = async (orderData: OrderWebhookData): Promise<bool
       order: orderData
     };
 
-    await fetch(webhookUrl, {
+    console.log('Webhook payload:', webhookPayload);
+
+    const response = await fetch(webhookUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -49,10 +58,12 @@ export const sendOrderToMake = async (orderData: OrderWebhookData): Promise<bool
       body: JSON.stringify(webhookPayload),
     });
 
-    console.log('Order sent to Make.com successfully');
+    console.log('Make.com webhook response status:', response.status);
+    console.log('Order sent to Make.com successfully for order:', orderData.orderId);
     return true;
   } catch (error) {
     console.error('Error sending order to Make.com:', error);
+    console.error('Failed order data:', orderData);
     return false;
   }
 };
