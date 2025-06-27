@@ -56,7 +56,7 @@ const Admin = () => {
   return <div className="min-h-screen bg-gray-900">
       <Header />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 bg-gray-950">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
           <div className="lg:w-64 rounded-lg p-6 bg-zinc-900">
