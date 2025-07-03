@@ -1,73 +1,97 @@
-# Welcome to your Lovable project
+# The Fashion & Furious
 
-## Project info
+A modern e-commerce application for fashion products built with React, TypeScript, and Supabase.
 
-**URL**: https://lovable.dev/projects/edf11749-980c-4e34-8127-db5c619dd984
+## Features
 
-## How can I edit this code?
+- Product catalog with categories (Drivers, Teams, F1 Classic)
+- Shopping cart functionality
+- Order management system
+- Admin panel for product and order management
+- Make.com webhook integration
+- Responsive design with dark theme
 
-There are several ways of editing your application.
+## Getting Started
 
-**Use Lovable**
+### Prerequisites
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/edf11749-980c-4e34-8127-db5c619dd984) and start prompting.
+- Node.js (version 18 or higher)
+- npm or yarn package manager
 
-Changes made via Lovable will be committed automatically to this repo.
+### Installation
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
+1. Clone the repository:
+```bash
 git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
 cd <YOUR_PROJECT_NAME>
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
+2. Install dependencies:
+```bash
+npm install
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+3. Start the development server:
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The application will be available at `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Building for Production
 
-**Use GitHub Codespaces**
+To build the application for production:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```bash
+npm run build
+```
 
-## What technologies are used for this project?
+The built files will be in the `dist` directory.
 
-This project is built with:
+### Deployment Options
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+#### Using cPanel (Static Hosting)
 
-## How can I deploy this project?
+1. Run `npm run build` to create production files
+2. Upload the contents of the `dist` folder to your cPanel public_html directory
+3. The app will work as a static site
+
+#### Using Lovable
 
 Simply open [Lovable](https://lovable.dev/projects/edf11749-980c-4e34-8127-db5c619dd984) and click on Share -> Publish.
 
-## Can I connect a custom domain to my Lovable project?
+#### Using Vercel/Netlify
 
-Yes, you can!
+The app can be deployed directly to Vercel or Netlify by connecting your GitHub repository.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Project Structure
+
+- `/src` - Source code
+  - `/components` - React components
+  - `/pages` - Page components
+  - `/context` - React context providers
+  - `/hooks` - Custom React hooks
+  - `/integrations` - External service integrations
+  - `/utils` - Utility functions
+- `/public` - Static assets
+- `/supabase` - Database migrations and functions
+
+## Admin Access
+
+Admin panel is available at `/admin` with password: `yUsrA@#$2618`
+
+## Technologies Used
+
+- React 18
+- TypeScript
+- Tailwind CSS
+- Shadcn/ui Components
+- Supabase (Database & Storage)
+- React Router
+- Vite (Build tool)
+
+## Custom Domain
+
+You can connect a custom domain by navigating to Project > Settings > Domains and clicking Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
