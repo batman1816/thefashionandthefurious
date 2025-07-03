@@ -12,14 +12,14 @@ import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 
 const ProductDetail = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
   const { products } = useProducts();
   const { addToCart } = useCart();
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
   
-  const product = products.find(p => p.id === id);
+  const product = products.find(p => p.slug === slug);
 
   // Filter out XS from sizes
   const availableSizes = product ? product.sizes.filter(size => size.toUpperCase() !== 'XS') : [];
@@ -27,7 +27,7 @@ const ProductDetail = () => {
   // Scroll to top when component mounts or product changes
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [id]);
+  }, [slug]);
 
   useEffect(() => {
     if (availableSizes.length > 0 && !selectedSize) {

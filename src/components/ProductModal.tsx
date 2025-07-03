@@ -60,7 +60,7 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
 
   const handleViewDetails = () => {
     onClose();
-    navigate(`/product/${product.id}`);
+    navigate(`/product/${product.slug || product.id}`);
   };
 
   const handleSizeSelect = (size: string) => {

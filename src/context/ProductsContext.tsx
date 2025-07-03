@@ -35,7 +35,8 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
         category: product.category as 'drivers' | 'f1-classic' | 'teams',
         images: product.images || (product.image_url ? [product.image_url] : []),
         tags: product.tags || [],
-        is_active: product.is_active !== undefined ? product.is_active : true
+        is_active: product.is_active !== undefined ? product.is_active : true,
+        slug: product.slug
       }));
 
       console.log('Fetched products:', transformedProducts);
@@ -106,7 +107,8 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
         category: data.category as 'drivers' | 'f1-classic' | 'teams',
         images: data.images || (data.image_url ? [data.image_url] : []),
         tags: data.tags || [],
-        is_active: data.is_active !== undefined ? data.is_active : true
+        is_active: data.is_active !== undefined ? data.is_active : true,
+        slug: data.slug
       };
       setProducts(prev => [product, ...prev]);
       toast.success('Product added successfully');

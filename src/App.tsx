@@ -33,7 +33,7 @@ const App = () => (
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
-                <Route path="/product/:id" element={<ProductDetail />} />
+                <Route path="/product/:slug" element={<ProductDetail />} />
                 <Route path="/drivers" element={<CategoryPage />} />
                 <Route path="/f1-classic" element={<CategoryPage />} />
                 <Route path="/teams" element={<CategoryPage />} />

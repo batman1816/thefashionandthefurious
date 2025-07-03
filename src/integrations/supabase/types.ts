@@ -105,6 +105,7 @@ export type Database = {
           name: string
           price: number
           sizes: string[]
+          slug: string | null
           tags: string[] | null
           updated_at: string
         }
@@ -119,6 +120,7 @@ export type Database = {
           name: string
           price: number
           sizes?: string[]
+          slug?: string | null
           tags?: string[] | null
           updated_at?: string
         }
@@ -133,6 +135,7 @@ export type Database = {
           name?: string
           price?: number
           sizes?: string[]
+          slug?: string | null
           tags?: string[] | null
           updated_at?: string
         }
@@ -182,7 +185,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_slug: {
+        Args: { input_text: string }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
