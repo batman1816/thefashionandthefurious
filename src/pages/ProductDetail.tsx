@@ -54,6 +54,15 @@ const ProductDetail = () => {
     }
     addToCart(product, selectedSize, quantity);
     toast.success(`Added ${product.name} to cart!`);
+  };
+
+  const handleBuyNow = () => {
+    if (!selectedSize) {
+      toast.error('Please select a size');
+      return;
+    }
+    addToCart(product, selectedSize, quantity);
+    toast.success(`Added ${product.name} to cart!`);
     navigate('/checkout');
   };
 
@@ -145,13 +154,21 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            {/* Buy Now Button */}
-            <button
-              onClick={handleAddToCart}
-              className="w-full bg-black hover:bg-gray-800 text-white py-4 px-8 font-semibold transition-colors duration-300 mb-4"
-            >
-              BUY NOW
-            </button>
+            {/* Buttons */}
+            <div className="space-y-4 mb-4">
+              <button
+                onClick={handleAddToCart}
+                className="w-full bg-white border border-black text-black py-4 px-8 font-semibold transition-colors duration-300 hover:bg-gray-50"
+              >
+                Add to cart
+              </button>
+              <button
+                onClick={handleBuyNow}
+                className="w-full bg-black hover:bg-gray-800 text-white py-4 px-8 font-semibold transition-colors duration-300"
+              >
+                BUY NOW
+              </button>
+            </div>
 
             {/* Product Details */}
             <div className="border-t pt-6 mt-6">
