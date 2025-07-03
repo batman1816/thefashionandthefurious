@@ -24,6 +24,11 @@ const ProductDetail = () => {
   // Filter out XS from sizes
   const availableSizes = product ? product.sizes.filter(size => size.toUpperCase() !== 'XS') : [];
 
+  // Scroll to top when component mounts or product changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
+
   useEffect(() => {
     if (availableSizes.length > 0 && !selectedSize) {
       setSelectedSize(availableSizes[0]);
