@@ -187,38 +187,39 @@ const CheckoutForm = () => {
           {/* Bkash Payment Instructions */}
           <div className="mb-6">
             <Card className="bg-gray-800 border-gray-700">
-              <CardHeader className="bg-zinc-900">
-                <CardTitle className="text-xl font-semibold text-white">Bkash Payment Instructions</CardTitle>
+              <CardHeader className="bg-zinc-900 pb-3">
+                <CardTitle className="text-lg font-semibold text-white flex items-center gap-2">
+                  <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm">3</span>
+                  Select Payment
+                </CardTitle>
               </CardHeader>
-              <CardContent className="bg-zinc-900 space-y-4">
-                <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-                  <div className="text-center mb-4">
-                    <p className="text-lg font-semibold text-red-800 mb-2">Bkash Number: 01311506938</p>
-                    <p className="text-md font-medium text-red-700">
-                      Delivery Charge Amount: TK {shippingCost}
-                    </p>
+              <CardContent className="bg-zinc-900 space-y-3">
+                <div className="bg-blue-500 text-white p-3 rounded-lg text-center font-medium">
+                  bKash
+                </div>
+                
+                <div className="bg-zinc-800 p-4 rounded-lg">
+                  <h4 className="text-white font-medium mb-3">Bkash Details</h4>
+                  <div className="text-sm text-gray-300 space-y-1 mb-3">
+                    <p>1. Open up the <strong>Bkash</strong> app & Choose "<span className="text-red-400">Cash Out</span>" ( BE CAREFUL IT'S AN AGENT NUMBER</p>
+                    <p>2. Enter the <strong>Bkash</strong> Account Number, which is given down below</p>
+                    <p>3. Enter the exact amount and Confirm the Transaction</p>
+                    <p>4. After sending money, you'll receive a <strong>Bkash</strong> Transaction ID (TRX ID). If you are sending the Money from AGENT NUMBER just type "AGENT"</p>
                   </div>
                   
-                  <div className="text-red-800">
-                    <h4 className="font-semibold mb-3">Follow these steps:</h4>
-                    <ol className="list-decimal list-inside space-y-2 text-sm">
-                      <li>Open the Bkash app and choose "SEND MONEY"</li>
-                      <li>Enter the Bkash account number listed above</li>
-                      <li>Enter the exact amount and confirm the transaction</li>
-                      <li>After sending, you'll receive a TRX ID</li>
-                    </ol>
+                  <div className="text-green-400 font-semibold mb-3">
+                    You need to send us: TK {shippingCost + subtotal}
                   </div>
                   
-                  <div className="mt-4 p-3 bg-red-100 rounded border border-red-300">
-                    <h4 className="font-semibold text-red-800 mb-2">Account Details:</h4>
-                    <p className="text-sm text-red-700 mb-1">Account Type: PERSONAL</p>
-                    <p className="text-sm text-red-700">Account Number: 01311506938</p>
-                  </div>
-                  
-                  <div className="mt-4 p-3 bg-yellow-50 border border-yellow-300 rounded">
-                    <p className="text-sm text-yellow-800 font-medium">
-                      <strong>Important:</strong> Please provide the TRX ID or the word "AGENT" along with the amount you sent during checkout.
-                    </p>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Account Type:</span>
+                      <span className="text-white">AGENT</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Account Number:</span>
+                      <span className="text-white">01311506938</span>
+                    </div>
                   </div>
                 </div>
               </CardContent>
