@@ -158,13 +158,13 @@ const ProductDetail = () => {
             <div className="space-y-4 mb-4">
               <button
                 onClick={handleAddToCart}
-                className="w-full bg-white border border-black text-black py-4 px-8 font-semibold transition-colors duration-300 hover:bg-gray-50"
+                className="w-full bg-white border border-black text-black py-4 px-8 font-semibold transition-all duration-200 hover:bg-gray-50 transform hover:scale-[1.01] active:scale-[0.97] active:-translate-y-1"
               >
                 Add to cart
               </button>
               <button
                 onClick={handleBuyNow}
-                className="w-full bg-black hover:bg-gray-800 text-white py-4 px-8 font-semibold transition-colors duration-300"
+                className="w-full bg-black hover:bg-gray-800 text-white py-4 px-8 font-semibold transition-all duration-200 transform hover:scale-[1.01] active:scale-[0.97] active:-translate-y-1"
               >
                 BUY NOW
               </button>
