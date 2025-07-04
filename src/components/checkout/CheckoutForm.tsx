@@ -208,7 +208,7 @@ const CheckoutForm = () => {
                   </div>
                   
                   <div className="text-green-400 font-semibold mb-3">
-                    You need to send us: TK {shippingCost + subtotal}
+                    You need to send us: TK {shippingCost}
                   </div>
                   
                   <div className="space-y-2 text-sm">
