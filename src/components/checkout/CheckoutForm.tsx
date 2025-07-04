@@ -39,6 +39,8 @@ const CheckoutForm = () => {
   const [subtotal, setSubtotal] = useState(0);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [bkashAccount, setBkashAccount] = useState('');
+  const [bkashTransactionId, setBkashTransactionId] = useState('');
 
   useEffect(() => {
     const cartSubtotal = getCartTotal();
@@ -71,6 +73,11 @@ const CheckoutForm = () => {
     
     if (!customerInfo.firstName || !customerInfo.lastName || !customerInfo.email || !customerInfo.phone || !customerInfo.address || !customerInfo.city || !customerInfo.zipCode) {
       toast.error('Please fill in all required fields.');
+      return;
+    }
+
+    if (!bkashAccount || !bkashTransactionId) {
+      toast.error('Please fill in your Bkash account number and transaction ID.');
       return;
     }
 
@@ -142,21 +149,17 @@ const CheckoutForm = () => {
       // Send to Make.com webhook - wait for the result
       try {
         const webhookSuccess = await sendOrderToMake(makeWebhookData);
-        if (webhookSuccess) {
-          console.log('✅ CHECKOUT DEBUG: Order sent to Make.com successfully:', orderId);
-          toast.success('Order placed and sent to Make.com successfully!');
-        } else {
+        if (!webhookSuccess) {
           console.log('❌ CHECKOUT DEBUG: Failed to send order to Make.com:', orderId);
-          toast.success('Order placed successfully! (Webhook delivery failed - check console)');
         }
       } catch (webhookError) {
         console.error('❌ CHECKOUT DEBUG: Webhook error:', webhookError);
-        toast.success('Order placed successfully! (Webhook delivery failed - check console)');
       }
 
       // Clear cart and navigate regardless of webhook status
+      toast.success('Order placed successfully!');
       clearCart();
-      navigate('/order-success', { state: { order: orderData } });
+      navigate('/order-success', { state: { order: { ...orderData, orderDate: new Date().toISOString() } } });
       
     } catch (error) {
       console.error('❌ CHECKOUT DEBUG: Error placing order:', error);
@@ -228,6 +231,9 @@ const CheckoutForm = () => {
                       <input
                         type="text"
                         placeholder="01XXXXXXXXX"
+                        value={bkashAccount}
+                        onChange={(e) => setBkashAccount(e.target.value)}
+                        required
                         className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
@@ -236,6 +242,9 @@ const CheckoutForm = () => {
                       <input
                         type="text"
                         placeholder="Txn ID"
+                        value={bkashTransactionId}
+                        onChange={(e) => setBkashTransactionId(e.target.value)}
+                        required
                         className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
