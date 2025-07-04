@@ -5,13 +5,8 @@ import { supabase } from '../../integrations/supabase/client';
 import { SiteSettings as SiteSettingsType } from '../../types/Product';
 import { uploadImage } from '../../utils/imageUpload';
 import { toast } from 'sonner';
-import { useSiteSettings } from '../../hooks/useSiteSettings';
 
 const SiteSettings = () => {
-  const {
-    analytics,
-    loading: analyticsLoading
-  } = useSiteSettings();
   const [settings, setSettings] = useState<SiteSettingsType>({
     id: '',
     site_name: 'The Fashion & The Furious',
@@ -151,29 +146,6 @@ const SiteSettings = () => {
           </div>
         </div>
 
-        {/* Analytics */}
-        <div className="rounded-lg p-6 bg-zinc-800">
-          <h3 className="text-xl font-semibold mb-6">Site Analytics</h3>
-          
-          {analyticsLoading ? <div className="text-center text-gray-400">Loading analytics...</div> : <div className="grid grid-cols-2 gap-4">
-              <div className="p-4 rounded text-center bg-zinc-900">
-                <div className="text-2xl font-bold text-white">{analytics.total_orders}</div>
-                <div className="text-sm text-gray-400">Total Orders</div>
-              </div>
-              <div className="p-4 rounded text-center bg-zinc-900">
-                <div className="text-2xl font-bold text-white">{analytics.total_products}</div>
-                <div className="text-sm text-gray-400">Products</div>
-              </div>
-              <div className="p-4 rounded text-center bg-zinc-900">
-                <div className="text-2xl font-bold text-white">TK{analytics.total_revenue.toFixed(2)}</div>
-                <div className="text-sm text-gray-400">Revenue</div>
-              </div>
-              <div className="p-4 rounded text-center bg-zinc-900">
-                <div className="text-2xl font-bold text-white">{analytics.total_visitors}</div>
-                <div className="text-sm text-gray-400">Visitors</div>
-              </div>
-            </div>}
-        </div>
       </div>
     </div>;
 };
