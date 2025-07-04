@@ -199,26 +199,45 @@ const CheckoutForm = () => {
                 </div>
                 
                 <div className="bg-zinc-800 p-4 rounded-lg">
-                  <h4 className="text-white font-medium mb-3">Bkash Details</h4>
+                  <h4 className="text-white font-medium mb-3">Bkash Instructions:</h4>
                   <div className="text-sm text-gray-300 space-y-1 mb-3">
-                    <p>1. Open up the <strong>Bkash</strong> app & Choose "<span className="text-red-400">Cash Out</span>" ( BE CAREFUL IT'S AN AGENT NUMBER</p>
-                    <p>2. Enter the <strong>Bkash</strong> Account Number, which is given down below</p>
+                    <p>1. Open up the Bkash app & Choose "SEND MONEY"</p>
+                    <p>2. Enter the Bkash Account Number, which is given down below</p>
                     <p>3. Enter the exact amount and Confirm the Transaction</p>
-                    <p>4. After sending money, you'll receive a <strong>Bkash</strong> Transaction ID (TRX ID). If you are sending the Money from AGENT NUMBER just type "AGENT"</p>
+                    <p>4. After sending money, you'll receive a Bkash Transaction ID (TRX ID).</p>
                   </div>
                   
                   <div className="text-green-400 font-semibold mb-3">
                     You need to send us: TK {shippingCost}
                   </div>
                   
-                  <div className="space-y-2 text-sm">
+                  <div className="space-y-2 text-sm mb-4">
                     <div className="flex justify-between">
                       <span className="text-gray-400">Account Type:</span>
-                      <span className="text-white">AGENT</span>
+                      <span className="text-white">PERSONAL</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-400">Account Number:</span>
-                      <span className="text-white">01311506938</span>
+                      <span className="text-red-400">01311506938</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-white text-sm font-medium mb-1">Your Bkash Account Number</label>
+                      <input
+                        type="text"
+                        placeholder="01XXXXXXXXX"
+                        className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-white text-sm font-medium mb-1">Bkash Transaction ID</label>
+                      <input
+                        type="text"
+                        placeholder="Txn ID"
+                        className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
                     </div>
                   </div>
                 </div>
