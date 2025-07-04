@@ -184,6 +184,47 @@ const CheckoutForm = () => {
             <ShippingOptions shippingOption={shippingOption} onShippingOptionChange={setShippingOption} />
           </div>
 
+          {/* Bkash Payment Instructions */}
+          <div className="mb-6">
+            <Card className="bg-gray-800 border-gray-700">
+              <CardHeader className="bg-zinc-900">
+                <CardTitle className="text-xl font-semibold text-white">Bkash Payment Instructions</CardTitle>
+              </CardHeader>
+              <CardContent className="bg-zinc-900 space-y-4">
+                <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+                  <div className="text-center mb-4">
+                    <p className="text-lg font-semibold text-red-800 mb-2">Bkash Number: 01311506938</p>
+                    <p className="text-md font-medium text-red-700">
+                      Delivery Charge Amount: TK {shippingCost}
+                    </p>
+                  </div>
+                  
+                  <div className="text-red-800">
+                    <h4 className="font-semibold mb-3">Follow these steps:</h4>
+                    <ol className="list-decimal list-inside space-y-2 text-sm">
+                      <li>Open the Bkash app and choose "SEND MONEY"</li>
+                      <li>Enter the Bkash account number listed above</li>
+                      <li>Enter the exact amount and confirm the transaction</li>
+                      <li>After sending, you'll receive a TRX ID</li>
+                    </ol>
+                  </div>
+                  
+                  <div className="mt-4 p-3 bg-red-100 rounded border border-red-300">
+                    <h4 className="font-semibold text-red-800 mb-2">Account Details:</h4>
+                    <p className="text-sm text-red-700 mb-1">Account Type: PERSONAL</p>
+                    <p className="text-sm text-red-700">Account Number: 01311506938</p>
+                  </div>
+                  
+                  <div className="mt-4 p-3 bg-yellow-50 border border-yellow-300 rounded">
+                    <p className="text-sm text-yellow-800 font-medium">
+                      <strong>Important:</strong> Please provide the TRX ID or the word "AGENT" along with the amount you sent during checkout.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
           {/* Order Summary */}
           <div>
             <Card className="bg-gray-800 border-gray-700">
