@@ -136,7 +136,6 @@ const SalesChart = () => {
               <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
               <XAxis dataKey="period" stroke="#9ca3af" fontSize={12} />
               <YAxis stroke="#9ca3af" fontSize={12} />
-              <ChartTooltip content={<ChartTooltipContent />} />
               <Line type="monotone" dataKey="sales" stroke="#ef4444" strokeWidth={2} dot={{
             fill: "#ef4444",
             strokeWidth: 2
@@ -144,6 +143,22 @@ const SalesChart = () => {
             </LineChart>
           </ChartContainer>}
       </div>
+
+      {/* Summary */}
+      {!loading && salesData.length > 0 && <div className="grid grid-cols-2 gap-4 mt-4">
+          <div className="p-3 rounded text-center bg-zinc-900">
+            <div className="text-lg font-bold text-white">
+              TK{salesData.reduce((sum, item) => sum + item.sales, 0).toFixed(2)}
+            </div>
+            <div className="text-xs text-gray-400">Total Sales</div>
+          </div>
+          <div className="p-3 rounded text-center bg-zinc-900">
+            <div className="text-lg font-bold text-white">
+              {salesData.reduce((sum, item) => sum + item.orders, 0)}
+            </div>
+            <div className="text-xs text-gray-400">Total Orders</div>
+          </div>
+        </div>}
 
     </div>;
 };
