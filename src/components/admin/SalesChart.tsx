@@ -145,7 +145,7 @@ const SalesChart = () => {
             </div>
             <div className="text-sm text-gray-400">Total Sales</div>
           </div>
-          <div className="bg-zinc-800 p-6 rounded-lg text-center">
+          <div className="p-6 rounded-lg text-center bg-zinc-900">
             <div className="text-2xl font-bold text-white mb-2">
               {salesData.reduce((sum, item) => sum + item.orders, 0)}
             </div>
