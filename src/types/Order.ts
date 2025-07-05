@@ -9,12 +9,14 @@ export interface Order {
   customer_address: string;
   customer_city: string;
   customer_zip_code: string;
-  items: Json; // Use Json type from Supabase
+  items: Json;
   subtotal: number;
   shipping_cost: number;
   total: number;
   shipping_option: string;
   status: 'pending' | 'fulfilled' | 'cancelled';
+  bkash_transaction_id?: string | null;
+  bkash_sender_number?: string | null;
   created_at: string;
   updated_at: string;
 }

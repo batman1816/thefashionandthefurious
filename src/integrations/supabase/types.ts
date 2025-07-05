@@ -41,6 +41,8 @@ export type Database = {
       }
       orders: {
         Row: {
+          bkash_sender_number: string | null
+          bkash_transaction_id: string | null
           created_at: string
           customer_address: string
           customer_city: string
@@ -58,6 +60,8 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          bkash_sender_number?: string | null
+          bkash_transaction_id?: string | null
           created_at?: string
           customer_address: string
           customer_city: string
@@ -75,6 +79,8 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          bkash_sender_number?: string | null
+          bkash_transaction_id?: string | null
           created_at?: string
           customer_address?: string
           customer_city?: string
