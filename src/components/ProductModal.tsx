@@ -28,11 +28,7 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
       return;
     }
     
-    addToCart({
-      product,
-      size: selectedSize,
-      quantity
-    });
+    addToCart(product, selectedSize, quantity);
     
     toast.success(`Added ${product.name} to cart!`);
     onClose();
@@ -44,11 +40,7 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
       return;
     }
     
-    addToCart({
-      product,
-      size: selectedSize,
-      quantity
-    });
+    addToCart(product, selectedSize, quantity);
     
     navigate('/checkout');
     scrollToTop();
