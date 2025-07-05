@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, ShoppingCart } from 'lucide-react';
@@ -78,7 +79,10 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <ProductImageCarousel images={product.images || [product.image_url || '']} />
+              <ProductImageCarousel 
+                images={product.images || [product.image_url || '']} 
+                productName={product.name}
+              />
             </div>
 
             <div className="space-y-4">
@@ -153,7 +157,7 @@ const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
       </div>
 
       {showSizeChart && (
-        <SizeChart onClose={() => setShowSizeChart(false)} />
+        <SizeChart />
       )}
     </div>
   );

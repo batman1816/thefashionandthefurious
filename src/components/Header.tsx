@@ -12,10 +12,9 @@ const Header = () => {
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
-  const handleNavigation = (path: string) => {
-    navigate(path);
+  const handleCartClick = () => {
+    navigate('/cart');
     scrollToTop();
-    setIsMenuOpen(false);
   };
 
   return (
@@ -33,36 +32,40 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <button 
-              onClick={() => handleNavigation('/')}
+            <Link 
+              to="/"
               className="hover:text-gray-300 transition-colors"
+              onClick={() => scrollToTop()}
             >
               Home
-            </button>
-            <button 
-              onClick={() => handleNavigation('/drivers')}
+            </Link>
+            <Link 
+              to="/drivers"
               className="hover:text-gray-300 transition-colors"
+              onClick={() => scrollToTop()}
             >
               Drivers
-            </button>
-            <button 
-              onClick={() => handleNavigation('/f1-classic')}
+            </Link>
+            <Link 
+              to="/f1-classic"
               className="hover:text-gray-300 transition-colors"
+              onClick={() => scrollToTop()}
             >
               F1 Classic
-            </button>
-            <button 
-              onClick={() => handleNavigation('/teams')}
+            </Link>
+            <Link 
+              to="/teams"
               className="hover:text-gray-300 transition-colors"
+              onClick={() => scrollToTop()}
             >
               Teams
-            </button>
+            </Link>
           </nav>
 
           {/* Cart Icon */}
           <div className="flex items-center space-x-4">
             <button 
-              onClick={() => handleNavigation('/cart')}
+              onClick={handleCartClick}
               className="relative p-2 hover:text-gray-300 transition-colors"
             >
               <ShoppingCart size={24} />
@@ -87,30 +90,46 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden border-t border-gray-800">
             <div className="py-4 space-y-2">
-              <button 
-                onClick={() => handleNavigation('/')}
+              <Link 
+                to="/"
                 className="block w-full text-left px-4 py-2 hover:bg-gray-800 transition-colors"
+                onClick={() => {
+                  scrollToTop();
+                  setIsMenuOpen(false);
+                }}
               >
                 Home
-              </button>
-              <button 
-                onClick={() => handleNavigation('/drivers')}
+              </Link>
+              <Link 
+                to="/drivers"
                 className="block w-full text-left px-4 py-2 hover:bg-gray-800 transition-colors"
+                onClick={() => {
+                  scrollToTop();
+                  setIsMenuOpen(false);
+                }}
               >
                 Drivers
-              </button>
-              <button 
-                onClick={() => handleNavigation('/f1-classic')}
+              </Link>
+              <Link 
+                to="/f1-classic"
                 className="block w-full text-left px-4 py-2 hover:bg-gray-800 transition-colors"
+                onClick={() => {
+                  scrollToTop();
+                  setIsMenuOpen(false);
+                }}
               >
                 F1 Classic
-              </button>
-              <button 
-                onClick={() => handleNavigation('/teams')}
+              </Link>
+              <Link 
+                to="/teams"
                 className="block w-full text-left px-4 py-2 hover:bg-gray-800 transition-colors"
+                onClick={() => {
+                  scrollToTop();
+                  setIsMenuOpen(false);
+                }}
               >
                 Teams
-              </button>
+              </Link>
             </div>
           </div>
         )}
