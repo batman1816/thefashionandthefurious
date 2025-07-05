@@ -141,8 +141,7 @@ const DriversProducts = () => {
 
       {selectedProduct && (
         <ProductModal 
-          product={selectedProduct}
-          isOpen={!!selectedProduct}
+          product={selectedProduct} 
           onClose={() => setSelectedProduct(null)} 
         />
       )}

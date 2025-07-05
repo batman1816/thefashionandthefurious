@@ -125,8 +125,7 @@ const NewProductsSection = () => {
 
       {selectedProduct && (
         <ProductModal 
-          product={selectedProduct}
-          isOpen={!!selectedProduct}
+          product={selectedProduct} 
           onClose={handleCloseModal} 
         />
       )}

@@ -99,8 +99,7 @@ const ProductGrid = ({ products }: ProductGridProps) => {
 
       {selectedProduct && (
         <ProductModal 
-          product={selectedProduct}
-          isOpen={!!selectedProduct}
+          product={selectedProduct} 
           onClose={handleCloseModal} 
         />
       )}
