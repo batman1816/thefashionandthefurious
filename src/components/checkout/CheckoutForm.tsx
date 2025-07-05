@@ -108,7 +108,9 @@ const CheckoutForm = () => {
         shipping_cost: shippingCost,
         shipping_option: shippingOption,
         total: total,
-        status: 'pending'
+        status: 'pending',
+        bkash_account: bkashAccount,
+        bkash_transaction_id: bkashTransactionId
       };
 
       console.log('🛒 CHECKOUT DEBUG: About to insert order into database:', orderId);

@@ -1,74 +1,118 @@
 
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Menu, X, ShoppingCart } from 'lucide-react';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ShoppingCart, Menu, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { scrollToTop } from '../utils/scrollToTop';
 
 const Header = () => {
+  const { cartItems } = useCart();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const {
-    cartItems
-  } = useCart();
-  const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+  const navigate = useNavigate();
+
+  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    scrollToTop();
+    setIsMenuOpen(false);
+  };
 
   return (
-    <header className="bg-black shadow-sm border-b border-black">
-      {/* Top Bar */}
-      <div className="text-white text-center py-1 text-xs bg-zinc-950">
-        
-      </div>
-
+    <header className="bg-black text-white sticky top-0 z-50">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between py-2">
-          {/* Mobile Menu Button */}
-          <button className="md:hidden text-white" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
-
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex-1 md:flex-none">
-            <img src="/lovable-uploads/1bfadb02-757f-46dc-b0c2-f866a1969b54.png" alt="The Fashion & The Furious" className="h-12 md:h-14 object-contain" />
+          <Link 
+            to="/" 
+            className="text-xl font-bold hover:text-gray-300 transition-colors"
+            onClick={() => scrollToTop()}
+          >
+            The Fashion & Furious
           </Link>
 
-          {/* Desktop Navigation - Right aligned */}
-          <nav className="hidden md:flex space-x-8 ml-auto mr-8">
-            <Link to="/drivers" className="text-white hover:text-red-500 transition-colors font-medium text-sm">
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-8">
+            <button 
+              onClick={() => handleNavigation('/')}
+              className="hover:text-gray-300 transition-colors"
+            >
+              Home
+            </button>
+            <button 
+              onClick={() => handleNavigation('/drivers')}
+              className="hover:text-gray-300 transition-colors"
+            >
               Drivers
-            </Link>
-            <Link to="/f1-classic" className="text-white hover:text-red-500 transition-colors font-medium text-sm">
-              F1 Classics
-            </Link>
-            <Link to="/teams" className="text-white hover:text-red-500 transition-colors font-medium text-sm">
+            </button>
+            <button 
+              onClick={() => handleNavigation('/f1-classic')}
+              className="hover:text-gray-300 transition-colors"
+            >
+              F1 Classic
+            </button>
+            <button 
+              onClick={() => handleNavigation('/teams')}
+              className="hover:text-gray-300 transition-colors"
+            >
               Teams
-            </Link>
+            </button>
           </nav>
 
           {/* Cart Icon */}
-          <Link to="/cart" className="relative">
-            <ShoppingCart size={20} className="text-white hover:text-red-500 transition-colors" />
-            {cartItemsCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                {cartItemsCount}
-              </span>
-            )}
-          </Link>
+          <div className="flex items-center space-x-4">
+            <button 
+              onClick={() => handleNavigation('/cart')}
+              className="relative p-2 hover:text-gray-300 transition-colors"
+            >
+              <ShoppingCart size={24} />
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden p-2"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <nav className="md:hidden py-4 border-t border-gray-800">
-            <div className="flex flex-col space-y-4">
-              <Link to="/drivers" className="text-white hover:text-red-500 transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>
+          <div className="md:hidden border-t border-gray-800">
+            <div className="py-4 space-y-2">
+              <button 
+                onClick={() => handleNavigation('/')}
+                className="block w-full text-left px-4 py-2 hover:bg-gray-800 transition-colors"
+              >
+                Home
+              </button>
+              <button 
+                onClick={() => handleNavigation('/drivers')}
+                className="block w-full text-left px-4 py-2 hover:bg-gray-800 transition-colors"
+              >
                 Drivers
-              </Link>
-              <Link to="/f1-classic" className="text-white hover:text-red-500 transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>
-                F1 Classics
-              </Link>
-              <Link to="/teams" className="text-white hover:text-red-500 transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>
+              </button>
+              <button 
+                onClick={() => handleNavigation('/f1-classic')}
+                className="block w-full text-left px-4 py-2 hover:bg-gray-800 transition-colors"
+              >
+                F1 Classic
+              </button>
+              <button 
+                onClick={() => handleNavigation('/teams')}
+                className="block w-full text-left px-4 py-2 hover:bg-gray-800 transition-colors"
+              >
                 Teams
-              </Link>
+              </button>
             </div>
-          </nav>
+          </div>
         )}
       </div>
     </header>

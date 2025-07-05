@@ -4,6 +4,7 @@ import { useOrders } from '../../hooks/useOrders';
 import OrderSearch from './OrderSearch';
 import { Order } from '../../types/Order';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
+
 const OrderManagement = () => {
   const {
     orders,
@@ -14,6 +15,7 @@ const OrderManagement = () => {
     updateOrderStatus
   } = useOrders();
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending':
@@ -26,6 +28,7 @@ const OrderManagement = () => {
         return 'text-gray-400';
     }
   };
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'pending':
@@ -38,6 +41,7 @@ const OrderManagement = () => {
         return <Clock size={16} />;
     }
   };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -47,11 +51,13 @@ const OrderManagement = () => {
       minute: '2-digit'
     });
   };
+
   if (loading) {
     return <div className="flex justify-center items-center h-64">
         <div className="text-white">Loading orders...</div>
       </div>;
   }
+
   return <div className="text-white">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold">Order Management</h2>
@@ -119,11 +125,15 @@ const OrderManagement = () => {
       </div>
 
       {/* Order Detail Modal */}
-      {selectedOrder && <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      {selectedOrder && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-zinc-900">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-2xl font-bold">Order #{selectedOrder.id}</h3>
-              <button onClick={() => setSelectedOrder(null)} className="text-gray-400 hover:text-white text-2xl">
+              <button
+                onClick={() => setSelectedOrder(null)}
+                className="text-gray-400 hover:text-white text-2xl"
+              >
                 ×
               </button>
             </div>
@@ -141,6 +151,18 @@ const OrderManagement = () => {
                   <p><strong>ZIP:</strong> {selectedOrder.customer_zip_code}</p>
                 </div>
               </div>
+
+              {/* Bkash Payment Details */}
+              {(selectedOrder as any).bkash_account && (
+                <div>
+                  <h4 className="text-lg font-semibold mb-3">Payment Details</h4>
+                  <div className="p-4 rounded bg-zinc-800">
+                    <p><strong>Bkash Account:</strong> {(selectedOrder as any).bkash_account}</p>
+                    <p><strong>Transaction ID:</strong> {(selectedOrder as any).bkash_transaction_id}</p>
+                    <p><strong>Payment Method:</strong> Bkash</p>
+                  </div>
+                </div>
+              )}
 
               {/* Order Items */}
               <div>
@@ -215,7 +237,9 @@ const OrderManagement = () => {
               </div>
             </div>
           </div>
-        </div>}
+        </div>
+      )}
     </div>;
 };
+
 export default OrderManagement;
