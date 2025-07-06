@@ -54,6 +54,17 @@ const OrderManagement = () => {
     });
   };
 
+  const handlePaymentConfirmation = async (orderId: string, isConfirmed: boolean) => {
+    // Here you could add logic to update a payment confirmation status
+    // For now, we'll just show a console log
+    console.log(`Payment ${isConfirmed ? 'confirmed' : 'rejected'} for order ${orderId}`);
+    
+    // You might want to update the order status or add a payment_confirmed field
+    if (isConfirmed) {
+      await updateOrderStatus(orderId, 'fulfilled');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -249,6 +260,22 @@ const OrderManagement = () => {
                     {selectedOrder.bkash_sender_number && (
                       <p><strong>Sender Number:</strong> <span className="font-mono text-green-400">{selectedOrder.bkash_sender_number}</span></p>
                     )}
+                    
+                    {/* Payment Confirmation Buttons */}
+                    <div className="mt-4 flex gap-3">
+                      <button 
+                        onClick={() => handlePaymentConfirmation(selectedOrder.id, true)}
+                        className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded transition-colors"
+                      >
+                        Confirm Payment
+                      </button>
+                      <button 
+                        onClick={() => handlePaymentConfirmation(selectedOrder.id, false)}
+                        className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
+                      >
+                        Reject Payment
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
