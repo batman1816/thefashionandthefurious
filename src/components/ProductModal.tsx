@@ -21,8 +21,10 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
 
   console.log('ProductModal rendered for:', product.name);
 
-  // Filter out XS from sizes and memoize the result
-  const availableSizes = product.sizes?.filter(size => size.toUpperCase() !== 'XS') || [];
+  // Filter out XS and S from sizes and memoize the result
+  const availableSizes = product.sizes?.filter(size => 
+    size.toUpperCase() !== 'XS' && size.toUpperCase() !== 'S'
+  ) || [];
 
   useEffect(() => {
     if (availableSizes.length > 0 && !selectedSize) {

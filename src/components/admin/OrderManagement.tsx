@@ -16,6 +16,7 @@ const OrderManagement = () => {
     updateOrderStatus
   } = useOrders();
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [selectedPayment, setSelectedPayment] = useState<Order | null>(null);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -118,10 +119,13 @@ const OrderManagement = () => {
                 </TableCell>
                 <TableCell className="bg-zinc-800">
                   {order.bkash_transaction_id ? (
-                    <div className="text-xs">
+                    <button 
+                      onClick={() => setSelectedPayment(order)}
+                      className="text-xs cursor-pointer hover:bg-green-800 p-2 rounded transition-colors"
+                    >
                       <div className="text-green-400 font-medium">Bkash Paid</div>
-                      <div className="text-gray-400">ID: {order.bkash_transaction_id}</div>
-                    </div>
+                      <div className="text-gray-400">Click to view details</div>
+                    </button>
                   ) : (
                     <div className="text-xs text-yellow-400">Pending Payment</div>
                   )}
@@ -145,6 +149,66 @@ const OrderManagement = () => {
           </div>
         )}
       </div>
+
+      {/* Payment Details Modal */}
+      {selectedPayment && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="rounded-lg p-6 w-full max-w-md bg-zinc-900">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-bold">Payment Details</h3>
+              <button 
+                onClick={() => setSelectedPayment(null)} 
+                className="text-gray-400 hover:text-white text-2xl"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div className="p-4 rounded bg-green-900/20 border border-green-600">
+                <h4 className="text-lg font-semibold mb-3 text-green-400">Bkash Payment Information</h4>
+                
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-sm text-gray-400">Order ID:</label>
+                    <p className="text-white font-mono">#{selectedPayment.id}</p>
+                  </div>
+                  
+                  <div>
+                    <label className="text-sm text-gray-400">Transaction ID:</label>
+                    <p className="text-green-400 font-mono text-lg">{selectedPayment.bkash_transaction_id}</p>
+                  </div>
+                  
+                  {selectedPayment.bkash_sender_number && (
+                    <div>
+                      <label className="text-sm text-gray-400">Sender Number:</label>
+                      <p className="text-green-400 font-mono text-lg">{selectedPayment.bkash_sender_number}</p>
+                    </div>
+                  )}
+                  
+                  <div>
+                    <label className="text-sm text-gray-400">Amount:</label>
+                    <p className="text-white font-semibold">TK{parseFloat(selectedPayment.total.toString()).toFixed(2)}</p>
+                  </div>
+                  
+                  <div>
+                    <label className="text-sm text-gray-400">Customer:</label>
+                    <p className="text-white">{selectedPayment.customer_name}</p>
+                    <p className="text-gray-400 text-sm">{selectedPayment.customer_phone}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <button 
+                onClick={() => setSelectedPayment(null)}
+                className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 px-4 rounded transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Order Detail Modal */}
       {selectedOrder && (
