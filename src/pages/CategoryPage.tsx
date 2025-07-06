@@ -12,8 +12,9 @@ const CategoryPage = () => {
   // Extract category from pathname
   const category = location.pathname.substring(1); // Remove leading slash
   
+  // Filter products by category and only include active products
   const categoryProducts = products.filter(product => 
-    product.category === category
+    product.category === category && product.is_active !== false
   );
 
   const getCategoryTitle = (cat: string) => {
