@@ -39,6 +39,54 @@ export type Database = {
         }
         Relationships: []
       }
+      bundle_deals: {
+        Row: {
+          applicable_categories: string[] | null
+          created_at: string
+          deal_type: string
+          description: string | null
+          discount_percentage: number
+          end_date: string | null
+          id: string
+          is_active: boolean
+          max_discount_items: number | null
+          minimum_quantity: number
+          name: string
+          start_date: string | null
+          updated_at: string
+        }
+        Insert: {
+          applicable_categories?: string[] | null
+          created_at?: string
+          deal_type?: string
+          description?: string | null
+          discount_percentage?: number
+          end_date?: string | null
+          id?: string
+          is_active?: boolean
+          max_discount_items?: number | null
+          minimum_quantity?: number
+          name: string
+          start_date?: string | null
+          updated_at?: string
+        }
+        Update: {
+          applicable_categories?: string[] | null
+          created_at?: string
+          deal_type?: string
+          description?: string | null
+          discount_percentage?: number
+          end_date?: string | null
+          id?: string
+          is_active?: boolean
+          max_discount_items?: number | null
+          minimum_quantity?: number
+          name?: string
+          start_date?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           bkash_sender_number: string | null
@@ -147,12 +195,95 @@ export type Database = {
         }
         Relationships: []
       }
+      sales: {
+        Row: {
+          created_at: string
+          end_date: string | null
+          id: string
+          is_active: boolean
+          original_price: number
+          product_id: string | null
+          sale_description: string | null
+          sale_price: number
+          sale_title: string | null
+          start_date: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          is_active?: boolean
+          original_price: number
+          product_id?: string | null
+          sale_description?: string | null
+          sale_price: number
+          sale_title?: string | null
+          start_date?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          is_active?: boolean
+          original_price?: number
+          product_id?: string | null
+          sale_description?: string | null
+          sale_price?: number
+          sale_title?: string | null
+          start_date?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sales_settings: {
+        Row: {
+          created_at: string
+          global_sale_active: boolean
+          global_sale_end: string | null
+          global_sale_start: string | null
+          global_sale_title: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          global_sale_active?: boolean
+          global_sale_end?: string | null
+          global_sale_start?: string | null
+          global_sale_title?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          global_sale_active?: boolean
+          global_sale_end?: string | null
+          global_sale_start?: string | null
+          global_sale_title?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       site_settings: {
         Row: {
           contact_email: string
           created_at: string
           id: string
           logo_url: string | null
+          next_sale_date: string | null
+          next_sale_title: string | null
+          show_sale_countdown: boolean | null
           site_name: string
           support_email: string
           total_orders: number | null
@@ -165,6 +296,9 @@ export type Database = {
           created_at?: string
           id?: string
           logo_url?: string | null
+          next_sale_date?: string | null
+          next_sale_title?: string | null
+          show_sale_countdown?: boolean | null
           site_name?: string
           support_email?: string
           total_orders?: number | null
@@ -177,6 +311,9 @@ export type Database = {
           created_at?: string
           id?: string
           logo_url?: string | null
+          next_sale_date?: string | null
+          next_sale_title?: string | null
+          show_sale_countdown?: boolean | null
           site_name?: string
           support_email?: string
           total_orders?: number | null
@@ -194,6 +331,10 @@ export type Database = {
       generate_slug: {
         Args: { input_text: string }
         Returns: string
+      }
+      update_expired_sales: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
     }
     Enums: {

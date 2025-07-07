@@ -12,6 +12,7 @@ import ProductDetail from "./pages/ProductDetail";
 import CategoryPage from "./pages/CategoryPage";
 import NewProducts from "./pages/NewProducts";
 import DriversProducts from "./pages/DriversProducts";
+import Sales from "./pages/Sales";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import OrderSuccess from "./pages/OrderSuccess";
@@ -39,6 +40,7 @@ const App = () => (
                 <Route path="/teams" element={<CategoryPage />} />
                 <Route path="/new-products" element={<NewProducts />} />
                 <Route path="/drivers-products" element={<DriversProducts />} />
+                <Route path="/sales" element={<Sales />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/order-success" element={<OrderSuccess />} />

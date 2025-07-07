@@ -35,6 +35,7 @@ const ProductGrid = ({ products }: ProductGridProps) => {
         {activeProducts.map((product) => {
           const primaryImage = product.images && product.images.length > 0 ? product.images[0] : product.image_url;
           const hoverImage = product.images && product.images.length > 1 ? product.images[1] : primaryImage;
+          const isOnSale = product.originalPrice && product.originalPrice > product.price;
           
           return (
             <div 
@@ -44,6 +45,13 @@ const ProductGrid = ({ products }: ProductGridProps) => {
             >
               {/* Product Image */}
               <div className="aspect-square overflow-hidden bg-gray-50 relative mb-4">
+                {/* Sale Badge */}
+                {isOnSale && (
+                  <div className="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded z-10">
+                    SALE
+                  </div>
+                )}
+                
                 {primaryImage ? (
                   <>
                     <img
@@ -81,7 +89,14 @@ const ProductGrid = ({ products }: ProductGridProps) => {
                   {product.name}
                 </h3>
                 <div className="text-base font-normal text-black">
-                  Tk {product.price}.00 BDT
+                  {isOnSale ? (
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-400 line-through">Tk {product.originalPrice}.00 BDT</span>
+                      <span className="text-red-600 font-bold">Tk {product.price}.00 BDT</span>
+                    </div>
+                  ) : (
+                    <span>Tk {product.price}.00 BDT</span>
+                  )}
                 </div>
                 <div className="pt-2">
                   <button 

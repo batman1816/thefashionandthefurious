@@ -6,9 +6,7 @@ import { useCart } from '../context/CartContext';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const {
-    cartItems
-  } = useCart();
+  const { cartItems } = useCart();
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   return (
@@ -41,6 +39,9 @@ const Header = () => {
             <Link to="/teams" className="text-white hover:text-red-500 transition-colors font-medium text-sm">
               Teams
             </Link>
+            <Link to="/sales" className="text-white hover:text-red-500 transition-colors font-medium text-sm">
+              Sales
+            </Link>
           </nav>
 
           {/* Cart Icon */}
@@ -66,6 +67,9 @@ const Header = () => {
               </Link>
               <Link to="/teams" className="text-white hover:text-red-500 transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>
                 Teams
+              </Link>
+              <Link to="/sales" className="text-white hover:text-red-500 transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>
+                Sales
               </Link>
             </div>
           </nav>
