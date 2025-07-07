@@ -1,192 +1,208 @@
 
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { X, Minus, Plus } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, Plus, Minus } from 'lucide-react';
 import { Product } from '../types/Product';
 import { useCart } from '../context/CartContext';
+import { useSalesContext } from '../context/SalesContext';
+import { Badge } from './ui/badge';
+import SaleBadge from './SaleBadge';
 import { toast } from 'sonner';
-import ProductImageCarousel from './ProductImageCarousel';
-import SizeChart from './SizeChart';
 
 interface ProductModalProps {
-  product: Product;
+  product: Product | null;
+  isOpen: boolean;
   onClose: () => void;
 }
 
-const ProductModal = ({ product, onClose }: ProductModalProps) => {
-  const navigate = useNavigate();
-  const { addToCart } = useCart();
-  const [selectedSize, setSelectedSize] = useState('');
+const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onClose }) => {
+  const [selectedSize, setSelectedSize] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { addToCart } = useCart();
+  const { getSaleForProduct, isProductOnSale } = useSalesContext();
 
-  console.log('ProductModal rendered for:', product.name);
+  if (!isOpen || !product) return null;
 
-  // Filter out XS and S from sizes and memoize the result
-  const availableSizes = product.sizes?.filter(size => 
-    size.toUpperCase() !== 'XS' && size.toUpperCase() !== 'S'
-  ) || [];
+  const sale = getSaleForProduct(product.id);
+  const onSale = isProductOnSale(product.id);
+  const currentPrice = onSale && sale ? sale.sale_price : product.price;
 
-  useEffect(() => {
-    if (availableSizes.length > 0 && !selectedSize) {
-      setSelectedSize(availableSizes[0]);
-    }
-  }, [availableSizes, selectedSize]);
-
-  const handleAddToCart = () => {
-    if (!selectedSize) {
-      toast.error('Please select a size');
-      return;
-    }
-    addToCart(product, selectedSize, quantity);
-    toast.success(`Added ${product.name} to cart!`);
-    onClose();
-  };
-
-  const handleBuyNow = () => {
-    if (!selectedSize) {
-      toast.error('Please select a size');
-      return;
-    }
-    addToCart(product, selectedSize, quantity);
-    toast.success(`Added ${product.name} to cart!`);
-    onClose();
-    navigate('/checkout');
-  };
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      console.log('Backdrop clicked, closing modal');
-      onClose();
-    }
-  };
-
-  const handleViewDetails = () => {
-    onClose();
-    navigate(`/product/${product.slug || product.id}`);
-  };
-
-  const handleSizeSelect = (size: string) => {
-    setSelectedSize(size);
-  };
-
-  // Prepare images for carousel
-  const carouselImages = product.images && product.images.length > 0 
+  const images = product.images && product.images.length > 0 
     ? product.images 
     : product.image_url 
-      ? [product.image_url] 
-      : [];
+    ? [product.image_url] 
+    : ['/placeholder.svg'];
+
+  const handleAddToCart = () => {
+    if (product.sizes && product.sizes.length > 0 && !selectedSize) {
+      toast.error('Please select a size');
+      return;
+    }
+
+    addToCart({
+      product: {
+        ...product,
+        price: currentPrice // Use the current price (sale price if on sale)
+      },
+      size: selectedSize || '',
+      quantity
+    });
+
+    toast.success(`Added ${quantity} ${product.name} to cart`);
+    onClose();
+  };
 
   return (
-    <div 
-      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
-      onClick={handleBackdropClick}
-    >
-      <div className="bg-white max-w-5xl w-full max-h-[90vh] overflow-y-auto relative">
+    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+      <div className="bg-gray-900 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
+        {/* Sale Badge */}
+        {onSale && <SaleBadge />}
+
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 z-10 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+          className="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
         >
-          <X size={24} />
+          <X className="h-6 w-6" />
         </button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2">
-          {/* Product Image Carousel */}
-          <div className="flex items-center justify-center p-8">
-            <ProductImageCarousel 
-              images={carouselImages}
-              productName={product.name}
-              className="aspect-square w-full max-w-md"
-            />
-          </div>
-
-          {/* Product Info */}
-          <div className="p-12 flex flex-col">
-            <h1 className="text-2xl font-normal text-black mb-4 tracking-wide leading-relaxed">
-              {product.name.toUpperCase()}
-            </h1>
-            
-            <div className="text-xl font-normal text-black mb-2">
-              Tk {product.price}.00 BDT
-            </div>
-
-            <p className="text-sm text-gray-500 mb-8 underline">
-              Shipping calculated at checkout.
-            </p>
-
-            {/* Size Selection */}
-            {availableSizes.length > 0 && (
-              <div className="mb-4">
-                <h3 className="text-sm font-normal mb-4 text-black">SIZE</h3>
-                <div className="flex flex-wrap gap-2 max-w-full overflow-x-auto">
-                  {availableSizes.map(size => (
+        <div className="p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Image Section */}
+            <div className="space-y-4">
+              <div className="aspect-square bg-gray-800 rounded-lg overflow-hidden">
+                <img
+                  src={images[currentImageIndex]}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              
+              {images.length > 1 && (
+                <div className="flex gap-2 overflow-x-auto">
+                  {images.map((image, index) => (
                     <button
-                      key={size}
-                      onClick={() => handleSizeSelect(size)}
-                      className={`flex-shrink-0 px-4 py-2 text-sm font-normal transition-all duration-200 border ${
-                        selectedSize === size
-                          ? 'bg-black text-white border-black'
-                          : 'bg-white text-black border-gray-300 hover:border-black'
+                      key={index}
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={`flex-shrink-0 w-20 h-20 rounded-md overflow-hidden border-2 ${
+                        index === currentImageIndex ? 'border-white' : 'border-gray-600'
                       }`}
                     >
-                      {size}
+                      <img
+                        src={image}
+                        alt={`${product.name} ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
                     </button>
                   ))}
                 </div>
-              </div>
-            )}
-
-            {/* Size Chart */}
-            <div className="mb-8">
-              <SizeChart />
+              )}
             </div>
 
-            {/* Quantity */}
-            <div className="mb-12">
-              <h3 className="text-sm font-normal mb-4 text-black">Quantity</h3>
-              <div className="flex items-center border border-gray-300 w-fit bg-white">
-                <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="p-4 hover:bg-gray-50 transition-colors duration-200 disabled:opacity-50"
-                  disabled={quantity <= 1}
-                >
-                  <Minus size={16} />
-                </button>
-                <span className="px-8 py-4 text-center min-w-[80px] font-normal border-l border-r border-gray-300">
-                  {quantity}
-                </span>
-                <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="p-4 hover:bg-gray-50 transition-colors duration-200"
-                >
-                  <Plus size={16} />
-                </button>
-              </div>
-            </div>
+            {/* Product Details */}
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-bold text-white mb-2">{product.name}</h2>
+                
+                <div className="flex items-center gap-4 mb-4">
+                  {onSale && sale ? (
+                    <>
+                      <span className="text-gray-400 line-through text-xl">
+                        TK {sale.original_price}
+                      </span>
+                      <span className="text-red-400 font-bold text-2xl">
+                        TK {sale.sale_price}
+                      </span>
+                      <Badge variant="destructive">
+                        -{sale.percentage_off}% OFF
+                      </Badge>
+                    </>
+                  ) : (
+                    <span className="text-white font-bold text-2xl">
+                      TK {product.price}
+                    </span>
+                  )}
+                </div>
 
-            {/* Buttons */}
-            <div className="space-y-4 mb-8">
+                {product.category && (
+                  <Badge variant="secondary" className="mb-4">
+                    {product.category.replace('-', ' ').toUpperCase()}
+                  </Badge>
+                )}
+              </div>
+
+              {product.description && (
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-2">Description</h3>
+                  <p className="text-gray-300">{product.description}</p>
+                </div>
+              )}
+
+              {/* Size Selection */}
+              {product.sizes && product.sizes.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-3">Size</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {product.sizes.map((size) => (
+                      <button
+                        key={size}
+                        onClick={() => setSelectedSize(size)}
+                        className={`px-4 py-2 rounded-md border transition-colors ${
+                          selectedSize === size
+                            ? 'bg-white text-black border-white'
+                            : 'bg-gray-800 text-white border-gray-600 hover:border-gray-400'
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Quantity */}
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-3">Quantity</h3>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="w-10 h-10 rounded-full bg-gray-800 text-white flex items-center justify-center hover:bg-gray-700 transition-colors"
+                  >
+                    <Minus className="h-4 w-4" />
+                  </button>
+                  <span className="text-white text-xl font-semibold w-8 text-center">
+                    {quantity}
+                  </span>
+                  <button
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="w-10 h-10 rounded-full bg-gray-800 text-white flex items-center justify-center hover:bg-gray-700 transition-colors"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Add to Cart Button */}
               <button
                 onClick={handleAddToCart}
-                className="w-full bg-white border border-black text-black py-4 px-8 font-normal transition-all duration-200 hover:bg-gray-50 transform hover:scale-[1.01] active:scale-[0.97] active:-translate-y-1"
+                className="w-full bg-white text-black font-semibold py-3 px-6 rounded-md hover:bg-gray-200 transition-colors"
               >
-                Add to cart
+                Add to Cart - TK {(currentPrice * quantity).toFixed(2)}
               </button>
-              <button
-                onClick={handleBuyNow}
-                className="w-full bg-black text-white py-4 px-8 font-normal transition-all duration-200 hover:bg-gray-800 transform hover:scale-[1.01] active:scale-[0.97] active:-translate-y-1"
-              >
-                Buy it now
-              </button>
-            </div>
 
-            {/* View Details Link */}
-            <button 
-              onClick={handleViewDetails}
-              className="text-sm text-gray-500 hover:text-black transition-colors duration-200 text-left group flex items-center"
-            >
-              View full details 
-              <span className="ml-2 inline-block transition-transform duration-200 group-hover:translate-x-1">→</span>
-            </button>
+              {/* Tags */}
+              {product.tags && product.tags.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-3">Tags</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {product.tags.map((tag) => (
+                      <Badge key={tag} variant="outline" className="text-gray-300 border-gray-600">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

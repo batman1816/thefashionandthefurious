@@ -1,109 +1,105 @@
 
-import { useState } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { AspectRatio } from './ui/aspect-ratio';
+import { Badge } from './ui/badge';
 import { Product } from '../types/Product';
-import ProductModal from './ProductModal';
+import { useSalesContext } from '../context/SalesContext';
+import SaleBadge from './SaleBadge';
 
 interface ProductGridProps {
   products: Product[];
+  title?: string;
 }
 
-const ProductGrid = ({ products }: ProductGridProps) => {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+const ProductGrid: React.FC<ProductGridProps> = ({ products, title }) => {
+  const { getSaleForProduct, isProductOnSale } = useSalesContext();
 
-  // Filter to only show active products
-  const activeProducts = products.filter(product => product.is_active === true);
-
-  const handleChooseOptions = (product: Product, e: React.MouseEvent) => {
-    e.stopPropagation();
-    console.log('Choose options clicked for:', product.name);
-    setSelectedProduct(product);
-  };
-
-  const handleProductClick = (product: Product) => {
-    console.log('Product clicked:', product.name);
-    setSelectedProduct(product);
-  };
-
-  const handleCloseModal = () => {
-    console.log('Modal closed');
-    setSelectedProduct(null);
-  };
+  if (products.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-gray-400 text-lg">No products found.</p>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {activeProducts.map((product) => {
-          const primaryImage = product.images && product.images.length > 0 ? product.images[0] : product.image_url;
-          const hoverImage = product.images && product.images.length > 1 ? product.images[1] : primaryImage;
+    <div className="space-y-8">
+      {title && (
+        <h2 className="text-3xl font-bold text-white text-center">{title}</h2>
+      )}
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {products.map((product) => {
+          const sale = getSaleForProduct(product.id);
+          const onSale = isProductOnSale(product.id);
           
           return (
-            <div 
-              key={product.id} 
-              className="group cursor-pointer bg-white"
-              onClick={() => handleProductClick(product)}
+            <Link
+              key={product.id}
+              to={`/product/${product.slug}`}
+              className="group block bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-750 transition-all duration-300 hover:scale-105 relative"
             >
-              {/* Product Image */}
-              <div className="aspect-square overflow-hidden bg-gray-50 relative mb-4">
-                {primaryImage ? (
-                  <>
-                    <img
-                      src={primaryImage}
-                      alt={product.name}
-                      className="w-full h-full object-cover transition-opacity duration-500 ease-in-out group-hover:opacity-0"
-                      onError={(e) => {
-                        console.log('Primary image failed to load for:', product.name);
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
-                    <img
-                      src={hoverImage}
-                      alt={product.name}
-                      className="w-full h-full object-cover absolute inset-0 opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100"
-                      onError={(e) => {
-                        console.log('Hover image failed to load for:', product.name);
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
-                  </>
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-500">
-                    No Image
+              {/* Sale Badge */}
+              {onSale && <SaleBadge />}
+
+              <AspectRatio ratio={1} className="bg-gray-700">
+                <img
+                  src={product.images?.[0] || product.image_url || '/placeholder.svg'}
+                  alt={product.name}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                />
+              </AspectRatio>
+              
+              <div className="p-4 space-y-2">
+                <h3 className="text-white font-semibold group-hover:text-gray-300 transition-colors line-clamp-2">
+                  {product.name}
+                </h3>
+                
+                {product.category && (
+                  <Badge variant="secondary" className="text-xs">
+                    {product.category.replace('-', ' ').toUpperCase()}
+                  </Badge>
+                )}
+                
+                <div className="flex items-center gap-2">
+                  {onSale && sale ? (
+                    <>
+                      <span className="text-gray-400 line-through text-sm">
+                        TK {sale.original_price}
+                      </span>
+                      <span className="text-red-400 font-bold text-lg">
+                        TK {sale.sale_price}
+                      </span>
+                      <Badge variant="destructive" className="text-xs">
+                        -{sale.percentage_off}%
+                      </Badge>
+                    </>
+                  ) : (
+                    <span className="text-white font-bold text-lg">
+                      TK {product.price}
+                    </span>
+                  )}
+                </div>
+                
+                {product.sizes && product.sizes.length > 0 && (
+                  <div className="flex flex-wrap gap-1">
+                    {product.sizes.slice(0, 4).map((size) => (
+                      <span key={size} className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded">
+                        {size}
+                      </span>
+                    ))}
+                    {product.sizes.length > 4 && (
+                      <span className="text-xs text-gray-400">+{product.sizes.length - 4} more</span>
+                    )}
                   </div>
                 )}
               </div>
-              
-              {/* Product Info */}
-              <div className="text-left space-y-1">
-                <div className="text-sm text-gray-500 uppercase tracking-wide font-normal">
-                  T-SHIRT / {product.category.replace('-', ' ').toUpperCase()}
-                </div>
-                <h3 className="text-base font-normal text-black leading-tight text-center">
-                  {product.name}
-                </h3>
-                <div className="text-base font-normal text-black">
-                  Tk {product.price}.00 BDT
-                </div>
-                <div className="pt-2">
-                  <button 
-                    onClick={(e) => handleChooseOptions(product, e)}
-                    className="w-full border border-gray-400 text-black py-2 px-4 text-sm font-normal hover:bg-gray-50 transition-colors duration-200"
-                  >
-                    Choose options
-                  </button>
-                </div>
-              </div>
-            </div>
+            </Link>
           );
         })}
       </div>
-
-      {selectedProduct && (
-        <ProductModal 
-          product={selectedProduct} 
-          onClose={handleCloseModal} 
-        />
-      )}
-    </>
+    </div>
   );
 };
 
