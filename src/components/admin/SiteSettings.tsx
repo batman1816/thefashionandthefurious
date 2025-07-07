@@ -23,13 +23,15 @@ const SiteSettings = () => {
 
   const fetchSettings = async () => {
     try {
-      const {
-        data,
-        error
-      } = await supabase.from('site_settings').select('id, site_name, contact_email, support_email, logo_url').single();
+      const { data, error } = await supabase
+        .from('site_settings')
+        .select('id, site_name, contact_email, support_email, logo_url')
+        .single();
+        
       if (error && error.code !== 'PGRST116') {
         throw error;
       }
+      
       if (data) {
         const settingsData: SiteSettingsType = {
           id: data.id || '',
@@ -51,25 +53,24 @@ const SiteSettings = () => {
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
     setUploading(true);
     try {
       const logoUrl = await uploadImage(file, 'banner-images');
-      setSettings(prev => ({
-        ...prev,
-        logo_url: logoUrl
-      }));
+      setSettings(prev => ({ ...prev, logo_url: logoUrl }));
 
       // Save logo URL immediately
       if (settings.id) {
-        const {
-          error
-        } = await supabase.from('site_settings').update({
-          logo_url: logoUrl
-        }).eq('id', settings.id);
+        const { error } = await supabase
+          .from('site_settings')
+          .update({ logo_url: logoUrl })
+          .eq('id', settings.id);
+        
         if (error) throw error;
         toast.success('Logo updated successfully');
       }
     } catch (error) {
+      console.error('Error uploading logo:', error);
       toast.error('Failed to upload logo');
     } finally {
       setUploading(false);
@@ -77,12 +78,15 @@ const SiteSettings = () => {
   };
 
   if (loading) {
-    return <div className="flex justify-center items-center h-64">
+    return (
+      <div className="flex justify-center items-center h-64">
         <div className="text-white">Loading settings...</div>
-      </div>;
+      </div>
+    );
   }
 
-  return <div className="text-white">
+  return (
+    <div className="text-white">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold">Site Settings</h2>
       </div>
@@ -95,19 +99,34 @@ const SiteSettings = () => {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-2">Site Name</label>
-              <input type="text" value="The Fashion & The Furious" readOnly className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded text-gray-300 cursor-not-allowed" />
+              <input
+                type="text"
+                value="The Fashion & The Furious"
+                readOnly
+                className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded text-gray-300 cursor-not-allowed"
+              />
               <p className="text-xs text-gray-400 mt-1">Site name is fixed and cannot be changed</p>
             </div>
 
             <div>
               <label className="block text-sm font-medium mb-2">Contact Email</label>
-              <input type="email" value="thefashionnfurious@gmail.com" readOnly className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded text-gray-300 cursor-not-allowed" />
+              <input
+                type="email"
+                value="thefashionnfurious@gmail.com"
+                readOnly
+                className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded text-gray-300 cursor-not-allowed"
+              />
               <p className="text-xs text-gray-400 mt-1">Contact email is fixed and cannot be changed</p>
             </div>
 
             <div>
               <label className="block text-sm font-medium mb-2">Support Email</label>
-              <input type="email" value="thefashionnfurious@gmail.com" readOnly className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded text-gray-300 cursor-not-allowed" />
+              <input
+                type="email"
+                value="thefashionnfurious@gmail.com"
+                readOnly
+                className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded text-gray-300 cursor-not-allowed"
+              />
               <p className="text-xs text-gray-400 mt-1">Support email is fixed and cannot be changed</p>
             </div>
           </div>
@@ -121,13 +140,24 @@ const SiteSettings = () => {
             <div>
               <label className="block text-sm font-medium mb-2">Logo</label>
               <div className="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center">
-                <input type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" id="logo-upload" disabled={uploading} />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleLogoUpload}
+                  className="hidden"
+                  id="logo-upload"
+                  disabled={uploading}
+                />
                 <label htmlFor="logo-upload" className={`cursor-pointer ${uploading ? 'opacity-50' : ''}`}>
                   <Upload className="mx-auto mb-4 text-gray-400" size={48} />
                   <p className="text-gray-400 mb-4">
                     {uploading ? 'Uploading...' : 'Upload your logo'}
                   </p>
-                  <button type="button" className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded transition-colors" disabled={uploading}>
+                  <button
+                    type="button"
+                    className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded transition-colors"
+                    disabled={uploading}
+                  >
                     Choose File
                   </button>
                 </label>
@@ -137,17 +167,25 @@ const SiteSettings = () => {
             <div>
               <h4 className="font-medium mb-2">Current Logo Preview</h4>
               <div className="p-4 rounded text-center bg-zinc-900">
-                {settings.logo_url ? <img src={settings.logo_url} alt="Logo" className="max-h-16 mx-auto" /> : <div className="text-xl font-bold">
-                    <div className="text-white">THE FASHION</div>
-                    <div className="text-white">& THE FURIOUS</div>
-                  </div>}
+                {settings.logo_url ? (
+                  <img src={settings.logo_url} alt="Logo" className="max-h-16 mx-auto" />
+                ) : (
+                  <div className="flex items-center justify-center">
+                    <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center mr-2">
+                      <span className="text-black font-bold text-sm">F1</span>
+                    </div>
+                    <div className="text-white font-bold">
+                      The Fashion & The Furious
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
-
       </div>
-    </div>;
+    </div>
+  );
 };
 
 export default SiteSettings;
