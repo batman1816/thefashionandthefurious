@@ -10,18 +10,17 @@ import { toast } from 'sonner';
 
 interface ProductModalProps {
   product: Product | null;
-  isOpen: boolean;
   onClose: () => void;
 }
 
-const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onClose }) => {
+const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) => {
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { addToCart } = useCart();
   const { getSaleForProduct, isProductOnSale } = useSalesContext();
 
-  if (!isOpen || !product) return null;
+  if (!product) return null;
 
   const sale = getSaleForProduct(product.id);
   const onSale = isProductOnSale(product.id);
@@ -39,15 +38,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onClose })
       return;
     }
 
-    addToCart({
-      product: {
-        ...product,
-        price: currentPrice // Use the current price (sale price if on sale)
-      },
-      size: selectedSize || '',
-      quantity
-    });
-
+    addToCart(product, selectedSize || '', quantity);
     toast.success(`Added ${quantity} ${product.name} to cart`);
     onClose();
   };
@@ -113,7 +104,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onClose })
                         TK {sale.sale_price}
                       </span>
                       <Badge variant="destructive">
-                        -{sale.percentage_off}% OFF
+                        -{Math.round(((sale.original_price - sale.sale_price) / sale.original_price) * 100)}% OFF
                       </Badge>
                     </>
                   ) : (
