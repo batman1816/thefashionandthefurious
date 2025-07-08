@@ -18,7 +18,9 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   loading 
 }) => {
   return (
-    <div className="space-y-4">
+    <div className="bg-gray-800 p-6 rounded-lg">
+      <h3 className="text-xl font-semibold text-white mb-4">Order Summary</h3>
+      
       {/* Cart Items */}
       <div className="space-y-3 mb-6">
         {cartItems.map((item, index) => (
@@ -39,28 +41,11 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           <span>Shipping</span>
           <span>TK {shippingCost.toFixed(2)}</span>
         </div>
-        <div className="flex justify-between text-gray-300 border-t border-gray-600 pt-2">
-          <span>Total Amount</span>
+        <div className="flex justify-between font-semibold text-white text-lg border-t border-gray-600 pt-2">
+          <span>Total</span>
           <span>TK {total.toFixed(2)}</span>
         </div>
-        <div className="flex justify-between text-red-300">
-          <span>Shipping (Paid via bKash)</span>
-          <span>- TK {shippingCost.toFixed(2)}</span>
-        </div>
-        <div className="flex justify-between font-semibold text-white text-lg border-t border-gray-600 pt-2">
-          <span>Amount to Pay Here</span>
-          <span>TK {subtotal.toFixed(2)}</span>
-        </div>
       </div>
-
-      {/* Complete Purchase Button */}
-      <button
-        type="submit"
-        className={`w-full mt-6 py-3 px-4 rounded-lg font-medium text-gray-900 bg-gray-300 hover:bg-white transition-colors duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-        disabled={loading}
-      >
-        {loading ? 'Processing...' : 'Complete Purchase'}
-      </button>
     </div>
   );
 };
