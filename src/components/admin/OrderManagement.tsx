@@ -265,14 +265,16 @@ const OrderManagement = () => {
                     <div className="mt-4 flex gap-3">
                       <button 
                         onClick={() => handlePaymentConfirmation(selectedOrder.id, true)}
-                        className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded transition-colors"
+                        className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded transition-colors flex items-center gap-2"
                       >
+                        <Check size={16} />
                         Confirm Payment
                       </button>
                       <button 
                         onClick={() => handlePaymentConfirmation(selectedOrder.id, false)}
-                        className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
+                        className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors flex items-center gap-2"
                       >
+                        <X size={16} />
                         Reject Payment
                       </button>
                     </div>
