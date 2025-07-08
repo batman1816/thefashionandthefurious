@@ -6,7 +6,15 @@ import Footer from '../components/Footer';
 import { useCart } from '../context/CartContext';
 
 const Cart = () => {
-  const { cartItems, updateQuantity, removeFromCart, getCartTotal } = useCart();
+  const { 
+    cartItems, 
+    updateQuantity, 
+    removeFromCart, 
+    getCartTotal, 
+    getCartSubtotal, 
+    getBundleDiscount, 
+    activeBundleDeal 
+  } = useCart();
 
   if (cartItems.length === 0) {
     return (
@@ -27,12 +35,25 @@ const Cart = () => {
     );
   }
 
+  const subtotal = getCartSubtotal();
+  const bundleDiscount = getBundleDiscount();
+  const total = getCartTotal();
+
   return (
     <div className="min-h-screen bg-white">
       <Header />
       
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
+        
+        {/* Bundle Deal Banner */}
+        {activeBundleDeal && cartItems.length >= activeBundleDeal.minimum_quantity && (
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+            <p className="font-semibold">🎉 Bundle Deal Applied!</p>
+            <p>{activeBundleDeal.description}</p>
+            <p>You saved TK {bundleDiscount.toFixed(2)}!</p>
+          </div>
+        )}
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
@@ -101,8 +122,21 @@ const Cart = () => {
               <div className="space-y-2 mb-6">
                 <div className="flex justify-between font-normal text-lg">
                   <span>Subtotal:</span>
-                  <span>TK {getCartTotal().toFixed(2)}</span>
+                  <span>TK {subtotal.toFixed(2)}</span>
                 </div>
+                
+                {bundleDiscount > 0 && (
+                  <div className="flex justify-between text-green-600 font-normal">
+                    <span>Bundle Discount:</span>
+                    <span>-TK {bundleDiscount.toFixed(2)}</span>
+                  </div>
+                )}
+                
+                <div className="flex justify-between font-bold text-xl border-t pt-2">
+                  <span>Total:</span>
+                  <span>TK {total.toFixed(2)}</span>
+                </div>
+                
                 <p className="text-sm text-gray-600">
                   Shipping will be calculated at checkout
                 </p>

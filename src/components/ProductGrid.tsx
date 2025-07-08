@@ -1,7 +1,8 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Product } from '../types/Product';
 import ProductModal from './ProductModal';
+import { supabase } from '../integrations/supabase/client';
 
 interface ProductGridProps {
   products: Product[];
@@ -9,9 +10,49 @@ interface ProductGridProps {
 
 const ProductGrid = ({ products }: ProductGridProps) => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [productsWithSales, setProductsWithSales] = useState<Product[]>([]);
+
+  useEffect(() => {
+    // Fetch active sales and apply them to products
+    const fetchSalesData = async () => {
+      try {
+        const { data: salesData, error } = await supabase
+          .from('sales')
+          .select('*')
+          .eq('is_active', true)
+          .gte('end_date', new Date().toISOString());
+
+        if (error) throw error;
+
+        const updatedProducts = products.map(product => {
+          const sale = salesData?.find((s: any) => s.product_id === product.id);
+          if (sale) {
+            return {
+              ...product,
+              originalPrice: sale.original_price,
+              price: sale.sale_price,
+              saleInfo: {
+                title: sale.sale_title,
+                description: sale.sale_description,
+                endDate: sale.end_date
+              }
+            };
+          }
+          return product;
+        });
+
+        setProductsWithSales(updatedProducts);
+      } catch (error) {
+        console.error('Error fetching sales data:', error);
+        setProductsWithSales(products);
+      }
+    };
+
+    fetchSalesData();
+  }, [products]);
 
   // Filter to only show active products
-  const activeProducts = products.filter(product => product.is_active === true);
+  const activeProducts = productsWithSales.filter(product => product.is_active === true);
 
   const handleChooseOptions = (product: Product, e: React.MouseEvent) => {
     e.stopPropagation();
