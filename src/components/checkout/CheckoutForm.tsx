@@ -1,270 +1,254 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { supabase } from '../../integrations/supabase/client';
 import { toast } from 'sonner';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import CustomerInfoForm from './CustomerInfoForm';
-import ShippingOptions from './ShippingOptions';
 import OrderSummary from './OrderSummary';
-import { sendOrderToMake, OrderWebhookData } from '../../utils/makeWebhook';
-
-interface CustomerInfo {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  zipCode: string;
-}
+import ShippingOptions from './ShippingOptions';
+import { sendOrderToMake } from '../../utils/makeWebhook';
 
 const CheckoutForm = () => {
   const { cartItems, clearCart, getCartTotal } = useCart();
   const navigate = useNavigate();
-  
-  const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
-    firstName: '',
-    lastName: '',
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [customerInfo, setCustomerInfo] = useState({
+    name: '',
     email: '',
     phone: '',
     address: '',
     city: '',
     zipCode: ''
   });
-  
+
   const [shippingOption, setShippingOption] = useState('inside-dhaka');
-  const [shippingCost, setShippingCost] = useState(70);
-  const [subtotal, setSubtotal] = useState(0);
-  const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [bkashAccount, setBkashAccount] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('bkash');
+  
+  // bKash payment info
   const [bkashTransactionId, setBkashTransactionId] = useState('');
+  const [bkashSenderNumber, setBkashSenderNumber] = useState('');
 
-  useEffect(() => {
-    const cartSubtotal = getCartTotal();
-    setSubtotal(cartSubtotal);
-    setTotal(cartSubtotal + shippingCost);
-  }, [cartItems, shippingCost, getCartTotal]);
-
-  useEffect(() => {
-    if (shippingOption === 'outside-dhaka') {
-      setShippingCost(140);
-    } else {
-      setShippingCost(70);
+  const getShippingCost = () => {
+    switch (shippingOption) {
+      case 'inside-dhaka':
+        return 70;
+      case 'outside-dhaka':
+        return 130;
+      default:
+        return 70;
     }
-  }, [shippingOption]);
+  };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+  const handleCustomerInfoChange = (field: string, value: string) => {
     setCustomerInfo(prev => ({
       ...prev,
-      [name]: value
+      [field]: value
     }));
   };
 
-  const generateOrderId = () => {
-    return Math.floor(Math.random() * 899900) + 100;
+  const validateForm = () => {
+    if (!customerInfo.name || !customerInfo.email || !customerInfo.phone || 
+        !customerInfo.address || !customerInfo.city || !customerInfo.zipCode) {
+      toast.error('Please fill in all customer information fields');
+      return false;
+    }
+
+    if (paymentMethod === 'bkash' && (!bkashTransactionId || !bkashSenderNumber)) {
+      toast.error('Please provide bKash transaction ID and sender number');
+      return false;
+    }
+
+    return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!customerInfo.firstName || !customerInfo.lastName || !customerInfo.email || !customerInfo.phone || !customerInfo.address || !customerInfo.city || !customerInfo.zipCode) {
-      toast.error('Please fill in all required fields.');
+    if (!validateForm()) return;
+    if (cartItems.length === 0) {
+      toast.error('Your cart is empty');
       return;
     }
 
-    if (!bkashAccount || !bkashTransactionId) {
-      toast.error('Please fill in your Bkash account number and transaction ID.');
-      return;
-    }
+    setIsSubmitting(true);
 
-    setLoading(true);
-    
     try {
-      const orderId = generateOrderId().toString();
-      const orderItems = cartItems.map(item => ({
-        product: {
-          id: item.product.id,
-          name: item.product.name,
-          price: item.product.price
-        },
-        size: item.size,
-        quantity: item.quantity
-      }));
+      const orderId = Math.random().toString().slice(2, 8);
+      const subtotal = getCartTotal();
+      const shippingCost = getShippingCost();
+      const total = subtotal + shippingCost;
+
+      console.log('🛒 CHECKOUT DEBUG: About to insert order into database:', orderId);
 
       const orderData = {
         id: orderId,
-        customer_name: `${customerInfo.firstName} ${customerInfo.lastName}`,
+        customer_name: customerInfo.name,
         customer_email: customerInfo.email,
         customer_phone: customerInfo.phone,
         customer_address: customerInfo.address,
         customer_city: customerInfo.city,
         customer_zip_code: customerInfo.zipCode,
-        items: JSON.stringify(orderItems),
-        subtotal: subtotal,
+        items: cartItems.map(item => ({
+          product: item.product,
+          size: item.size,
+          quantity: item.quantity,
+          name: item.product.name,
+          price: item.product.price
+        })),
+        subtotal,
         shipping_cost: shippingCost,
+        total,
         shipping_option: shippingOption,
-        total: total,
-        status: 'pending'
+        status: 'pending',
+        bkash_transaction_id: paymentMethod === 'bkash' ? bkashTransactionId : null,
+        bkash_sender_number: paymentMethod === 'bkash' ? bkashSenderNumber : null
       };
 
-      console.log('🛒 CHECKOUT DEBUG: About to insert order into database:', orderId);
-      const { error } = await supabase.from('orders').insert(orderData);
-      
+      console.log('📊 BKASH DEBUG: Order data with bKash info:', {
+        bkash_transaction_id: orderData.bkash_transaction_id,
+        bkash_sender_number: orderData.bkash_sender_number
+      });
+
+      const { error } = await supabase
+        .from('orders')
+        .insert([orderData]);
+
       if (error) {
         console.error('❌ Database error:', error);
         throw error;
       }
+
       console.log('✅ Order successfully inserted into database:', orderId);
 
-      // Prepare webhook data immediately after successful database insert
-      const makeWebhookData: OrderWebhookData = {
-        orderId: orderId,
-        customerName: `${customerInfo.firstName} ${customerInfo.lastName}`,
-        customerEmail: customerInfo.email,
-        customerPhone: customerInfo.phone,
-        customerAddress: customerInfo.address,
-        customerCity: customerInfo.city,
-        customerZipCode: customerInfo.zipCode,
-        items: cartItems.map(item => ({
-          productName: item.product.name,
-          productPrice: item.product.price,
-          size: item.size,
-          quantity: item.quantity,
-          total: item.product.price * item.quantity
-        })),
-        subtotal: subtotal,
-        shippingCost: shippingCost,
-        total: total,
-        shippingOption: shippingOption,
-        orderDate: new Date().toISOString(),
-        status: 'pending'
-      };
-
-      console.log('🔗 CHECKOUT DEBUG: About to send order to Make.com webhook:', orderId);
-      
-      // Send to Make.com webhook - wait for the result
+      // Send to Make.com webhook
       try {
-        const webhookSuccess = await sendOrderToMake(makeWebhookData);
-        if (!webhookSuccess) {
-          console.log('❌ CHECKOUT DEBUG: Failed to send order to Make.com:', orderId);
-        }
+        console.log('🔗 CHECKOUT DEBUG: About to send order to Make.com webhook:', orderId);
+        await sendOrderToMake({
+          orderId,
+          customerName: customerInfo.name,
+          customerEmail: customerInfo.email,
+          customerPhone: customerInfo.phone,
+          customerAddress: customerInfo.address,
+          customerCity: customerInfo.city,
+          customerZipCode: customerInfo.zipCode,
+          items: cartItems.map(item => ({
+            productName: item.product.name,
+            productPrice: item.product.price,
+            size: item.size,
+            quantity: item.quantity,
+            total: item.product.price * item.quantity
+          })),
+          subtotal,
+          shippingCost,
+          total,
+          shippingOption,
+          orderDate: new Date().toISOString(),
+          status: 'pending',
+          bkashTransactionId: paymentMethod === 'bkash' ? bkashTransactionId : null,
+          bkashSenderNumber: paymentMethod === 'bkash' ? bkashSenderNumber : null
+        });
+        console.log('✅ CHECKOUT DEBUG: Successfully sent order to Make.com:', orderId);
       } catch (webhookError) {
-        console.error('❌ CHECKOUT DEBUG: Webhook error:', webhookError);
+        console.log('❌ CHECKOUT DEBUG: Failed to send order to Make.com:', orderId);
+        console.error('Webhook error:', webhookError);
+        // Don't fail the entire checkout if webhook fails
       }
 
-      // Clear cart and navigate regardless of webhook status
       toast.success('Order placed successfully!');
       clearCart();
-      navigate('/order-success', { state: { order: { ...orderData, orderDate: new Date().toISOString() } } });
-      
+      navigate(`/order-success?orderId=${orderId}`);
+
     } catch (error) {
-      console.error('❌ CHECKOUT DEBUG: Error placing order:', error);
-      toast.error('Failed to place order');
+      console.error('Checkout error:', error);
+      toast.error('Failed to place order. Please try again.');
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
   return (
     <div className="max-w-6xl mx-auto">
-      <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Billing Information */}
-          <div className="space-y-6">
-            <Card className="bg-gray-800 border-gray-700">
-              <CardHeader className="bg-zinc-900">
-                <CardTitle className="text-xl font-semibold text-white">Billing Information</CardTitle>
-              </CardHeader>
-              <CardContent className="bg-zinc-900">
-                <CustomerInfoForm customerInfo={customerInfo} onInputChange={handleInputChange} />
-              </CardContent>
-            </Card>
-            
-            <ShippingOptions shippingOption={shippingOption} onShippingOptionChange={setShippingOption} />
-          </div>
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="space-y-6">
+          <CustomerInfoForm
+            customerInfo={customerInfo}
+            onCustomerInfoChange={handleCustomerInfoChange}
+          />
+          
+          <ShippingOptions
+            selectedOption={shippingOption}
+            onOptionChange={setShippingOption}
+          />
 
-          {/* Bkash Payment Instructions */}
-          <div className="mb-6">
-            <Card className="bg-gray-800 border-gray-700">
-              <CardHeader className="bg-zinc-900 pb-3">
-                <CardTitle className="text-lg font-semibold text-white flex items-center gap-2">
-                  <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm">3</span>
-                  Select Payment
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="bg-zinc-900 space-y-3">
-                <div className="bg-blue-500 text-white p-3 rounded-lg text-center font-medium">
-                  bKash
-                </div>
-                
-                <div className="bg-zinc-800 p-4 rounded-lg">
-                  <h4 className="text-white font-medium mb-3">Bkash Instructions:</h4>
-                  <div className="text-sm text-gray-300 space-y-1 mb-3">
-                    <p>1. Open up the Bkash app & Choose "SEND MONEY"</p>
-                    <p>2. Enter the Bkash Account Number, which is given down below</p>
-                    <p>3. Enter the exact amount and Confirm the Transaction</p>
-                    <p>4. After sending money, you'll receive a Bkash Transaction ID (TRX ID).</p>
+          {/* Payment Method */}
+          <div className="bg-gray-800 p-6 rounded-lg">
+            <h3 className="text-xl font-semibold text-white mb-4">Payment Method</h3>
+            <div className="space-y-4">
+              <label className="flex items-center space-x-3">
+                <input
+                  type="radio"
+                  name="payment"
+                  value="bkash"
+                  checked={paymentMethod === 'bkash'}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  className="text-pink-500"
+                />
+                <span className="text-white">bKash</span>
+              </label>
+              
+              {paymentMethod === 'bkash' && (
+                <div className="ml-6 space-y-4 p-4 bg-pink-900/20 rounded border border-pink-600">
+                  <div className="text-pink-400 text-sm">
+                    <p className="font-semibold mb-2">bKash Payment Instructions:</p>
+                    <p>1. Send money to: <strong>01XXXXXXXXX</strong></p>
+                    <p>2. Enter the transaction details below</p>
                   </div>
                   
-                  <div className="text-green-400 font-semibold mb-3">
-                    You need to send us: TK {shippingCost}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                      bKash Transaction ID *
+                    </label>
+                    <input
+                      type="text"
+                      value={bkashTransactionId}
+                      onChange={(e) => setBkashTransactionId(e.target.value)}
+                      placeholder="Enter bKash TXN ID"
+                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+                      required
+                    />
                   </div>
                   
-                  <div className="space-y-2 text-sm mb-4">
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Account Type:</span>
-                      <span className="text-white">PERSONAL</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Account Number:</span>
-                      <span className="text-red-400">01311506938</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <div>
-                      <label className="block text-white text-sm font-medium mb-1">Your Bkash Account Number</label>
-                      <input
-                        type="text"
-                        placeholder="01XXXXXXXXX"
-                        value={bkashAccount}
-                        onChange={(e) => setBkashAccount(e.target.value)}
-                        required
-                        className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-white text-sm font-medium mb-1">Bkash Transaction ID</label>
-                      <input
-                        type="text"
-                        placeholder="Txn ID"
-                        value={bkashTransactionId}
-                        onChange={(e) => setBkashTransactionId(e.target.value)}
-                        required
-                        className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                      Your bKash Number *
+                    </label>
+                    <input
+                      type="text"
+                      value={bkashSenderNumber}
+                      onChange={(e) => setBkashSenderNumber(e.target.value)}
+                      placeholder="Enter your bKash number"
+                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+                      required
+                    />
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              )}
+            </div>
           </div>
+        </div>
 
-          {/* Order Summary */}
-          <div>
-            <Card className="bg-gray-800 border-gray-700">
-              <CardHeader className="bg-zinc-900">
-                <CardTitle className="text-xl font-semibold text-white">Order Summary</CardTitle>
-              </CardHeader>
-              <CardContent className="bg-zinc-900">
-                <OrderSummary cartItems={cartItems} subtotal={subtotal} shippingCost={shippingCost} total={total} loading={loading} />
-              </CardContent>
-            </Card>
-          </div>
+        <div className="space-y-6">
+          <OrderSummary shippingCost={getShippingCost()} />
+          
+          <button
+            type="submit"
+            disabled={isSubmitting || cartItems.length === 0}
+            className="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-pink-600 hover:to-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSubmitting ? 'Processing...' : `Place Order - TK${(getCartTotal() + getShippingCost()).toFixed(2)}`}
+          </button>
         </div>
       </form>
     </div>

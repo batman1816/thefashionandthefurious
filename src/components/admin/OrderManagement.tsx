@@ -16,7 +16,6 @@ const OrderManagement = () => {
     updateOrderStatus
   } = useOrders();
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [selectedPayment, setSelectedPayment] = useState<Order | null>(null);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -54,17 +53,6 @@ const OrderManagement = () => {
     });
   };
 
-  const handlePaymentConfirmation = async (orderId: string, isConfirmed: boolean) => {
-    // Here you could add logic to update a payment confirmation status
-    // For now, we'll just show a console log
-    console.log(`Payment ${isConfirmed ? 'confirmed' : 'rejected'} for order ${orderId}`);
-    
-    // You might want to update the order status or add a payment_confirmed field
-    if (isConfirmed) {
-      await updateOrderStatus(orderId, 'fulfilled');
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -97,7 +85,7 @@ const OrderManagement = () => {
               <TableHead className="text-gray-300 bg-zinc-800">Date</TableHead>
               <TableHead className="text-gray-300 bg-zinc-800">Total</TableHead>
               <TableHead className="text-gray-300 bg-zinc-800">Status</TableHead>
-              <TableHead className="text-gray-300 bg-zinc-800">Payment</TableHead>
+              <TableHead className="text-gray-300 bg-zinc-800">bKash Payment</TableHead>
               <TableHead className="text-gray-300 bg-zinc-800">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -130,23 +118,21 @@ const OrderManagement = () => {
                 </TableCell>
                 <TableCell className="bg-zinc-800">
                   {order.bkash_transaction_id ? (
-                    <button 
-                      onClick={() => setSelectedPayment(order)}
-                      className="text-xs cursor-pointer hover:bg-green-800 p-2 rounded transition-colors"
-                    >
-                      <div className="text-green-400 font-medium">Bkash Paid</div>
-                      <div className="text-gray-400">Click to view details</div>
-                    </button>
+                    <div className="text-xs">
+                      <div className="text-green-400 font-medium">✅ Paid</div>
+                      <div className="text-gray-400">TXN: {order.bkash_transaction_id}</div>
+                      <div className="text-gray-400">From: {order.bkash_sender_number}</div>
+                    </div>
                   ) : (
-                    <div className="text-xs text-yellow-400">Pending Payment</div>
+                    <div className="text-xs text-red-400">❌ No Payment Info</div>
                   )}
                 </TableCell>
                 <TableCell className="bg-zinc-800">
                   <button 
                     onClick={() => setSelectedOrder(order)} 
-                    className="text-blue-400 hover:text-blue-300 mr-3"
+                    className="text-blue-400 hover:text-blue-300"
                   >
-                    <Eye size={16} className="bg-transparent" />
+                    <Eye size={16} />
                   </button>
                 </TableCell>
               </TableRow>
@@ -160,66 +146,6 @@ const OrderManagement = () => {
           </div>
         )}
       </div>
-
-      {/* Payment Details Modal */}
-      {selectedPayment && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="rounded-lg p-6 w-full max-w-md bg-zinc-900">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-bold">Payment Details</h3>
-              <button 
-                onClick={() => setSelectedPayment(null)} 
-                className="text-gray-400 hover:text-white text-2xl"
-              >
-                ×
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              <div className="p-4 rounded bg-green-900/20 border border-green-600">
-                <h4 className="text-lg font-semibold mb-3 text-green-400">Bkash Payment Information</h4>
-                
-                <div className="space-y-3">
-                  <div>
-                    <label className="text-sm text-gray-400">Order ID:</label>
-                    <p className="text-white font-mono">#{selectedPayment.id}</p>
-                  </div>
-                  
-                  <div>
-                    <label className="text-sm text-gray-400">Transaction ID:</label>
-                    <p className="text-green-400 font-mono text-lg">{selectedPayment.bkash_transaction_id}</p>
-                  </div>
-                  
-                  {selectedPayment.bkash_sender_number && (
-                    <div>
-                      <label className="text-sm text-gray-400">Sender Number:</label>
-                      <p className="text-green-400 font-mono text-lg">{selectedPayment.bkash_sender_number}</p>
-                    </div>
-                  )}
-                  
-                  <div>
-                    <label className="text-sm text-gray-400">Amount:</label>
-                    <p className="text-white font-semibold">TK{parseFloat(selectedPayment.total.toString()).toFixed(2)}</p>
-                  </div>
-                  
-                  <div>
-                    <label className="text-sm text-gray-400">Customer:</label>
-                    <p className="text-white">{selectedPayment.customer_name}</p>
-                    <p className="text-gray-400 text-sm">{selectedPayment.customer_phone}</p>
-                  </div>
-                </div>
-              </div>
-              
-              <button 
-                onClick={() => setSelectedPayment(null)}
-                className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 px-4 rounded transition-colors"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Order Detail Modal */}
       {selectedOrder && (
@@ -236,6 +162,51 @@ const OrderManagement = () => {
             </div>
 
             <div className="space-y-6">
+              {/* bKash Payment Info Section */}
+              {selectedOrder.bkash_transaction_id && (
+                <div className="p-4 rounded bg-green-900/20 border border-green-600">
+                  <h4 className="text-lg font-semibold mb-3 text-green-400 flex items-center gap-2">
+                    💳 bKash Payment Details
+                  </h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label className="text-sm text-gray-400">Transaction ID:</label>
+                      <p className="text-green-400 font-mono text-lg font-bold">{selectedOrder.bkash_transaction_id}</p>
+                    </div>
+                    
+                    <div>
+                      <label className="text-sm text-gray-400">Sender Number:</label>
+                      <p className="text-green-400 font-mono text-lg font-bold">{selectedOrder.bkash_sender_number}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-3">
+                    <button 
+                      onClick={() => updateOrderStatus(selectedOrder.id, 'fulfilled')}
+                      className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded transition-colors flex items-center gap-2"
+                    >
+                      <Check size={16} />
+                      Approve Payment
+                    </button>
+                    <button 
+                      onClick={() => updateOrderStatus(selectedOrder.id, 'cancelled')}
+                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors flex items-center gap-2"
+                    >
+                      <X size={16} />
+                      Deny Payment
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {!selectedOrder.bkash_transaction_id && (
+                <div className="p-4 rounded bg-red-900/20 border border-red-600">
+                  <h4 className="text-lg font-semibold mb-2 text-red-400">❌ No Payment Information</h4>
+                  <p className="text-gray-300">Customer has not provided bKash payment details yet.</p>
+                </div>
+              )}
+
               {/* Customer Info */}
               <div>
                 <h4 className="text-lg font-semibold mb-3">Customer Information</h4>
@@ -248,39 +219,6 @@ const OrderManagement = () => {
                   <p><strong>ZIP:</strong> {selectedOrder.customer_zip_code}</p>
                 </div>
               </div>
-
-              {/* Bkash Payment Details */}
-              {(selectedOrder.bkash_transaction_id || selectedOrder.bkash_sender_number) && (
-                <div>
-                  <h4 className="text-lg font-semibold mb-3">Bkash Payment Details</h4>
-                  <div className="p-4 rounded bg-green-900/20 border border-green-600">
-                    {selectedOrder.bkash_transaction_id && (
-                      <p><strong>Transaction ID:</strong> <span className="font-mono text-green-400">{selectedOrder.bkash_transaction_id}</span></p>
-                    )}
-                    {selectedOrder.bkash_sender_number && (
-                      <p><strong>Sender Number:</strong> <span className="font-mono text-green-400">{selectedOrder.bkash_sender_number}</span></p>
-                    )}
-                    
-                    {/* Payment Confirmation Buttons */}
-                    <div className="mt-4 flex gap-3">
-                      <button 
-                        onClick={() => handlePaymentConfirmation(selectedOrder.id, true)}
-                        className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded transition-colors flex items-center gap-2"
-                      >
-                        <Check size={16} />
-                        Confirm Payment
-                      </button>
-                      <button 
-                        onClick={() => handlePaymentConfirmation(selectedOrder.id, false)}
-                        className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors flex items-center gap-2"
-                      >
-                        <X size={16} />
-                        Reject Payment
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
 
               {/* Order Items */}
               <div>
