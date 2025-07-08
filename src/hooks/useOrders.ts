@@ -14,13 +14,20 @@ export const useOrders = () => {
   });
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const ordersPerPage = 10;
 
-  const fetchOrders = async () => {
+  const fetchOrders = async (page = 1) => {
     try {
-      const { data, error } = await supabase
+      const start = (page - 1) * ordersPerPage;
+      const end = start + ordersPerPage - 1;
+
+      const { data, error, count } = await supabase
         .from('orders')
-        .select('*')
-        .order('created_at', { ascending: false });
+        .select('*', { count: 'exact' })
+        .order('created_at', { ascending: false })
+        .range(start, end);
 
       if (error) throw error;
 
@@ -28,18 +35,29 @@ export const useOrders = () => {
       const ordersData = (data || []) as Order[];
       setOrders(ordersData);
 
-      // Calculate stats
-      const totalOrders = ordersData.length;
-      const totalRevenue = ordersData.reduce((sum, order) => sum + parseFloat(order.total.toString()), 0);
-      const pendingOrders = ordersData.filter(order => order.status === 'pending').length;
-      const fulfilledOrders = ordersData.filter(order => order.status === 'fulfilled').length;
+      // Calculate total pages
+      const totalCount = count || 0;
+      setTotalPages(Math.ceil(totalCount / ordersPerPage));
 
-      setStats({
-        total_orders: totalOrders,
-        total_revenue: totalRevenue,
-        pending_orders: pendingOrders,
-        fulfilled_orders: fulfilledOrders
-      });
+      // Calculate stats (from all orders, not just current page)
+      const { data: allOrdersData, error: statsError } = await supabase
+        .from('orders')
+        .select('*');
+
+      if (!statsError && allOrdersData) {
+        const allOrders = allOrdersData as Order[];
+        const totalOrders = allOrders.length;
+        const totalRevenue = allOrders.reduce((sum, order) => sum + parseFloat(order.total.toString()), 0);
+        const pendingOrders = allOrders.filter(order => order.status === 'pending').length;
+        const fulfilledOrders = allOrders.filter(order => order.status === 'fulfilled').length;
+
+        setStats({
+          total_orders: totalOrders,
+          total_revenue: totalRevenue,
+          pending_orders: pendingOrders,
+          fulfilled_orders: fulfilledOrders
+        });
+      }
     } catch (error) {
       console.error('Error fetching orders:', error);
       toast.error('Failed to fetch orders');
@@ -61,7 +79,7 @@ export const useOrders = () => {
       if (error) throw error;
 
       toast.success(`Order ${orderId} status updated to ${status}`);
-      fetchOrders(); // Refresh the orders list
+      fetchOrders(currentPage); // Refresh the current page
     } catch (error) {
       console.error('Error updating order status:', error);
       toast.error('Failed to update order status');
@@ -80,8 +98,13 @@ export const useOrders = () => {
     );
   });
 
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    fetchOrders(page);
+  };
+
   useEffect(() => {
-    fetchOrders();
+    fetchOrders(currentPage);
   }, []);
 
   return {
@@ -91,6 +114,9 @@ export const useOrders = () => {
     searchTerm,
     setSearchTerm,
     updateOrderStatus,
-    refetch: fetchOrders
+    refetch: () => fetchOrders(currentPage),
+    currentPage,
+    totalPages,
+    goToPage
   };
 };

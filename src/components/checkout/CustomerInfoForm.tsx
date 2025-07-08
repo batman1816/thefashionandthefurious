@@ -1,11 +1,10 @@
 
 import React from 'react';
-import { Input } from '../ui/input';
-import { Textarea } from '../ui/textarea';
 
 interface CustomerInfo {
   firstName: string;
   lastName: string;
+  name: string;
   email: string;
   phone: string;
   address: string;
@@ -15,123 +14,102 @@ interface CustomerInfo {
 
 interface CustomerInfoFormProps {
   customerInfo: CustomerInfo;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onCustomerInfoChange: (field: string, value: string) => void;
 }
 
-const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
-  customerInfo,
-  onInputChange
-}) => {
+const CustomerInfoForm = ({ customerInfo, onCustomerInfoChange }: CustomerInfoFormProps) => {
   return (
-    <div className="space-y-4">
-      {/* First Name and Last Name Row */}
+    <div className="bg-gray-800 p-6 rounded-lg">
+      <h3 className="text-xl font-semibold text-white mb-4">Customer Information</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="firstName" className="block text-sm font-medium text-gray-300 mb-2">
-            First Name
+          <label className="block text-sm font-medium text-gray-300 mb-1">
+            First Name *
           </label>
-          <Input
+          <input
             type="text"
-            id="firstName"
-            name="firstName"
             value={customerInfo.firstName}
-            onChange={onInputChange}
+            onChange={(e) => onCustomerInfoChange('firstName', e.target.value)}
+            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
             required
-            className="border-gray-600 text-black placeholder-gray-400 focus:border-gray-500 bg-zinc-200"
           />
         </div>
+        
         <div>
-          <label htmlFor="lastName" className="block text-sm font-medium text-gray-300 mb-2">
-            Last Name
+          <label className="block text-sm font-medium text-gray-300 mb-1">
+            Last Name *
           </label>
-          <Input
+          <input
             type="text"
-            id="lastName"
-            name="lastName"
             value={customerInfo.lastName}
-            onChange={onInputChange}
+            onChange={(e) => onCustomerInfoChange('lastName', e.target.value)}
+            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
             required
-            className="border-gray-600 text-black placeholder-gray-400 focus:border-gray-500 bg-zinc-200"
           />
         </div>
-      </div>
 
-      {/* Email */}
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-          Email
-        </label>
-        <Input
-          type="email"
-          id="email"
-          name="email"
-          value={customerInfo.email}
-          onChange={onInputChange}
-          required
-          className="border-gray-600 text-black placeholder-gray-400 focus:border-gray-500 bg-zinc-200"
-        />
-      </div>
-
-      {/* Phone Number */}
-      <div>
-        <label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-2">
-          Phone Number
-        </label>
-        <Input
-          type="tel"
-          id="phone"
-          name="phone"
-          value={customerInfo.phone}
-          onChange={onInputChange}
-          required
-          className="border-gray-600 text-black placeholder-gray-400 focus:border-gray-500 bg-zinc-200"
-        />
-      </div>
-
-      {/* Address */}
-      <div>
-        <label htmlFor="address" className="block text-sm font-medium text-gray-300 mb-2">
-          Address
-        </label>
-        <Textarea
-          id="address"
-          name="address"
-          value={customerInfo.address}
-          onChange={onInputChange}
-          rows={3}
-          required
-          className="border-gray-600 text-black placeholder-gray-400 focus:border-gray-500 bg-zinc-200"
-        />
-      </div>
-
-      {/* City and ZIP Code Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="city" className="block text-sm font-medium text-gray-300 mb-2">
-            City
+        <div className="md:col-span-2">
+          <label className="block text-sm font-medium text-gray-300 mb-1">
+            Email *
           </label>
-          <Input
+          <input
+            type="email"
+            value={customerInfo.email}
+            onChange={(e) => onCustomerInfoChange('email', e.target.value)}
+            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+            required
+          />
+        </div>
+
+        <div className="md:col-span-2">
+          <label className="block text-sm font-medium text-gray-300 mb-1">
+            Phone *
+          </label>
+          <input
+            type="tel"
+            value={customerInfo.phone}
+            onChange={(e) => onCustomerInfoChange('phone', e.target.value)}
+            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+            required
+          />
+        </div>
+
+        <div className="md:col-span-2">
+          <label className="block text-sm font-medium text-gray-300 mb-1">
+            Address *
+          </label>
+          <textarea
+            value={customerInfo.address}
+            onChange={(e) => onCustomerInfoChange('address', e.target.value)}
+            rows={3}
+            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-1">
+            City *
+          </label>
+          <input
             type="text"
-            id="city"
-            name="city"
             value={customerInfo.city}
-            onChange={onInputChange}
+            onChange={(e) => onCustomerInfoChange('city', e.target.value)}
+            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
             required
-            className="border-gray-600 text-black placeholder-gray-400 focus:border-gray-500 bg-zinc-200"
           />
         </div>
+
         <div>
-          <label htmlFor="zipCode" className="block text-sm font-medium text-gray-300 mb-2">
-            ZIP Code
+          <label className="block text-sm font-medium text-gray-300 mb-1">
+            ZIP Code *
           </label>
-          <Input
+          <input
             type="text"
-            id="zipCode"
-            name="zipCode"
             value={customerInfo.zipCode}
-            onChange={onInputChange}
+            onChange={(e) => onCustomerInfoChange('zipCode', e.target.value)}
+            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
             required
-            className="border-gray-600 text-black placeholder-gray-400 focus:border-gray-500 bg-zinc-200"
           />
         </div>
       </div>

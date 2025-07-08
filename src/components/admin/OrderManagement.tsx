@@ -1,6 +1,5 @@
-
 import { useState } from 'react';
-import { Check, Clock, Eye, X } from 'lucide-react';
+import { Check, Clock, Eye, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useOrders } from '../../hooks/useOrders';
 import OrderSearch from './OrderSearch';
 import { Order } from '../../types/Order';
@@ -13,7 +12,10 @@ const OrderManagement = () => {
     loading,
     searchTerm,
     setSearchTerm,
-    updateOrderStatus
+    updateOrderStatus,
+    currentPage,
+    totalPages,
+    goToPage
   } = useOrders();
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
@@ -146,6 +148,45 @@ const OrderManagement = () => {
           </div>
         )}
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center mt-6 space-x-2">
+          <button
+            onClick={() => goToPage(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="flex items-center px-3 py-2 text-sm bg-gray-700 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-600"
+          >
+            <ChevronLeft size={16} className="mr-1" />
+            Previous
+          </button>
+          
+          <div className="flex space-x-1">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => goToPage(page)}
+                className={`px-3 py-2 text-sm rounded ${
+                  currentPage === page
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-700 text-white hover:bg-gray-600'
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+          </div>
+          
+          <button
+            onClick={() => goToPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="flex items-center px-3 py-2 text-sm bg-gray-700 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-600"
+          >
+            Next
+            <ChevronRight size={16} className="ml-1" />
+          </button>
+        </div>
+      )}
 
       {/* Order Detail Modal */}
       {selectedOrder && (

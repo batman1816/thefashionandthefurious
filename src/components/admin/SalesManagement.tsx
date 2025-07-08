@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '../../integrations/supabase/client';
 import { toast } from 'sonner';
@@ -126,17 +125,24 @@ const SalesManagement = () => {
 
   const handleSaveSale = async () => {
     try {
+      // Prepare form data with proper null handling for empty dates
+      const formData = {
+        ...saleForm,
+        start_date: saleForm.start_date || null,
+        end_date: saleForm.end_date || null
+      };
+
       if (editingSale) {
         const { error } = await supabase
           .from('sales')
-          .update(saleForm)
+          .update(formData)
           .eq('id', editingSale.id);
         if (error) throw error;
         toast.success('Sale updated successfully');
       } else {
         const { error } = await supabase
           .from('sales')
-          .insert([saleForm]);
+          .insert([formData]);
         if (error) throw error;
         toast.success('Sale created successfully');
       }
@@ -153,17 +159,24 @@ const SalesManagement = () => {
 
   const handleSaveBundle = async () => {
     try {
+      // Prepare form data with proper null handling for empty dates
+      const formData = {
+        ...bundleForm,
+        start_date: bundleForm.start_date || null,
+        end_date: bundleForm.end_date || null
+      };
+
       if (editingBundle) {
         const { error } = await supabase
           .from('bundle_deals')
-          .update(bundleForm)
+          .update(formData)
           .eq('id', editingBundle.id);
         if (error) throw error;
         toast.success('Bundle deal updated successfully');
       } else {
         const { error } = await supabase
           .from('bundle_deals')
-          .insert([bundleForm]);
+          .insert([formData]);
         if (error) throw error;
         toast.success('Bundle deal created successfully');
       }
@@ -288,7 +301,7 @@ const SalesManagement = () => {
                   <span className="text-red-500 font-bold">Tk {sale.sale_price}</span>
                 </div>
                 <p className="text-xs text-gray-400 mb-3">
-                  {new Date(sale.start_date).toLocaleDateString()} - {new Date(sale.end_date).toLocaleDateString()}
+                  {sale.start_date ? new Date(sale.start_date).toLocaleDateString() : 'No start date'} - {sale.end_date ? new Date(sale.end_date).toLocaleDateString() : 'No end date'}
                 </p>
                 <div className="flex gap-2">
                   <Button 
@@ -464,7 +477,7 @@ const SalesManagement = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">Start Date</label>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">Start Date (Optional)</label>
                   <input 
                     type="datetime-local"
                     value={saleForm.start_date}
@@ -473,7 +486,7 @@ const SalesManagement = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">End Date</label>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">End Date (Optional)</label>
                   <input 
                     type="datetime-local"
                     value={saleForm.end_date}
@@ -578,7 +591,7 @@ const SalesManagement = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">Start Date</label>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">Start Date (Optional)</label>
                   <input 
                     type="datetime-local"
                     value={bundleForm.start_date}
@@ -587,7 +600,7 @@ const SalesManagement = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">End Date</label>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">End Date (Optional)</label>
                   <input 
                     type="datetime-local"
                     value={bundleForm.end_date}

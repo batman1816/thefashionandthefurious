@@ -1,34 +1,54 @@
+
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
+
 interface ShippingOptionsProps {
   shippingOption: string;
   onShippingOptionChange: (option: string) => void;
 }
-const ShippingOptions: React.FC<ShippingOptionsProps> = ({
-  shippingOption,
-  onShippingOptionChange
-}) => {
-  return <Card className="bg-gray-800 border-gray-700">
-      <CardHeader className="bg-zinc-900">
-        <CardTitle className="text-lg font-semibold text-white">Shipping Options</CardTitle>
-      </CardHeader>
-      <CardContent className="bg-zinc-900">
-        <RadioGroup value={shippingOption} onValueChange={onShippingOptionChange} className="space-y-3">
+
+const ShippingOptions = ({ shippingOption, onShippingOptionChange }: ShippingOptionsProps) => {
+  return (
+    <div className="bg-gray-800 p-6 rounded-lg">
+      <h3 className="text-xl font-semibold text-white mb-4">Shipping Options</h3>
+      <div className="space-y-3">
+        <label className="flex items-center justify-between p-3 border border-gray-600 rounded cursor-pointer hover:border-gray-500">
           <div className="flex items-center space-x-3">
-            <RadioGroupItem value="inside-dhaka" id="inside-dhaka" className="border-gray-600 focus:ring-red-500 text-zinc-200" />
-            <label htmlFor="inside-dhaka" className="text-base text-gray-300 cursor-pointer bg-transparent">
-              Inside Dhaka (TK 70)
-            </label>
+            <input
+              type="radio"
+              name="shipping"
+              value="inside-dhaka"
+              checked={shippingOption === 'inside-dhaka'}
+              onChange={(e) => onShippingOptionChange(e.target.value)}
+              className="text-pink-500"
+            />
+            <div>
+              <span className="text-white font-medium">Inside Dhaka</span>
+              <p className="text-gray-400 text-sm">Delivery within 2-3 days</p>
+            </div>
           </div>
+          <span className="text-white font-semibold">TK 70</span>
+        </label>
+
+        <label className="flex items-center justify-between p-3 border border-gray-600 rounded cursor-pointer hover:border-gray-500">
           <div className="flex items-center space-x-3">
-            <RadioGroupItem value="outside-dhaka" id="outside-dhaka" className="border-gray-600 focus:ring-red-500 text-slate-50" />
-            <label htmlFor="outside-dhaka" className="text-base text-gray-300 cursor-pointer">
-              Outside Dhaka (TK 140)
-            </label>
+            <input
+              type="radio"
+              name="shipping"
+              value="outside-dhaka"
+              checked={shippingOption === 'outside-dhaka'}
+              onChange={(e) => onShippingOptionChange(e.target.value)}
+              className="text-pink-500"
+            />
+            <div>
+              <span className="text-white font-medium">Outside Dhaka</span>
+              <p className="text-gray-400 text-sm">Delivery within 5-7 days</p>
+            </div>
           </div>
-        </RadioGroup>
-      </CardContent>
-    </Card>;
+          <span className="text-white font-semibold">TK 130</span>
+        </label>
+      </div>
+    </div>
+  );
 };
+
 export default ShippingOptions;

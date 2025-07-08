@@ -15,6 +15,8 @@ const CheckoutForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [customerInfo, setCustomerInfo] = useState({
+    firstName: '',
+    lastName: '',
     name: '',
     email: '',
     phone: '',
@@ -44,12 +46,15 @@ const CheckoutForm = () => {
   const handleCustomerInfoChange = (field: string, value: string) => {
     setCustomerInfo(prev => ({
       ...prev,
-      [field]: value
+      [field]: value,
+      name: field === 'firstName' || field === 'lastName' 
+        ? `${field === 'firstName' ? value : prev.firstName} ${field === 'lastName' ? value : prev.lastName}`.trim()
+        : prev.name
     }));
   };
 
   const validateForm = () => {
-    if (!customerInfo.name || !customerInfo.email || !customerInfo.phone || 
+    if (!customerInfo.firstName || !customerInfo.lastName || !customerInfo.email || !customerInfo.phone || 
         !customerInfo.address || !customerInfo.city || !customerInfo.zipCode) {
       toast.error('Please fill in all customer information fields');
       return false;
@@ -84,14 +89,20 @@ const CheckoutForm = () => {
 
       const orderData = {
         id: orderId,
-        customer_name: customerInfo.name,
+        customer_name: `${customerInfo.firstName} ${customerInfo.lastName}`,
         customer_email: customerInfo.email,
         customer_phone: customerInfo.phone,
         customer_address: customerInfo.address,
         customer_city: customerInfo.city,
         customer_zip_code: customerInfo.zipCode,
         items: cartItems.map(item => ({
-          product: item.product,
+          product: {
+            id: item.product.id,
+            name: item.product.name,
+            price: item.product.price,
+            category: item.product.category,
+            image_url: item.product.image_url
+          },
           size: item.size,
           quantity: item.quantity,
           name: item.product.name,
@@ -127,7 +138,7 @@ const CheckoutForm = () => {
         console.log('🔗 CHECKOUT DEBUG: About to send order to Make.com webhook:', orderId);
         await sendOrderToMake({
           orderId,
-          customerName: customerInfo.name,
+          customerName: `${customerInfo.firstName} ${customerInfo.lastName}`,
           customerEmail: customerInfo.email,
           customerPhone: customerInfo.phone,
           customerAddress: customerInfo.address,
@@ -178,8 +189,8 @@ const CheckoutForm = () => {
           />
           
           <ShippingOptions
-            selectedOption={shippingOption}
-            onOptionChange={setShippingOption}
+            shippingOption={shippingOption}
+            onShippingOptionChange={setShippingOption}
           />
 
           {/* Payment Method */}
@@ -240,7 +251,13 @@ const CheckoutForm = () => {
         </div>
 
         <div className="space-y-6">
-          <OrderSummary shippingCost={getShippingCost()} />
+          <OrderSummary 
+            cartItems={cartItems}
+            subtotal={getCartTotal()}
+            shippingCost={getShippingCost()}
+            total={getCartTotal() + getShippingCost()}
+            loading={false}
+          />
           
           <button
             type="submit"
