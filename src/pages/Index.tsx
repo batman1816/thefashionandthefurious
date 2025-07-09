@@ -1,27 +1,45 @@
 
+import { Suspense, lazy } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import RotatingBanner from '../components/RotatingBanner';
-import NewProductsSection from '../components/NewProductsSection';
-import SalesSection from '../components/SalesSection';
-import DriversSection from '../components/DriversSection';
+
+// Lazy load components that are not immediately visible
+const RotatingBanner = lazy(() => import('../components/RotatingBanner'));
+const NewProductsSection = lazy(() => import('../components/NewProductsSection'));
+const SalesSection = lazy(() => import('../components/SalesSection'));
+const DriversSection = lazy(() => import('../components/DriversSection'));
+
+// Loading component for lazy-loaded sections
+const SectionLoader = () => (
+  <div className="flex justify-center items-center py-16">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
+  </div>
+);
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-white">
       <Header />
       
-      {/* Rotating Banner */}
-      <RotatingBanner />
+      {/* Rotating Banner - Load immediately as it's above the fold */}
+      <Suspense fallback={<SectionLoader />}>
+        <RotatingBanner />
+      </Suspense>
 
-      {/* Sales Section */}
-      <SalesSection />
+      {/* Sales Section - Load immediately to show deals */}
+      <Suspense fallback={<SectionLoader />}>
+        <SalesSection />
+      </Suspense>
 
-      {/* New Products Section */}
-      <NewProductsSection />
+      {/* New Products Section - Can be lazy loaded */}
+      <Suspense fallback={<SectionLoader />}>
+        <NewProductsSection />
+      </Suspense>
 
-      {/* Drivers Section */}
-      <DriversSection />
+      {/* Drivers Section - Can be lazy loaded */}
+      <Suspense fallback={<SectionLoader />}>
+        <DriversSection />
+      </Suspense>
 
       <Footer />
     </div>

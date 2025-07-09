@@ -34,15 +34,23 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Load cart from localStorage on mount
   useEffect(() => {
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      setCartItems(JSON.parse(savedCart));
+    try {
+      const savedCart = localStorage.getItem('cart');
+      if (savedCart) {
+        setCartItems(JSON.parse(savedCart));
+      }
+    } catch (error) {
+      console.error('Error loading cart from localStorage:', error);
     }
   }, []);
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cartItems));
+    try {
+      localStorage.setItem('cart', JSON.stringify(cartItems));
+    } catch (error) {
+      console.error('Error saving cart to localStorage:', error);
+    }
   }, [cartItems]);
 
   // Fetch active bundle deals
@@ -118,26 +126,36 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const getBundleDiscount = () => {
-    if (!activeBundleDeal || cartItems.length < activeBundleDeal.minimum_quantity) {
+    if (!activeBundleDeal) {
       return 0;
     }
 
+    // Calculate total quantity of all items in cart
+    const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
+    
+    if (totalQuantity < activeBundleDeal.minimum_quantity) {
+      return 0;
+    }
+
+    // Create a flat array of all individual items (expanding quantities)
+    const allItems: { product: Product; price: number }[] = [];
+    cartItems.forEach(cartItem => {
+      for (let i = 0; i < cartItem.quantity; i++) {
+        allItems.push({
+          product: cartItem.product,
+          price: cartItem.product.price
+        });
+      }
+    });
+
     // Sort items by price (highest first) to apply discount to most expensive items
-    const sortedItems = [...cartItems].sort((a, b) => b.product.price - a.product.price);
+    allItems.sort((a, b) => b.price - a.price);
     
     let discountAmount = 0;
-    let discountedItems = 0;
+    const itemsToDiscount = Math.min(activeBundleDeal.max_discount_items, allItems.length);
     
-    for (const item of sortedItems) {
-      if (discountedItems >= activeBundleDeal.max_discount_items) break;
-      
-      const itemsToDiscount = Math.min(
-        item.quantity, 
-        activeBundleDeal.max_discount_items - discountedItems
-      );
-      
-      discountAmount += (item.product.price * itemsToDiscount * activeBundleDeal.discount_percentage) / 100;
-      discountedItems += itemsToDiscount;
+    for (let i = 0; i < itemsToDiscount; i++) {
+      discountAmount += (allItems[i].price * activeBundleDeal.discount_percentage) / 100;
     }
 
     return discountAmount;

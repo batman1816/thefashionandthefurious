@@ -39,19 +39,16 @@ const SalesSection = () => {
         // Map sale prices to products
         const productsWithSales = productsData?.map(product => {
           const sale = salesData?.find(s => s.product_id === product.id);
-          if (sale) {
-            return {
-              ...product,
-              originalPrice: sale.original_price,
-              price: sale.sale_price,
-              saleInfo: {
-                title: sale.sale_title,
-                description: sale.sale_description,
-                endDate: sale.end_date
-              }
-            };
-          }
-          return product;
+          return {
+            ...product,
+            originalPrice: sale?.original_price || product.price,
+            price: sale?.sale_price || product.price,
+            saleInfo: sale ? {
+              title: sale.sale_title,
+              description: sale.sale_description,
+              endDate: sale.end_date
+            } : undefined
+          };
         }) || [];
 
         setSaleProducts(productsWithSales);
@@ -65,8 +62,8 @@ const SalesSection = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-16">
-        <div className="text-gray-600">Loading sales...</div>
+      <div className="flex justify-center items-center py-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
       </div>
     );
   }
