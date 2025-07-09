@@ -37,7 +37,7 @@ const CheckoutForm = () => {
       case 'inside-dhaka':
         return 70;
       case 'outside-dhaka':
-        return 130;
+        return 140;
       default:
         return 70;
     }
