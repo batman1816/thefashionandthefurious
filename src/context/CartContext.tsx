@@ -133,6 +133,13 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Calculate total quantity of all items in cart
     const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
     
+    console.log('Bundle Deal Check:', {
+      totalQuantity,
+      minimumRequired: activeBundleDeal.minimum_quantity,
+      dealActive: activeBundleDeal.is_active
+    });
+    
+    // Only apply discount if we meet the minimum quantity requirement
     if (totalQuantity < activeBundleDeal.minimum_quantity) {
       return 0;
     }
@@ -157,6 +164,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     for (let i = 0; i < itemsToDiscount; i++) {
       discountAmount += (allItems[i].price * activeBundleDeal.discount_percentage) / 100;
     }
+
+    console.log('Bundle Discount Applied:', {
+      discountAmount,
+      itemsToDiscount,
+      discountPercentage: activeBundleDeal.discount_percentage
+    });
 
     return discountAmount;
   };

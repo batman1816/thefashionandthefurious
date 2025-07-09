@@ -38,6 +38,7 @@ const Cart = () => {
   const subtotal = getCartSubtotal();
   const bundleDiscount = getBundleDiscount();
   const total = getCartTotal();
+  const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   return (
     <div className="min-h-screen bg-white">
@@ -46,12 +47,26 @@ const Cart = () => {
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
         
-        {/* Bundle Deal Banner */}
-        {activeBundleDeal && cartItems.length >= activeBundleDeal.minimum_quantity && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
-            <p className="font-semibold">🎉 Bundle Deal Applied!</p>
-            <p>{activeBundleDeal.description}</p>
-            <p>You saved TK {bundleDiscount.toFixed(2)}!</p>
+        {/* Bundle Deal Status */}
+        {activeBundleDeal && (
+          <div className={`border px-4 py-3 rounded mb-6 ${
+            totalQuantity >= activeBundleDeal.minimum_quantity
+              ? 'bg-green-100 border-green-400 text-green-700'
+              : 'bg-yellow-100 border-yellow-400 text-yellow-700'
+          }`}>
+            {totalQuantity >= activeBundleDeal.minimum_quantity ? (
+              <>
+                <p className="font-semibold">🎉 Bundle Deal Applied!</p>
+                <p>{activeBundleDeal.description}</p>
+                <p>You saved TK {bundleDiscount.toFixed(2)}!</p>
+              </>
+            ) : (
+              <>
+                <p className="font-semibold">📦 Bundle Deal Available!</p>
+                <p>{activeBundleDeal.description}</p>
+                <p>Add {activeBundleDeal.minimum_quantity - totalQuantity} more item{(activeBundleDeal.minimum_quantity - totalQuantity) > 1 ? 's' : ''} to unlock {activeBundleDeal.discount_percentage}% off!</p>
+              </>
+            )}
           </div>
         )}
         
@@ -121,7 +136,7 @@ const Cart = () => {
               
               <div className="space-y-2 mb-6">
                 <div className="flex justify-between font-normal text-lg">
-                  <span>Subtotal:</span>
+                  <span>Subtotal ({totalQuantity} item{totalQuantity > 1 ? 's' : ''}):</span>
                   <span>TK {subtotal.toFixed(2)}</span>
                 </div>
                 
