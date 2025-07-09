@@ -8,6 +8,7 @@ interface OrderSummaryProps {
   shippingCost: number;
   total: number;
   loading: boolean;
+  onSubmit?: (e: React.FormEvent) => void;
 }
 
 const OrderSummary: React.FC<OrderSummaryProps> = ({ 
@@ -15,24 +16,25 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   subtotal, 
   shippingCost, 
   total, 
-  loading 
+  loading,
+  onSubmit 
 }) => {
   return (
-    <div className="bg-gray-800 p-6 rounded-lg">
-      <h3 className="text-xl font-semibold text-white mb-4">Order Summary</h3>
+    <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
+      <h3 className="text-xl font-semibold text-white mb-6">Order Summary</h3>
       
       {/* Cart Items */}
       <div className="space-y-3 mb-6">
         {cartItems.map((item, index) => (
           <div key={`${item.product.id}-${item.size}`} className="flex justify-between text-gray-300">
-            <span>{item.product.name} (Size: {item.size}) x{item.quantity}</span>
+            <span>{item.product.name} x{item.quantity}</span>
             <span>TK {(item.product.price * item.quantity).toFixed(2)}</span>
           </div>
         ))}
       </div>
 
       {/* Summary */}
-      <div className="border-t border-gray-600 pt-4 space-y-2">
+      <div className="space-y-3">
         <div className="flex justify-between text-gray-300">
           <span>Subtotal</span>
           <span>TK {subtotal.toFixed(2)}</span>
@@ -41,11 +43,29 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           <span>Shipping</span>
           <span>TK {shippingCost.toFixed(2)}</span>
         </div>
-        <div className="flex justify-between font-semibold text-white text-lg border-t border-gray-600 pt-2">
-          <span>Total</span>
+        <div className="flex justify-between text-gray-300 border-t border-gray-600 pt-3">
+          <span>Total Amount</span>
           <span>TK {total.toFixed(2)}</span>
         </div>
+        <div className="flex justify-between text-red-400">
+          <span>Shipping (Paid via bKash)</span>
+          <span>- TK {shippingCost.toFixed(2)}</span>
+        </div>
+        <div className="flex justify-between font-semibold text-white text-lg border-t border-gray-600 pt-3">
+          <span>Amount to Pay Here</span>
+          <span>TK {subtotal.toFixed(2)}</span>
+        </div>
       </div>
+
+      {/* Complete Purchase Button */}
+      <button
+        type="submit"
+        onClick={onSubmit}
+        className={`w-full mt-6 py-3 px-4 rounded-lg font-medium text-gray-900 bg-gray-300 hover:bg-white transition-colors duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+        disabled={loading}
+      >
+        {loading ? 'Processing...' : 'Complete Purchase'}
+      </button>
     </div>
   );
 };

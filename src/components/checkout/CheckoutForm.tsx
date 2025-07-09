@@ -192,80 +192,88 @@ const CheckoutForm = () => {
             shippingOption={shippingOption}
             onShippingOptionChange={setShippingOption}
           />
-
-          {/* Payment Method */}
-          <div className="bg-gray-800 p-6 rounded-lg">
-            <h3 className="text-xl font-semibold text-white mb-4">Payment Method</h3>
-            <div className="space-y-4">
-              <label className="flex items-center space-x-3">
-                <input
-                  type="radio"
-                  name="payment"
-                  value="bkash"
-                  checked={paymentMethod === 'bkash'}
-                  onChange={(e) => setPaymentMethod(e.target.value)}
-                  className="text-pink-500"
-                />
-                <span className="text-white">bKash</span>
-              </label>
-              
-              {paymentMethod === 'bkash' && (
-                <div className="ml-6 space-y-4 p-4 bg-pink-900/20 rounded border border-pink-600">
-                  <div className="text-pink-400 text-sm">
-                    <p className="font-semibold mb-2">bKash Payment Instructions:</p>
-                    <p>1. Send money to: <strong>01XXXXXXXXX</strong></p>
-                    <p>2. Enter the transaction details below</p>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">
-                      bKash Transaction ID *
-                    </label>
-                    <input
-                      type="text"
-                      value={bkashTransactionId}
-                      onChange={(e) => setBkashTransactionId(e.target.value)}
-                      placeholder="Enter bKash TXN ID"
-                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">
-                      Your bKash Number *
-                    </label>
-                    <input
-                      type="text"
-                      value={bkashSenderNumber}
-                      onChange={(e) => setBkashSenderNumber(e.target.value)}
-                      placeholder="Enter your bKash number"
-                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
-                      required
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
         </div>
 
         <div className="space-y-6">
+          {/* Payment Method */}
+          <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
+            <div className="flex items-center mb-4">
+              <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-semibold mr-3">
+                3
+              </div>
+              <h3 className="text-lg font-semibold text-white">Select Payment</h3>
+            </div>
+            
+            <div className="mb-6">
+              <button
+                type="button"
+                className="w-full bg-blue-500 text-white py-3 px-4 rounded-lg font-medium"
+              >
+                bKash
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div className="text-gray-300">
+                <p className="font-semibold mb-3">Bkash Instructions:</p>
+                <ol className="space-y-1 text-sm">
+                  <li>1. Open up the Bkash app & Choose "SEND MONEY"</li>
+                  <li>2. Enter the Bkash Account Number, which is given down below</li>
+                  <li>3. Enter the exact amount and Confirm the Transaction</li>
+                  <li>4. After sending money, you'll receive a Bkash Transaction ID (TRX ID).</li>
+                </ol>
+              </div>
+
+              <div className="bg-gray-700 p-4 rounded-lg">
+                <p className="text-green-400 font-semibold mb-2">You need to send us: TK {getShippingCost()}</p>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-gray-300">Account Type:</span>
+                  <span className="text-white font-semibold">PERSONAL</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-300">Account Number:</span>
+                  <span className="text-red-400 font-semibold">01311506938</span>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-white font-medium mb-2">
+                  Your Bkash Account Number
+                </label>
+                <input
+                  type="text"
+                  value={bkashSenderNumber}
+                  onChange={(e) => setBkashSenderNumber(e.target.value)}
+                  placeholder="01XXXXXXXXX"
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-white font-medium mb-2">
+                  Bkash Transaction ID
+                </label>
+                <input
+                  type="text"
+                  value={bkashTransactionId}
+                  onChange={(e) => setBkashTransactionId(e.target.value)}
+                  placeholder="Txn ID"
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
           <OrderSummary 
             cartItems={cartItems}
             subtotal={getCartTotal()}
             shippingCost={getShippingCost()}
             total={getCartTotal() + getShippingCost()}
-            loading={false}
+            loading={isSubmitting}
+            onSubmit={handleSubmit}
           />
-          
-          <button
-            type="submit"
-            disabled={isSubmitting || cartItems.length === 0}
-            className="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-pink-600 hover:to-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isSubmitting ? 'Processing...' : `Place Order - TK${(getCartTotal() + getShippingCost()).toFixed(2)}`}
-          </button>
         </div>
       </form>
     </div>
