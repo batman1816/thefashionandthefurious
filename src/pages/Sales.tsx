@@ -177,7 +177,7 @@ const Sales = () => {
 
         {/* Bundle Deal Banner */}
         {activeBundleDeal && (
-          <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6 rounded-lg mb-8">
+          <div className="bg-black text-white p-6 rounded-lg mb-8 text-center">
             <h2 className="text-2xl font-bold mb-2">{activeBundleDeal.name}</h2>
             <p className="text-lg mb-2">{activeBundleDeal.description}</p>
             <p className="text-yellow-300 text-lg font-semibold">
