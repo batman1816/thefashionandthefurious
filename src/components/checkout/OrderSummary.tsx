@@ -1,7 +1,5 @@
-
 import React from 'react';
 import { CartItem } from '../../types/Product';
-
 interface OrderSummaryProps {
   cartItems: CartItem[];
   subtotal: number;
@@ -10,27 +8,23 @@ interface OrderSummaryProps {
   loading: boolean;
   onSubmit?: (e: React.FormEvent) => void;
 }
-
-const OrderSummary: React.FC<OrderSummaryProps> = ({ 
-  cartItems, 
-  subtotal, 
-  shippingCost, 
-  total, 
+const OrderSummary: React.FC<OrderSummaryProps> = ({
+  cartItems,
+  subtotal,
+  shippingCost,
+  total,
   loading,
-  onSubmit 
+  onSubmit
 }) => {
-  return (
-    <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
+  return <div className="p-6 rounded-lg border border-gray-700 bg-zinc-900">
       <h3 className="text-xl font-semibold text-white mb-6">Order Summary</h3>
       
       {/* Cart Items */}
       <div className="space-y-3 mb-6">
-        {cartItems.map((item, index) => (
-          <div key={`${item.product.id}-${item.size}`} className="flex justify-between text-gray-300">
+        {cartItems.map((item, index) => <div key={`${item.product.id}-${item.size}`} className="flex justify-between text-gray-300">
             <span>{item.product.name} x{item.quantity}</span>
             <span>TK {(item.product.price * item.quantity).toFixed(2)}</span>
-          </div>
-        ))}
+          </div>)}
       </div>
 
       {/* Summary */}
@@ -58,16 +52,9 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
       </div>
 
       {/* Complete Purchase Button */}
-      <button
-        type="submit"
-        onClick={onSubmit}
-        className={`w-full mt-6 py-3 px-4 rounded-lg font-medium text-gray-900 bg-gray-300 hover:bg-white transition-colors duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-        disabled={loading}
-      >
+      <button type="submit" onClick={onSubmit} className={`w-full mt-6 py-3 px-4 rounded-lg font-medium text-gray-900 bg-gray-300 hover:bg-white transition-colors duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={loading}>
         {loading ? 'Processing...' : 'Complete Purchase'}
       </button>
-    </div>
-  );
+    </div>;
 };
-
 export default OrderSummary;
