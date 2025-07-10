@@ -130,25 +130,30 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return 0;
     }
 
-    // Calculate total quantity of all items in cart
-    const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
+    // Filter out items that are already on individual sale
+    const nonSaleItems = cartItems.filter(item => !item.product.originalPrice);
+    
+    // Calculate total quantity of non-sale items only
+    const totalNonSaleQuantity = nonSaleItems.reduce((total, item) => total + item.quantity, 0);
     
     console.log('Bundle Deal Check:', {
-      totalQuantity,
+      totalNonSaleQuantity,
       minimumRequired: activeBundleDeal.minimum_quantity,
-      dealActive: activeBundleDeal.is_active
+      dealActive: activeBundleDeal.is_active,
+      nonSaleItemsCount: nonSaleItems.length,
+      totalItemsCount: cartItems.length
     });
     
-    // Only apply discount if we meet the minimum quantity requirement
-    if (totalQuantity < activeBundleDeal.minimum_quantity) {
+    // Only apply discount if we meet the minimum quantity requirement with non-sale items
+    if (totalNonSaleQuantity < activeBundleDeal.minimum_quantity) {
       return 0;
     }
 
-    // Create a flat array of all individual items (expanding quantities)
-    const allItems: { product: Product; price: number }[] = [];
-    cartItems.forEach(cartItem => {
+    // Create a flat array of all individual non-sale items (expanding quantities)
+    const allNonSaleItems: { product: Product; price: number }[] = [];
+    nonSaleItems.forEach(cartItem => {
       for (let i = 0; i < cartItem.quantity; i++) {
-        allItems.push({
+        allNonSaleItems.push({
           product: cartItem.product,
           price: cartItem.product.price
         });
@@ -156,19 +161,20 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     // Sort items by price (highest first) to apply discount to most expensive items
-    allItems.sort((a, b) => b.price - a.price);
+    allNonSaleItems.sort((a, b) => b.price - a.price);
     
     let discountAmount = 0;
-    const itemsToDiscount = Math.min(activeBundleDeal.max_discount_items, allItems.length);
+    const itemsToDiscount = Math.min(activeBundleDeal.max_discount_items, allNonSaleItems.length);
     
     for (let i = 0; i < itemsToDiscount; i++) {
-      discountAmount += (allItems[i].price * activeBundleDeal.discount_percentage) / 100;
+      discountAmount += (allNonSaleItems[i].price * activeBundleDeal.discount_percentage) / 100;
     }
 
     console.log('Bundle Discount Applied:', {
       discountAmount,
       itemsToDiscount,
-      discountPercentage: activeBundleDeal.discount_percentage
+      discountPercentage: activeBundleDeal.discount_percentage,
+      appliedToNonSaleItemsOnly: true
     });
 
     return discountAmount;

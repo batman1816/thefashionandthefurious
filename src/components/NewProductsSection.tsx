@@ -1,18 +1,55 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useProducts } from '../context/ProductsContext';
 import ProductModal from './ProductModal';
 import { Product } from '../types/Product';
+import { supabase } from '../integrations/supabase/client';
 
 const NewProductsSection = () => {
   const { products } = useProducts();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [productsWithSales, setProductsWithSales] = useState<Product[]>([]);
 
   // Filter products with "New" tag and take only the first 4
   const newProducts = products
     .filter(product => product.tags?.includes('New') && product.is_active !== false)
     .slice(0, 4);
+
+  useEffect(() => {
+    const fetchSalesData = async () => {
+      try {
+        const { data: salesData, error } = await supabase
+          .from('sales')
+          .select('*')
+          .eq('is_active', true)
+          .gte('end_date', new Date().toISOString());
+
+        if (error) throw error;
+
+        const updatedProducts = newProducts.map(product => {
+          const sale = salesData?.find((s: any) => s.product_id === product.id);
+          return sale ? {
+            ...product,
+            originalPrice: sale.original_price,
+            price: sale.sale_price,
+            saleInfo: {
+              title: sale.sale_title,
+              description: sale.sale_description,
+              endDate: sale.end_date
+            }
+          } : product;
+        });
+
+        setProductsWithSales(updatedProducts);
+      } catch (error) {
+        console.error('Error fetching sales data:', error);
+        setProductsWithSales(newProducts);
+      }
+    };
+
+    fetchSalesData();
+  }, [products]);
 
   const handleChooseOptions = (product: Product, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -37,12 +74,13 @@ const NewProductsSection = () => {
           NEW PRODUCTS
         </h2>
         
-        {newProducts.length > 0 ? (
+        {productsWithSales.length > 0 ? (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-              {newProducts.map((product) => {
+              {productsWithSales.map((product) => {
                 const primaryImage = product.images && product.images.length > 0 ? product.images[0] : product.image_url;
                 const hoverImage = product.images && product.images.length > 1 ? product.images[1] : primaryImage;
+                const isOnSale = product.originalPrice && product.originalPrice > product.price;
                 
                 return (
                   <div 
@@ -52,6 +90,13 @@ const NewProductsSection = () => {
                   >
                     {/* Product Image */}
                     <div className="aspect-square overflow-hidden bg-gray-50 relative mb-4">
+                      {/* Sale Badge */}
+                      {isOnSale && (
+                        <div className="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded z-10">
+                          SALE
+                        </div>
+                      )}
+                      
                       {primaryImage ? (
                         <>
                           <img
@@ -89,7 +134,14 @@ const NewProductsSection = () => {
                         {product.name}
                       </h3>
                       <div className="text-base font-normal text-black">
-                        Tk {product.price}.00 BDT
+                        {isOnSale ? (
+                          <div className="flex items-center gap-2">
+                            <span className="text-gray-400 line-through">Tk {product.originalPrice}.00 BDT</span>
+                            <span className="text-red-600 font-bold">Tk {product.price}.00 BDT</span>
+                          </div>
+                        ) : (
+                          <span>Tk {product.price}.00 BDT</span>
+                        )}
                       </div>
                       <div className="pt-2">
                         <button 
