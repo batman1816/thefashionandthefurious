@@ -6,7 +6,6 @@ import Footer from '../components/Footer';
 // Lazy load components that are not immediately visible
 const RotatingBanner = lazy(() => import('../components/RotatingBanner'));
 const NewProductsSection = lazy(() => import('../components/NewProductsSection'));
-const SalesSection = lazy(() => import('../components/SalesSection'));
 const DriversSection = lazy(() => import('../components/DriversSection'));
 
 // Loading component for lazy-loaded sections
@@ -24,11 +23,6 @@ const Index = () => {
       {/* Rotating Banner - Load immediately as it's above the fold */}
       <Suspense fallback={<SectionLoader />}>
         <RotatingBanner />
-      </Suspense>
-
-      {/* Sales Section - Load immediately to show deals */}
-      <Suspense fallback={<SectionLoader />}>
-        <SalesSection />
       </Suspense>
 
       {/* New Products Section - Can be lazy loaded */}
