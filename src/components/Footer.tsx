@@ -1,3 +1,4 @@
+
 import { Link } from 'react-router-dom';
 import { Instagram, Facebook, MessageCircle } from 'lucide-react';
 const Footer = () => {
@@ -27,7 +28,7 @@ const Footer = () => {
             <div className="flex items-center gap-4 mb-4">
               <h4 className="font-semibold">SUPPORT</h4>
               <div className="flex gap-3">
-                <a href="https://www.instagram.com/thefashionnthefurious?igsh=ZGRsZTcyazl3bGp4&utm_source=qr" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
+                <a href="https://www.instagram.com/thefashionandthefurious_?igsh=ZGRsZTcyazl3bGp4&utm_source=qr" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
                   <Instagram size={20} />
                 </a>
                 <a href="https://www.facebook.com/share/1EhKPkuewp/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
