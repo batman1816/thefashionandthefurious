@@ -1,186 +1,131 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Product } from '../types/Product';
 import ProductModal from './ProductModal';
-import { supabase } from '../integrations/supabase/client';
+import { useIsMobile } from '../hooks/use-mobile';
 
 interface ProductGridProps {
   products: Product[];
+  showSaleTag?: boolean;
 }
 
-const ProductGrid = ({ products }: ProductGridProps) => {
+const ProductGrid = ({ products, showSaleTag = false }: ProductGridProps) => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [productsWithSales, setProductsWithSales] = useState<Product[]>([]);
-  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
-
-  // Preload critical images
-  const preloadImage = useCallback((src: string) => {
-    if (!src || loadedImages.has(src)) return;
-    
-    const img = new Image();
-    img.onload = () => {
-      setLoadedImages(prev => new Set(prev).add(src));
-    };
-    img.src = src;
-  }, [loadedImages]);
-
-  useEffect(() => {
-    // Fetch active sales and apply them to products
-    const fetchSalesData = async () => {
-      try {
-        const { data: salesData, error } = await supabase
-          .from('sales')
-          .select('*')
-          .eq('is_active', true)
-          .gte('end_date', new Date().toISOString());
-
-        if (error) throw error;
-
-        const updatedProducts = products.map(product => {
-          const sale = salesData?.find((s: any) => s.product_id === product.id);
-          const productWithSale = sale ? {
-            ...product,
-            originalPrice: sale.original_price,
-            price: sale.sale_price,
-            saleInfo: {
-              title: sale.sale_title,
-              description: sale.sale_description,
-              endDate: sale.end_date
-            }
-          } : product;
-
-          // Preload primary images
-          const primaryImage = productWithSale.images?.[0] || productWithSale.image_url;
-          if (primaryImage) {
-            preloadImage(primaryImage);
-          }
-
-          return productWithSale;
-        });
-
-        setProductsWithSales(updatedProducts);
-      } catch (error) {
-        console.error('Error fetching sales data:', error);
-        setProductsWithSales(products);
-        
-        // Still preload images even if sales fetch fails
-        products.forEach(product => {
-          const primaryImage = product.images?.[0] || product.image_url;
-          if (primaryImage) {
-            preloadImage(primaryImage);
-          }
-        });
-      }
-    };
-
-    fetchSalesData();
-  }, [products, preloadImage]);
-
-  // Filter to only show active products
-  const activeProducts = productsWithSales.filter(product => product.is_active === true);
-
-  const handleChooseOptions = (product: Product, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setSelectedProduct(product);
-  };
+  const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);
+  const [selectedColors, setSelectedColors] = useState<Record<string, string>>({});
+  const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   const handleProductClick = (product: Product) => {
-    setSelectedProduct(product);
+    if (isMobile) {
+      navigate(`/product/${product.slug || product.id}`);
+    } else {
+      setSelectedProduct(product);
+    }
   };
 
-  const handleCloseModal = () => {
-    setSelectedProduct(null);
+  const handleColorSelect = (productId: string, color: string) => {
+    setSelectedColors(prev => ({
+      ...prev,
+      [productId]: color
+    }));
+  };
+
+  const getProductImage = (product: Product) => {
+    const selectedColor = selectedColors[product.id];
+    
+    if (!selectedColor || !product.color_variants) {
+      return product.image_url || (product.images && product.images[0]);
+    }
+
+    const colorVariant = product.color_variants.find(variant => 
+      variant.color.toLowerCase() === selectedColor.toLowerCase()
+    );
+    
+    return colorVariant?.image_url || product.image_url || (product.images && product.images[0]);
+  };
+
+  const getHoverImage = (product: Product) => {
+    return product.images && product.images.length > 1 ? product.images[1] : null;
   };
 
   return (
     <>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
-        {activeProducts.map((product) => {
-          const primaryImage = product.images && product.images.length > 0 ? product.images[0] : product.image_url;
-          const hoverImage = product.images && product.images.length > 1 ? product.images[1] : primaryImage;
-          const isOnSale = product.originalPrice && product.originalPrice > product.price;
-          const imageLoaded = loadedImages.has(primaryImage || '');
-          
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+        {products.map((product) => {
+          const mainImage = getProductImage(product);
+          const hoverImage = getHoverImage(product);
+          const isHovered = hoveredProduct === product.id;
+
           return (
-            <div 
-              key={product.id} 
-              className="group cursor-pointer bg-white"
-              onClick={() => handleProductClick(product)}
-            >
-              {/* Product Image */}
-              <div className="aspect-square overflow-hidden bg-gray-50 relative mb-2 md:mb-4">
-                {/* Sale Badge - Updated styling to match reference */}
-                {isOnSale && (
-                  <div className="absolute top-2 left-2 md:top-3 md:left-3 bg-red-600 text-white text-xs md:text-sm font-bold px-3 py-1 md:px-4 md:py-2 z-10 uppercase tracking-wide">
-                    SALE
+            <div key={product.id} className="group relative">
+              <div 
+                className="aspect-square bg-gray-100 rounded-none mb-3 sm:mb-4 overflow-hidden cursor-pointer relative"
+                onClick={() => handleProductClick(product)}
+                onMouseEnter={() => setHoveredProduct(product.id)}
+                onMouseLeave={() => setHoveredProduct(null)}
+              >
+                {/* Sale Tag */}
+                {showSaleTag && product.saleInfo && (
+                  <div className="absolute top-2 left-2 z-10">
+                    <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 uppercase tracking-wide">
+                      SALE
+                    </span>
                   </div>
                 )}
+
+                {/* Main Product Image */}
+                <img
+                  src={mainImage}
+                  alt={product.name}
+                  className={`w-full h-full object-cover transition-opacity duration-300 ${
+                    isHovered && hoverImage ? 'opacity-0' : 'opacity-100'
+                  }`}
+                />
                 
-                {primaryImage ? (
-                  <>
-                    {/* Loading placeholder */}
-                    {!imageLoaded && (
-                      <div className="w-full h-full flex items-center justify-center bg-gray-100 animate-pulse">
-                        <div className="w-8 h-8 md:w-12 md:h-12 bg-gray-200 rounded"></div>
-                      </div>
-                    )}
-                    
-                    <img
-                      src={primaryImage}
-                      alt={product.name}
-                      className={`w-full h-full object-cover transition-all duration-500 ease-in-out group-hover:opacity-0 ${
-                        imageLoaded ? 'opacity-100' : 'opacity-0'
-                      }`}
-                      loading="lazy"
-                      onLoad={() => setLoadedImages(prev => new Set(prev).add(primaryImage))}
-                      onError={(e) => {
-                        console.log('Primary image failed to load for:', product.name);
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
-                    {hoverImage && hoverImage !== primaryImage && (
-                      <img
-                        src={hoverImage}
-                        alt={product.name}
-                        className="w-full h-full object-cover absolute inset-0 opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100"
-                        loading="lazy"
-                        onError={(e) => {
-                          console.log('Hover image failed to load for:', product.name);
-                          e.currentTarget.style.display = 'none';
-                        }}
-                      />
-                    )}
-                  </>
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-500">
-                    No Image
-                  </div>
+                {/* Hover Image */}
+                {hoverImage && (
+                  <img
+                    src={hoverImage}
+                    alt={`${product.name} - hover`}
+                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+                      isHovered ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  />
                 )}
               </div>
-              
+
+              {/* Color Selection */}
+              {product.color_variants && product.color_variants.length > 0 && (
+                <div className="mb-2 flex gap-2 justify-center">
+                  {product.color_variants.map((variant) => (
+                    <button
+                      key={variant.color}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleColorSelect(product.id, variant.color);
+                      }}
+                      className={`px-3 py-1 text-xs font-medium border transition-all duration-200 ${
+                        selectedColors[product.id] === variant.color
+                          ? 'bg-black text-white border-black'
+                          : 'bg-white text-black border-gray-300 hover:border-black'
+                      }`}
+                    >
+                      {variant.color}
+                    </button>
+                  ))}
+                </div>
+              )}
+
               {/* Product Info */}
-              <div className="text-left space-y-1">
-                <h3 className="text-sm md:text-base font-normal text-black leading-tight">
+              <div className="text-center">
+                <h3 className="text-sm sm:text-base font-normal text-gray-900 mb-1 sm:mb-2 line-clamp-2">
                   {product.name}
                 </h3>
-                <div className="text-sm md:text-base font-normal text-black">
-                  {isOnSale ? (
-                    <div className="flex flex-col md:flex-row md:items-center md:gap-2">
-                      <span className="text-gray-400 line-through text-xs md:text-sm">€{product.originalPrice}.00 EUR</span>
-                      <span className="text-red-600 font-bold">€{product.price}.00 EUR</span>
-                    </div>
-                  ) : (
-                    <span>€{product.price}.00 EUR</span>
-                  )}
-                </div>
-                <div className="pt-2">
-                  <button 
-                    onClick={(e) => handleChooseOptions(product, e)}
-                    className="w-full border border-gray-400 text-black py-2 px-2 md:px-4 text-xs md:text-sm font-normal hover:bg-gray-50 transition-colors duration-200"
-                  >
-                    Choose options
-                  </button>
-                </div>
+                <p className="text-sm sm:text-base font-normal text-gray-900">
+                  TK {product.price}
+                </p>
               </div>
             </div>
           );
@@ -188,9 +133,9 @@ const ProductGrid = ({ products }: ProductGridProps) => {
       </div>
 
       {selectedProduct && (
-        <ProductModal 
-          product={selectedProduct} 
-          onClose={handleCloseModal} 
+        <ProductModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
         />
       )}
     </>

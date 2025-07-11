@@ -1,3 +1,7 @@
+export interface ColorVariant {
+  color: string;
+  image_url: string;
+}
 
 export interface Product {
   id: string;
@@ -17,6 +21,7 @@ export interface Product {
     description: string;
     endDate: string;
   };
+  color_variants?: ColorVariant[]; // Add color variants support
   created_at?: string;
   updated_at?: string;
 }
@@ -25,14 +30,17 @@ export interface CartItem {
   product: Product;
   size: string;
   quantity: number;
+  color?: string; // Add color to cart items
 }
 
 export interface Banner {
   id: string;
-  image_url: string;
+  image_url?: string;
+  video_url?: string; // Add video support
   button_text?: string;
   button_link?: string;
   is_active: boolean;
+  media_type: 'image' | 'video'; // Specify media type
   created_at?: string;
   updated_at?: string;
 }

@@ -17,6 +17,7 @@ const ProductDetail = () => {
   const { products } = useProducts();
   const { addToCart } = useCart();
   const [selectedSize, setSelectedSize] = useState('');
+  const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
   
   const product = products.find(p => p.slug === slug);
@@ -35,6 +36,12 @@ const ProductDetail = () => {
     }
   }, [availableSizes, selectedSize]);
 
+  useEffect(() => {
+    if (product?.color_variants && product.color_variants.length > 0 && !selectedColor) {
+      setSelectedColor(product.color_variants[0].color);
+    }
+  }, [product, selectedColor]);
+
   if (!product) {
     return (
       <div className="min-h-screen bg-white">
@@ -52,7 +59,11 @@ const ProductDetail = () => {
       toast.error('Please select a size');
       return;
     }
-    addToCart(product, selectedSize, quantity);
+    if (product.color_variants && product.color_variants.length > 0 && !selectedColor) {
+      toast.error('Please select a color');
+      return;
+    }
+    addToCart(product, selectedSize, quantity, selectedColor);
     toast.success(`Added ${product.name} to cart!`);
   };
 
@@ -61,7 +72,11 @@ const ProductDetail = () => {
       toast.error('Please select a size');
       return;
     }
-    addToCart(product, selectedSize, quantity);
+    if (product.color_variants && product.color_variants.length > 0 && !selectedColor) {
+      toast.error('Please select a color');
+      return;
+    }
+    addToCart(product, selectedSize, quantity, selectedColor);
     toast.success(`Added ${product.name} to cart!`);
     navigate('/checkout');
   };
@@ -70,12 +85,29 @@ const ProductDetail = () => {
     setSelectedSize(size);
   };
 
-  // Prepare images for carousel
-  const carouselImages = product.images && product.images.length > 0 
-    ? product.images 
-    : product.image_url 
-      ? [product.image_url] 
-      : [];
+  const handleColorSelect = (color: string) => {
+    setSelectedColor(color);
+  };
+
+  // Get the correct image based on selected color
+  const getDisplayImages = () => {
+    if (selectedColor && product.color_variants) {
+      const colorVariant = product.color_variants.find(variant => 
+        variant.color.toLowerCase() === selectedColor.toLowerCase()
+      );
+      if (colorVariant?.image_url) {
+        return [colorVariant.image_url];
+      }
+    }
+    
+    return product.images && product.images.length > 0 
+      ? product.images 
+      : product.image_url 
+        ? [product.image_url] 
+        : [];
+  };
+
+  const carouselImages = getDisplayImages();
 
   return (
     <div className="min-h-screen bg-white">
@@ -103,6 +135,28 @@ const ProductDetail = () => {
             <div className="prose text-gray-600 mb-8">
               <FormattedText text={product.description} />
             </div>
+
+            {/* Color Selection */}
+            {product.color_variants && product.color_variants.length > 0 && (
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold mb-3">Color</h3>
+                <div className="flex flex-wrap gap-2">
+                  {product.color_variants.map(variant => (
+                    <button
+                      key={variant.color}
+                      onClick={() => handleColorSelect(variant.color)}
+                      className={`px-4 py-2 border-2 font-medium transition-colors ${
+                        selectedColor === variant.color
+                          ? 'border-black bg-black text-white'
+                          : 'border-gray-300 hover:border-gray-400'
+                      }`}
+                    >
+                      {variant.color}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Size Selection */}
             {availableSizes.length > 0 && (

@@ -17,9 +17,8 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const [selectedSize, setSelectedSize] = useState('');
+  const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
-
-  console.log('ProductModal rendered for:', product.name);
 
   // Filter out XS and S from sizes and memoize the result
   const availableSizes = product.sizes?.filter(size => 
@@ -32,12 +31,22 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
     }
   }, [availableSizes, selectedSize]);
 
+  useEffect(() => {
+    if (product.color_variants && product.color_variants.length > 0 && !selectedColor) {
+      setSelectedColor(product.color_variants[0].color);
+    }
+  }, [product, selectedColor]);
+
   const handleAddToCart = () => {
     if (!selectedSize) {
       toast.error('Please select a size');
       return;
     }
-    addToCart(product, selectedSize, quantity);
+    if (product.color_variants && product.color_variants.length > 0 && !selectedColor) {
+      toast.error('Please select a color');
+      return;
+    }
+    addToCart(product, selectedSize, quantity, selectedColor);
     toast.success(`Added ${product.name} to cart!`);
     onClose();
   };
@@ -47,7 +56,11 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
       toast.error('Please select a size');
       return;
     }
-    addToCart(product, selectedSize, quantity);
+    if (product.color_variants && product.color_variants.length > 0 && !selectedColor) {
+      toast.error('Please select a color');
+      return;
+    }
+    addToCart(product, selectedSize, quantity, selectedColor);
     toast.success(`Added ${product.name} to cart!`);
     onClose();
     navigate('/checkout');
@@ -55,7 +68,6 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
-      console.log('Backdrop clicked, closing modal');
       onClose();
     }
   };
@@ -69,12 +81,29 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
     setSelectedSize(size);
   };
 
-  // Prepare images for carousel
-  const carouselImages = product.images && product.images.length > 0 
-    ? product.images 
-    : product.image_url 
-      ? [product.image_url] 
-      : [];
+  const handleColorSelect = (color: string) => {
+    setSelectedColor(color);
+  };
+
+  // Get the correct image based on selected color
+  const getDisplayImages = () => {
+    if (selectedColor && product.color_variants) {
+      const colorVariant = product.color_variants.find(variant => 
+        variant.color.toLowerCase() === selectedColor.toLowerCase()
+      );
+      if (colorVariant?.image_url) {
+        return [colorVariant.image_url];
+      }
+    }
+    
+    return product.images && product.images.length > 0 
+      ? product.images 
+      : product.image_url 
+        ? [product.image_url] 
+        : [];
+  };
+
+  const carouselImages = getDisplayImages();
 
   return (
     <div 
@@ -106,12 +135,34 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
             </h1>
             
             <div className="text-xl font-normal text-black mb-2">
-              Tk {product.price}.00 BDT
+              TK {product.price}.00
             </div>
 
             <p className="text-sm text-gray-500 mb-8 underline">
               Shipping calculated at checkout.
             </p>
+
+            {/* Color Selection */}
+            {product.color_variants && product.color_variants.length > 0 && (
+              <div className="mb-4">
+                <h3 className="text-sm font-normal mb-4 text-black">COLOR</h3>
+                <div className="flex flex-wrap gap-2 max-w-full overflow-x-auto">
+                  {product.color_variants.map(variant => (
+                    <button
+                      key={variant.color}
+                      onClick={() => handleColorSelect(variant.color)}
+                      className={`flex-shrink-0 px-4 py-2 text-sm font-normal transition-all duration-200 border ${
+                        selectedColor === variant.color
+                          ? 'bg-black text-white border-black'
+                          : 'bg-white text-black border-gray-300 hover:border-black'
+                      }`}
+                    >
+                      {variant.color}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Size Selection */}
             {availableSizes.length > 0 && (

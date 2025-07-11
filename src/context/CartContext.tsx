@@ -1,116 +1,82 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { CartItem, Product } from '../types/Product';
-import { supabase } from '../integrations/supabase/client';
-
-interface BundleDeal {
-  id: string;
-  name: string;
-  description: string;
-  discount_percentage: number;
-  minimum_quantity: number;
-  max_discount_items: number;
-  is_active: boolean;
-  end_date: string;
-}
+import { Product, CartItem } from '../types/Product';
 
 interface CartContextType {
-  cartItems: CartItem[];
-  addToCart: (product: Product, size: string, quantity: number) => void;
-  removeFromCart: (productId: string, size: string) => void;
-  updateQuantity: (productId: string, size: string, quantity: number) => void;
+  items: CartItem[];
+  addToCart: (product: Product, size: string, quantity: number, color?: string) => void;
+  removeFromCart: (productId: string, size: string, color?: string) => void;
+  updateQuantity: (productId: string, size: string, quantity: number, color?: string) => void;
   clearCart: () => void;
-  getCartTotal: () => number;
-  getCartSubtotal: () => number;
-  getBundleDiscount: () => number;
-  activeBundleDeal: BundleDeal | null;
+  total: number;
+  itemCount: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [activeBundleDeal, setActiveBundleDeal] = useState<BundleDeal | null>(null);
+  const [items, setItems] = useState<CartItem[]>([]);
 
-  // Load cart from localStorage on mount
+  // Load cart from localStorage on component mount
   useEffect(() => {
-    try {
-      const savedCart = localStorage.getItem('cart');
-      if (savedCart) {
-        setCartItems(JSON.parse(savedCart));
-      }
-    } catch (error) {
-      console.error('Error loading cart from localStorage:', error);
-    }
-  }, []);
-
-  // Save cart to localStorage whenever it changes
-  useEffect(() => {
-    try {
-      localStorage.setItem('cart', JSON.stringify(cartItems));
-    } catch (error) {
-      console.error('Error saving cart to localStorage:', error);
-    }
-  }, [cartItems]);
-
-  // Fetch active bundle deals
-  useEffect(() => {
-    const fetchBundleDeals = async () => {
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
       try {
-        const { data, error } = await supabase
-          .from('bundle_deals')
-          .select('*')
-          .eq('is_active', true)
-          .gte('end_date', new Date().toISOString())
-          .single();
-
-        if (error && error.code !== 'PGRST116') {
-          console.error('Error fetching bundle deals:', error);
-          return;
-        }
-
-        setActiveBundleDeal(data || null);
+        setItems(JSON.parse(savedCart));
       } catch (error) {
-        console.error('Error fetching bundle deals:', error);
+        console.error('Error parsing cart from localStorage:', error);
       }
-    };
-
-    fetchBundleDeals();
+    }
   }, []);
 
-  const addToCart = (product: Product, size: string, quantity: number = 1) => {
-    setCartItems(prevItems => {
-      const existingItem = prevItems.find(
-        item => item.product.id === product.id && item.size === size
+  // Save cart to localStorage whenever items change
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(items));
+  }, [items]);
+
+  const addToCart = (product: Product, size: string, quantity: number = 1, color?: string) => {
+    setItems(currentItems => {
+      const existingItem = currentItems.find(
+        item => item.product.id === product.id && 
+               item.size === size && 
+               item.color === color
       );
 
       if (existingItem) {
-        return prevItems.map(item =>
-          item.product.id === product.id && item.size === size
+        return currentItems.map(item =>
+          item.product.id === product.id && 
+          item.size === size && 
+          item.color === color
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
       }
 
-      return [...prevItems, { product, size, quantity }];
+      return [...currentItems, { product, size, quantity, color }];
     });
   };
 
-  const removeFromCart = (productId: string, size: string) => {
-    setCartItems(prevItems =>
-      prevItems.filter(item => !(item.product.id === productId && item.size === size))
+  const removeFromCart = (productId: string, size: string, color?: string) => {
+    setItems(currentItems => 
+      currentItems.filter(
+        item => !(item.product.id === productId && 
+                 item.size === size && 
+                 item.color === color)
+      )
     );
   };
 
-  const updateQuantity = (productId: string, size: string, quantity: number) => {
+  const updateQuantity = (productId: string, size: string, quantity: number, color?: string) => {
     if (quantity <= 0) {
-      removeFromCart(productId, size);
+      removeFromCart(productId, size, color);
       return;
     }
 
-    setCartItems(prevItems =>
-      prevItems.map(item =>
-        item.product.id === productId && item.size === size
+    setItems(currentItems =>
+      currentItems.map(item =>
+        item.product.id === productId && 
+        item.size === size && 
+        item.color === color
           ? { ...item, quantity }
           : item
       )
@@ -118,85 +84,21 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const clearCart = () => {
-    setCartItems([]);
+    setItems([]);
   };
 
-  const getCartSubtotal = () => {
-    return cartItems.reduce((total, item) => total + (item.product.price * item.quantity), 0);
-  };
-
-  const getBundleDiscount = () => {
-    if (!activeBundleDeal) {
-      return 0;
-    }
-
-    // Filter out items that are already on individual sale
-    const nonSaleItems = cartItems.filter(item => !item.product.originalPrice);
-    
-    // Calculate total quantity of non-sale items only
-    const totalNonSaleQuantity = nonSaleItems.reduce((total, item) => total + item.quantity, 0);
-    
-    console.log('Bundle Deal Check:', {
-      totalNonSaleQuantity,
-      minimumRequired: activeBundleDeal.minimum_quantity,
-      dealActive: activeBundleDeal.is_active,
-      nonSaleItemsCount: nonSaleItems.length,
-      totalItemsCount: cartItems.length
-    });
-    
-    // Only apply discount if we meet the minimum quantity requirement with non-sale items
-    if (totalNonSaleQuantity < activeBundleDeal.minimum_quantity) {
-      return 0;
-    }
-
-    // Create a flat array of all individual non-sale items (expanding quantities)
-    const allNonSaleItems: { product: Product; price: number }[] = [];
-    nonSaleItems.forEach(cartItem => {
-      for (let i = 0; i < cartItem.quantity; i++) {
-        allNonSaleItems.push({
-          product: cartItem.product,
-          price: cartItem.product.price
-        });
-      }
-    });
-
-    // Sort items by price (highest first) to apply discount to most expensive items
-    allNonSaleItems.sort((a, b) => b.price - a.price);
-    
-    let discountAmount = 0;
-    const itemsToDiscount = Math.min(activeBundleDeal.max_discount_items, allNonSaleItems.length);
-    
-    for (let i = 0; i < itemsToDiscount; i++) {
-      discountAmount += (allNonSaleItems[i].price * activeBundleDeal.discount_percentage) / 100;
-    }
-
-    console.log('Bundle Discount Applied:', {
-      discountAmount,
-      itemsToDiscount,
-      discountPercentage: activeBundleDeal.discount_percentage,
-      appliedToNonSaleItemsOnly: true
-    });
-
-    return discountAmount;
-  };
-
-  const getCartTotal = () => {
-    const subtotal = getCartSubtotal();
-    const bundleDiscount = getBundleDiscount();
-    return subtotal - bundleDiscount;
-  };
+  const total = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+  const itemCount = items.reduce((count, item) => count + item.quantity, 0);
 
   return (
     <CartContext.Provider value={{
-      cartItems,
+      items,
       addToCart,
       removeFromCart,
       updateQuantity,
       clearCart,
-      getCartTotal,
-      getCartSubtotal,
-      getBundleDiscount,
-      activeBundleDeal
+      total,
+      itemCount
     }}>
       {children}
     </CartContext.Provider>
@@ -205,7 +107,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useCart = () => {
   const context = useContext(CartContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useCart must be used within a CartProvider');
   }
   return context;

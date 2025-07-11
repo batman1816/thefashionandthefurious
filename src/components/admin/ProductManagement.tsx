@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Plus, Edit, Trash2, Upload, X, Eye, EyeOff } from 'lucide-react';
 import { useProducts } from '../../context/ProductsContext';
-import { Product } from '../../types/Product';
+import { Product, ColorVariant } from '../../types/Product';
 import { uploadImage, deleteImage } from '../../utils/imageUpload';
 import { toast } from 'sonner';
 
@@ -29,7 +29,8 @@ const ProductManagement = () => {
     image_url: '',
     images: [] as string[],
     tags: [] as string[],
-    is_active: true
+    is_active: true,
+    color_variants: [] as ColorVariant[]
   });
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,6 +52,54 @@ const ProductManagement = () => {
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleColorVariantImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, color: string) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    setUploading(true);
+    try {
+      const uploadPromises = Array.from(files).map(file => uploadImage(file, 'product-images'));
+      const imageUrls = await Promise.all(uploadPromises);
+      
+      setFormData(prev => ({
+        ...prev,
+        color_variants: prev.color_variants.map(variant =>
+          variant.color === color 
+            ? { ...variant, image_url: imageUrls[0] }
+            : variant
+        )
+      }));
+      toast.success('Color variant image uploaded successfully');
+    } catch (error) {
+      console.error('Failed to upload color variant image:', error);
+      toast.error('Failed to upload color variant image');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const addColorVariant = () => {
+    setFormData(prev => ({
+      ...prev,
+      color_variants: [...prev.color_variants, { color: 'Black', image_url: '' }]
+    }));
+  };
+
+  const removeColorVariant = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      color_variants: prev.color_variants.filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateColorVariant = (index: number, field: keyof ColorVariant, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      color_variants: prev.color_variants.map((variant, i) =>
+        i === index ? { ...variant, [field]: value } : variant
+      )
+    }));
   };
 
   const removeImage = (indexToRemove: number) => {
@@ -87,10 +136,9 @@ const ProductManagement = () => {
       image_url: formData.image_url,
       images: formData.images,
       tags: formData.tags,
-      is_active: formData.is_active
+      is_active: formData.is_active,
+      color_variants: formData.color_variants.length > 0 ? formData.color_variants : undefined
     };
-    
-    console.log('Submitting product data:', productData);
     
     try {
       if (editingProduct) {
@@ -99,14 +147,11 @@ const ProductManagement = () => {
           id: editingProduct.id
         });
         setEditingProduct(null);
-        console.log('Product updated successfully');
       } else {
         await addProduct(productData);
         setIsAddingProduct(false);
-        console.log('Product added successfully');
       }
       
-      // Refresh products to ensure we have the latest data
       await refreshProducts();
       
       setFormData({
@@ -118,7 +163,8 @@ const ProductManagement = () => {
         image_url: '',
         images: [],
         tags: [],
-        is_active: true
+        is_active: true,
+        color_variants: []
       });
     } catch (error) {
       console.error('Error saving product:', error);
@@ -127,7 +173,6 @@ const ProductManagement = () => {
   };
 
   const handleEdit = (product: Product) => {
-    console.log('Editing product:', product);
     setFormData({
       name: product.name,
       description: product.description || '',
@@ -137,7 +182,8 @@ const ProductManagement = () => {
       image_url: product.image_url || '',
       images: product.images || [],
       tags: product.tags || [],
-      is_active: product.is_active !== undefined ? product.is_active : true
+      is_active: product.is_active !== undefined ? product.is_active : true,
+      color_variants: product.color_variants || []
     });
     setEditingProduct(product);
     setIsAddingProduct(true);
@@ -145,12 +191,10 @@ const ProductManagement = () => {
 
   const toggleProductStatus = async (product: Product) => {
     try {
-      console.log('Toggling product status for:', product.name, 'Current status:', product.is_active);
       await updateProduct({
         ...product,
         is_active: !product.is_active
       });
-      // Refresh products after status change
       await refreshProducts();
     } catch (error) {
       console.error('Error toggling product status:', error);
@@ -169,7 +213,8 @@ const ProductManagement = () => {
       image_url: '',
       images: [],
       tags: [],
-      is_active: true
+      is_active: true,
+      color_variants: []
     });
   };
 
@@ -253,9 +298,6 @@ const ProductManagement = () => {
                 placeholder="Enter product description. Use line breaks for formatting."
                 className="w-full px-3 py-2 text-white rounded h-32 bg-zinc-900"
               />
-              <div className="text-sm text-gray-400 mt-1">
-                Tip: Press Enter for line breaks. Use **text** for bold and *text* for italic.
-              </div>
             </div>
 
             <div>
@@ -289,6 +331,66 @@ const ProductManagement = () => {
                   </label>
                 ))}
               </div>
+            </div>
+
+            {/* Color Variants Section */}
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-white">Color Variants (Optional)</label>
+                <button
+                  type="button"
+                  onClick={addColorVariant}
+                  className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
+                >
+                  Add Color
+                </button>
+              </div>
+              
+              {formData.color_variants.map((variant, index) => (
+                <div key={index} className="border border-gray-600 rounded p-4 mb-4">
+                  <div className="flex justify-between items-center mb-3">
+                    <h4 className="text-white font-medium">Color Variant {index + 1}</h4>
+                    <button
+                      type="button"
+                      onClick={() => removeColorVariant(index)}
+                      className="text-red-400 hover:text-red-300"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-white mb-2">Color Name</label>
+                      <select
+                        value={variant.color}
+                        onChange={(e) => updateColorVariant(index, 'color', e.target.value)}
+                        className="w-full px-3 py-2 text-white rounded bg-zinc-900"
+                      >
+                        <option value="Black">Black</option>
+                        <option value="White">White</option>
+                      </select>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-white mb-2">Color Image</label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleColorVariantImageUpload(e, variant.color)}
+                        className="w-full px-3 py-2 text-white rounded bg-zinc-900"
+                      />
+                      {variant.image_url && (
+                        <img
+                          src={variant.image_url}
+                          alt={`${variant.color} variant`}
+                          className="mt-2 w-16 h-16 object-cover rounded"
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
 
             <div>
@@ -336,11 +438,6 @@ const ProductManagement = () => {
                         {index === 0 && (
                           <div className="absolute bottom-0 left-0 right-0 bg-blue-600 text-white text-xs text-center py-1">
                             Main Image
-                          </div>
-                        )}
-                        {index === 1 && (
-                          <div className="absolute bottom-0 left-0 right-0 bg-green-600 text-white text-xs text-center py-1">
-                            Hover Image
                           </div>
                         )}
                       </div>
@@ -395,6 +492,7 @@ const ProductManagement = () => {
                 <th className="px-6 py-3 text-left text-white bg-zinc-800">Category</th>
                 <th className="px-6 py-3 text-left text-white bg-zinc-800">Tags</th>
                 <th className="px-6 py-3 text-left text-white bg-zinc-800">Price</th>
+                <th className="px-6 py-3 text-left text-white bg-zinc-800">Colors</th>
                 <th className="px-6 py-3 text-left text-white bg-zinc-800">Status</th>
                 <th className="px-6 py-3 text-left text-white bg-zinc-800">Actions</th>
               </tr>
@@ -424,7 +522,20 @@ const ProductManagement = () => {
                       <span className="text-gray-500">No tags</span>
                     )}
                   </td>
-                  <td className="px-6 py-4 text-white bg-zinc-800">৳{product.price}</td>
+                  <td className="px-6 py-4 text-white bg-zinc-800">TK {product.price}</td>
+                  <td className="px-6 py-4 text-gray-300 bg-zinc-800">
+                    {product.color_variants && product.color_variants.length > 0 ? (
+                      <div className="flex flex-wrap gap-1">
+                        {product.color_variants.map((variant) => (
+                          <span key={variant.color} className="bg-purple-600 text-white text-xs px-2 py-1 rounded">
+                            {variant.color}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-gray-500">No variants</span>
+                    )}
+                  </td>
                   <td className="px-6 py-4 bg-zinc-800">
                     <span
                       className={`px-2 py-1 rounded text-xs ${
