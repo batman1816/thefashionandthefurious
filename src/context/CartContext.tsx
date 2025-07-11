@@ -4,12 +4,17 @@ import { Product, CartItem } from '../types/Product';
 
 interface CartContextType {
   items: CartItem[];
+  cartItems: CartItem[]; // Add alias for backward compatibility
   addToCart: (product: Product, size: string, quantity: number, color?: string) => void;
   removeFromCart: (productId: string, size: string, color?: string) => void;
   updateQuantity: (productId: string, size: string, quantity: number, color?: string) => void;
   clearCart: () => void;
   total: number;
   itemCount: number;
+  getCartTotal: () => number;
+  getCartSubtotal: () => number;
+  getBundleDiscount: () => number;
+  activeBundleDeal: any; // Add for compatibility
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -90,15 +95,25 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const total = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
   const itemCount = items.reduce((count, item) => count + item.quantity, 0);
 
+  const getCartTotal = () => total;
+  const getCartSubtotal = () => total;
+  const getBundleDiscount = () => 0;
+  const activeBundleDeal = null;
+
   return (
     <CartContext.Provider value={{
       items,
+      cartItems: items, // Alias for backward compatibility
       addToCart,
       removeFromCart,
       updateQuantity,
       clearCart,
       total,
-      itemCount
+      itemCount,
+      getCartTotal,
+      getCartSubtotal,
+      getBundleDiscount,
+      activeBundleDeal
     }}>
       {children}
     </CartContext.Provider>

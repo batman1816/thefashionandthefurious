@@ -33,7 +33,12 @@ export const BannerProvider = ({ children }: { children: ReactNode }) => {
       }
 
       console.log('Banners fetched successfully:', data);
-      setBanners(data || []);
+      // Map the data to include media_type if missing (default to 'image')
+      const mappedBanners = (data || []).map(banner => ({
+        ...banner,
+        media_type: banner.media_type || 'image' as 'image' | 'video'
+      }));
+      setBanners(mappedBanners);
     } catch (error) {
       console.error('Error fetching banners:', error);
       toast.error('Failed to load banners');
@@ -93,7 +98,11 @@ export const BannerProvider = ({ children }: { children: ReactNode }) => {
         throw error;
       }
 
-      setBanners(prev => [data, ...prev]);
+      const mappedBanner = {
+        ...data,
+        media_type: newBanner.media_type || 'image' as 'image' | 'video'
+      };
+      setBanners(prev => [mappedBanner, ...prev]);
       console.log('Banner added successfully:', data);
     } catch (error) {
       console.error('Error adding banner:', error);
