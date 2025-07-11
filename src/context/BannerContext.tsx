@@ -36,7 +36,8 @@ export const BannerProvider = ({ children }: { children: ReactNode }) => {
       // Map the data to include media_type if missing (default to 'image')
       const mappedBanners = (data || []).map(banner => ({
         ...banner,
-        media_type: banner.media_type || 'image' as 'image' | 'video'
+        media_type: (banner as any).media_type || 'image' as 'image' | 'video',
+        video_url: (banner as any).video_url || undefined
       }));
       setBanners(mappedBanners);
     } catch (error) {
@@ -98,9 +99,10 @@ export const BannerProvider = ({ children }: { children: ReactNode }) => {
         throw error;
       }
 
-      const mappedBanner = {
+      const mappedBanner: Banner = {
         ...data,
-        media_type: newBanner.media_type || 'image' as 'image' | 'video'
+        media_type: newBanner.media_type || 'image',
+        video_url: newBanner.video_url || undefined
       };
       setBanners(prev => [mappedBanner, ...prev]);
       console.log('Banner added successfully:', data);

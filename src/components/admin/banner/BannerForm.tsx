@@ -1,136 +1,185 @@
-
 import { useState } from 'react';
-import { Banner } from '../../../types/Product';
-import BannerImageUpload from './BannerImageUpload';
-import BannerLinkSelector from './BannerLinkSelector';
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
 import { toast } from 'sonner';
+import { Banner } from '../../types/Product';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface BannerFormProps {
-  editingBanner: Banner | null;
+  editingBanner?: Banner;
   onSubmit: (bannerData: Omit<Banner, 'id'> | Banner) => Promise<void>;
   onCancel: () => void;
 }
 
-const BannerForm = ({
-  editingBanner,
-  onSubmit,
-  onCancel
-}: BannerFormProps) => {
-  const [uploading, setUploading] = useState(false);
-  const [formData, setFormData] = useState({
-    image_url: editingBanner?.image_url || '',
-    button_text: editingBanner?.button_text || '',
-    button_link: editingBanner?.button_link || '',
-    is_active: editingBanner?.is_active ?? true,
-    media_type: editingBanner?.media_type || 'image' as 'image' | 'video'
-  });
+const BannerForm = ({ editingBanner, onSubmit, onCancel }: BannerFormProps) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const initialFormData = editingBanner
+    ? {
+        image_url: editingBanner.image_url || '',
+        video_url: editingBanner.video_url || '',
+        button_text: editingBanner.button_text || '',
+        button_link: editingBanner.button_link || '',
+        is_active: editingBanner.is_active || false,
+        media_type: editingBanner.media_type || 'image'
+      }
+    : {
+        image_url: '',
+        video_url: '',
+        button_text: '',
+        button_link: '',
+        is_active: true,
+        media_type: 'image' as 'image' | 'video'
+      };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.image_url) {
-      toast.error('Please upload a banner image');
-      return;
-    }
-    if (!formData.image_url.trim()) {
-      toast.error('Please upload a valid banner image');
+  const [formData, setFormData] = useState(initialFormData);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleMediaTypeChange = (value: string) => {
+    setFormData(prev => ({ ...prev, media_type: value as 'image' | 'video' }));
+  };
+
+  const handleIsActiveChange = (checked: boolean) => {
+    setFormData(prev => ({ ...prev, is_active: checked }));
+  };
+
+  const handleSubmit = async () => {
+    if (!formData.image_url.trim() && !formData.video_url.trim()) {
+      toast.error('Please add an image or video');
       return;
     }
 
     try {
-      const bannerData = {
-        image_url: formData.image_url,
-        button_text: formData.button_text || null,
-        button_link: formData.button_link || null,
-        is_active: formData.is_active,
-        media_type: formData.media_type
-      };
-
-      console.log('Submitting banner data:', bannerData);
+      setIsSubmitting(true);
+      
       if (editingBanner) {
         await onSubmit({
-          ...bannerData,
-          id: editingBanner.id
+          ...editingBanner,
+          ...formData,
+          media_type: formData.media_type
         });
       } else {
-        await onSubmit(bannerData);
+        await onSubmit({
+          ...formData,
+          media_type: formData.media_type
+        });
       }
+      
+      // Reset form
+      setFormData({
+        image_url: '',
+        video_url: '',
+        button_text: '',
+        button_link: '',
+        is_active: true,
+        media_type: 'image'
+      });
     } catch (error) {
-      console.error('Error saving banner:', error);
-      toast.error(`Failed to ${editingBanner ? 'update' : 'add'} banner. Please try again.`);
+      console.error('Error submitting banner:', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="p-6 rounded-lg bg-zinc-900">
-      <h3 className="text-xl font-semibold text-white mb-4">
-        {editingBanner ? 'Edit Banner' : 'Add New Banner'}
-      </h3>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <BannerImageUpload
-          imageUrl={formData.image_url}
-          uploading={uploading}
-          onImageChange={url => setFormData(prev => ({
-            ...prev,
-            image_url: url
-          }))}
-          onUploadingChange={setUploading}
+    <div className="bg-zinc-900 p-6 rounded-md space-y-4">
+      <h3 className="text-xl font-semibold text-white">{editingBanner ? 'Edit Banner' : 'Add Banner'}</h3>
+
+      <div>
+        <Label htmlFor="image_url" className="text-white">Image URL</Label>
+        <Input
+          type="text"
+          id="image_url"
+          name="image_url"
+          value={formData.image_url}
+          onChange={handleChange}
+          placeholder="Enter image URL"
+          className="bg-zinc-800 text-white"
         />
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-white mb-2">Button Text (Optional)</label>
-            <input
-              type="text"
-              value={formData.button_text}
-              onChange={e => setFormData(prev => ({
-                ...prev,
-                button_text: e.target.value
-              }))}
-              className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-gray-500 focus:outline-none"
-              placeholder="e.g., Shop Now"
-              maxLength={50}
-            />
-          </div>
-          <BannerLinkSelector
-            buttonLink={formData.button_link}
-            onLinkChange={link => setFormData(prev => ({
-              ...prev,
-              button_link: link
-            }))}
-          />
-        </div>
+      <div>
+        <Label htmlFor="video_url" className="text-white">Video URL</Label>
+        <Input
+          type="text"
+          id="video_url"
+          name="video_url"
+          value={formData.video_url}
+          onChange={handleChange}
+          placeholder="Enter video URL"
+          className="bg-zinc-800 text-white"
+        />
+      </div>
 
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            id="isActive"
-            checked={formData.is_active}
-            onChange={e => setFormData(prev => ({
-              ...prev,
-              is_active: e.target.checked
-            }))}
-            className="w-4 h-4"
-          />
-          <label htmlFor="isActive" className="text-white">Active Banner</label>
-        </div>
+      <div>
+        <Label htmlFor="button_text" className="text-white">Button Text</Label>
+        <Input
+          type="text"
+          id="button_text"
+          name="button_text"
+          value={formData.button_text}
+          onChange={handleChange}
+          placeholder="Enter button text"
+          className="bg-zinc-800 text-white"
+        />
+      </div>
 
-        <div className="flex gap-4 pt-4">
-          <button
-            type="submit"
-            disabled={uploading || !formData.image_url}
-            className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {editingBanner ? 'Update Banner' : 'Add Banner'}
-          </button>
-          <button
-            type="button"
-            onClick={onCancel}
-            className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded"
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
+      <div>
+        <Label htmlFor="button_link" className="text-white">Button Link</Label>
+        <Input
+          type="text"
+          id="button_link"
+          name="button_link"
+          value={formData.button_link}
+          onChange={handleChange}
+          placeholder="Enter button link"
+          className="bg-zinc-800 text-white"
+        />
+      </div>
+
+      <div>
+        <Label className="text-white">Media Type</Label>
+        <Select onValueChange={handleMediaTypeChange} defaultValue={formData.media_type}>
+          <SelectTrigger className="bg-zinc-800 text-white">
+            <SelectValue placeholder="Select media type" />
+          </SelectTrigger>
+          <SelectContent className="bg-zinc-800 text-white">
+            <SelectItem value="image">Image</SelectItem>
+            <SelectItem value="video">Video</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="flex items-center space-x-2">
+        <Label htmlFor="is_active" className="text-white">Active</Label>
+        <Switch
+          id="is_active"
+          checked={formData.is_active}
+          onCheckedChange={handleIsActiveChange}
+        />
+      </div>
+
+      <div className="flex justify-end space-x-4">
+        <button
+          type="button"
+          className="px-4 py-2 text-zinc-400 rounded hover:bg-zinc-700 transition-colors"
+          onClick={onCancel}
+          disabled={isSubmitting}
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleSubmit}
+          className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Submitting...' : 'Submit'}
+        </button>
+      </div>
     </div>
   );
 };
