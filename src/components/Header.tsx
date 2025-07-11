@@ -30,6 +30,9 @@ const Header = () => {
 
           {/* Desktop Navigation - Right aligned */}
           <nav className="hidden md:flex space-x-8 ml-auto mr-8">
+            <Link to="/shop-all" className="text-white hover:text-red-500 transition-colors font-medium text-sm">
+              Shop All
+            </Link>
             <Link to="/drivers" className="text-white hover:text-red-500 transition-colors font-medium text-sm">
               Drivers
             </Link>
@@ -59,6 +62,9 @@ const Header = () => {
         {isMenuOpen && (
           <nav className="md:hidden py-4 border-t border-gray-800">
             <div className="flex flex-col space-y-4">
+              <Link to="/shop-all" className="text-white hover:text-red-500 transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>
+                Shop All
+              </Link>
               <Link to="/drivers" className="text-white hover:text-red-500 transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>
                 Drivers
               </Link>

@@ -10,6 +10,7 @@ import { BannerProvider } from "./context/BannerContext";
 import Index from "./pages/Index";
 import ProductDetail from "./pages/ProductDetail";
 import CategoryPage from "./pages/CategoryPage";
+import ShopAll from "./pages/ShopAll";
 import NewProducts from "./pages/NewProducts";
 import DriversProducts from "./pages/DriversProducts";
 import Sales from "./pages/Sales";
@@ -35,6 +36,7 @@ const App = () => (
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/product/:slug" element={<ProductDetail />} />
+                <Route path="/shop-all" element={<ShopAll />} />
                 <Route path="/drivers" element={<CategoryPage />} />
                 <Route path="/f1-classic" element={<CategoryPage />} />
                 <Route path="/teams" element={<CategoryPage />} />
