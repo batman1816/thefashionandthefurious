@@ -133,11 +133,11 @@ const DriversSection = () => {
                       <div className="text-sm md:text-base font-normal text-black">
                         {isOnSale ? (
                           <div className="flex flex-col md:flex-row md:items-center md:gap-2">
-                            <span className="text-gray-400 line-through text-xs md:text-sm">€{product.originalPrice}.00 EUR</span>
-                            <span className="text-red-600 font-bold">€{product.price}.00 EUR</span>
+                            <span className="text-gray-400 line-through text-xs md:text-sm">TK {product.originalPrice}</span>
+                            <span className="text-red-600 font-bold">TK {product.price}</span>
                           </div>
                         ) : (
-                          <span>€{product.price}.00 EUR</span>
+                          <span>TK {product.price}</span>
                         )}
                       </div>
                       <div className="pt-2">

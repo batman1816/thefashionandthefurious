@@ -59,6 +59,8 @@ export const BannerProvider = ({ children }: { children: ReactNode }) => {
         .from('banners')
         .update({
           image_url: updatedBanner.image_url,
+          video_url: updatedBanner.video_url,
+          media_type: updatedBanner.media_type,
           button_text: updatedBanner.button_text,
           button_link: updatedBanner.button_link,
           is_active: updatedBanner.is_active,
@@ -87,6 +89,8 @@ export const BannerProvider = ({ children }: { children: ReactNode }) => {
         .from('banners')
         .insert({
           image_url: newBanner.image_url,
+          video_url: newBanner.video_url,
+          media_type: newBanner.media_type,
           button_text: newBanner.button_text,
           button_link: newBanner.button_link,
           is_active: newBanner.is_active

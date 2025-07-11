@@ -99,17 +99,31 @@ const RotatingBanner = () => {
             }`}
           >
             {banner.media_type === 'video' && banner.video_url ? (
-              <video
-                src={banner.video_url}
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  console.error('Failed to load banner video:', banner.video_url);
-                }}
-              />
+              <div className="relative w-full h-full">
+                <video
+                  src={banner.video_url}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="w-full h-full object-cover lg:object-center object-center"
+                  style={{
+                    objectPosition: 'center center'
+                  }}
+                  onError={(e) => {
+                    console.error('Failed to load banner video:', banner.video_url);
+                  }}
+                />
+                {/* Mobile optimization: ensure video content isn't cut off */}
+                <style>{`
+                  @media (max-width: 768px) {
+                    video {
+                      object-fit: cover;
+                      object-position: center 30%;
+                    }
+                  }
+                `}</style>
+              </div>
             ) : banner.image_url ? (
               <img
                 src={banner.image_url}

@@ -87,7 +87,7 @@ const NewProducts = () => {
                         {product.name}
                       </h3>
                       <div className="text-base font-normal text-black mb-3">
-                        Tk {product.price}.00 BDT
+                        TK {product.price}
                       </div>
                       <button 
                         onClick={(e) => handleAddToCart(product, e)}
