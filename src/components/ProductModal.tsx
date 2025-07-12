@@ -135,7 +135,7 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
             </h1>
             
             <div className="text-xl font-normal text-black mb-2">
-              TK {product.price}.00
+              Tk {product.price}.00
             </div>
 
             <p className="text-sm text-gray-500 mb-8 underline">

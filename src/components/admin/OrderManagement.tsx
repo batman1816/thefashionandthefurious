@@ -109,7 +109,7 @@ const OrderManagement = () => {
                 </TableCell>
                 <TableCell className="bg-zinc-800">
                   <div className="text-sm font-medium text-white">
-                    TK{parseFloat(order.total.toString()).toFixed(2)}
+                    Tk{parseFloat(order.total.toString()).toFixed(2)}
                   </div>
                 </TableCell>
                 <TableCell className="bg-zinc-800">
@@ -276,7 +276,7 @@ const OrderManagement = () => {
                               <p className="text-gray-400">Size: {item.size} | Qty: {item.quantity}</p>
                             </div>
                             <div className="text-right">
-                              <p className="font-medium">TK{((item.product?.price || item.price) * item.quantity).toFixed(2)}</p>
+                              <p className="font-medium">Tk{((item.product?.price || item.price) * item.quantity).toFixed(2)}</p>
                             </div>
                           </div>
                         ));
@@ -297,15 +297,15 @@ const OrderManagement = () => {
                 <div className="p-4 rounded bg-zinc-800">
                   <div className="flex justify-between mb-2">
                     <span>Subtotal:</span>
-                    <span>TK{parseFloat(selectedOrder.subtotal.toString()).toFixed(2)}</span>
+                    <span>Tk{parseFloat(selectedOrder.subtotal.toString()).toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between mb-2">
                     <span>Shipping ({selectedOrder.shipping_option}):</span>
-                    <span>TK{parseFloat(selectedOrder.shipping_cost.toString()).toFixed(2)}</span>
+                    <span>Tk{parseFloat(selectedOrder.shipping_cost.toString()).toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between font-bold text-lg border-t border-gray-600 pt-2">
                     <span>Total:</span>
-                    <span>TK{parseFloat(selectedOrder.total.toString()).toFixed(2)}</span>
+                    <span>Tk{parseFloat(selectedOrder.total.toString()).toFixed(2)}</span>
                   </div>
                 </div>
               </div>

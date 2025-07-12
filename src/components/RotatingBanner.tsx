@@ -106,12 +106,19 @@ const RotatingBanner = () => {
                   muted
                   loop
                   playsInline
-                  className="w-full h-full object-cover lg:object-center object-center"
+                  preload="auto"
+                  className="w-full h-full object-cover"
                   style={{
                     objectPosition: 'center center'
                   }}
                   onError={(e) => {
                     console.error('Failed to load banner video:', banner.video_url);
+                  }}
+                  onLoadStart={() => {
+                    console.log('Video started loading:', banner.video_url);
+                  }}
+                  onCanPlay={() => {
+                    console.log('Video can play:', banner.video_url);
                   }}
                 />
                 {/* Mobile optimization: ensure video content isn't cut off */}
@@ -119,7 +126,13 @@ const RotatingBanner = () => {
                   @media (max-width: 768px) {
                     video {
                       object-fit: cover;
-                      object-position: center 30%;
+                      object-position: center 35%;
+                    }
+                  }
+                  @media (max-width: 480px) {
+                    video {
+                      object-fit: cover;
+                      object-position: center 40%;
                     }
                   }
                 `}</style>

@@ -58,7 +58,7 @@ const Cart = () => {
               <>
                 <p className="font-semibold">🎉 Bundle Deal Applied!</p>
                 <p>{activeBundleDeal.description}</p>
-                <p>You saved TK {bundleDiscount.toFixed(2)}!</p>
+                <p>You saved Tk {bundleDiscount.toFixed(2)}!</p>
               </>
             ) : (
               <>
@@ -88,7 +88,7 @@ const Cart = () => {
                     </h3>
                     <p className="text-gray-600 mb-2">Size: {item.size}</p>
                     <p className="text-lg font-normal text-gray-900">
-                      TK {item.product.price}
+                      Tk {item.product.price}
                     </p>
                   </div>
 
@@ -121,7 +121,7 @@ const Cart = () => {
 
                     {/* Item Total */}
                     <p className="font-normal text-gray-900">
-                      TK {(item.product.price * item.quantity).toFixed(2)}
+                      Tk {(item.product.price * item.quantity).toFixed(2)}
                     </p>
                   </div>
                 </div>
@@ -137,19 +137,19 @@ const Cart = () => {
               <div className="space-y-2 mb-6">
                 <div className="flex justify-between font-normal text-lg">
                   <span>Subtotal ({totalQuantity} item{totalQuantity > 1 ? 's' : ''}):</span>
-                  <span>TK {subtotal.toFixed(2)}</span>
+                  <span>Tk {subtotal.toFixed(2)}</span>
                 </div>
                 
                 {bundleDiscount > 0 && (
                   <div className="flex justify-between text-green-600 font-normal">
                     <span>Bundle Discount:</span>
-                    <span>-TK {bundleDiscount.toFixed(2)}</span>
+                    <span>-Tk {bundleDiscount.toFixed(2)}</span>
                   </div>
                 )}
                 
                 <div className="flex justify-between font-bold text-xl border-t pt-2">
                   <span>Total:</span>
-                  <span>TK {total.toFixed(2)}</span>
+                  <span>Tk {total.toFixed(2)}</span>
                 </div>
                 
                 <p className="text-sm text-gray-600">

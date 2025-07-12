@@ -87,7 +87,7 @@ const DriversProducts = () => {
                         {product.name}
                       </h3>
                       <div className="text-base font-normal text-black mb-3">
-                        TK {product.price}
+                        Tk {product.price}
                       </div>
                       <button 
                         onClick={(e) => handleAddToCart(product, e)}

@@ -124,7 +124,7 @@ const ProductGrid = ({ products, showSaleTag = false }: ProductGridProps) => {
                   {product.name}
                 </h3>
                 <p className="text-sm sm:text-base font-normal text-gray-900">
-                  TK {product.price}
+                  Tk {product.price}
                 </p>
               </div>
             </div>

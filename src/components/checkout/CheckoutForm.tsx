@@ -211,7 +211,7 @@ const CheckoutForm = () => {
               </div>
 
               <div className="p-4 rounded-lg bg-zinc-800">
-                <p className="text-green-400 font-semibold mb-2">You need to send us: TK {getCartTotal() + getShippingCost()}</p>
+                <p className="text-green-400 font-semibold mb-2">You need to send us: Tk {getCartTotal() + getShippingCost()}</p>
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-gray-300">Account Type:</span>
                   <span className="text-white font-semibold">PERSONAL</span>

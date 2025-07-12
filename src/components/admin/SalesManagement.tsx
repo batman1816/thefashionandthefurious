@@ -297,8 +297,8 @@ const SalesManagement = () => {
                 </div>
                 <p className="text-gray-300 text-sm mb-2">{sale.product?.name}</p>
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-gray-400 line-through">TK {sale.original_price}</span>
-                  <span className="text-red-500 font-bold">TK {sale.sale_price}</span>
+                  <span className="text-gray-400 line-through">Tk {sale.original_price}</span>
+                  <span className="text-red-500 font-bold">Tk {sale.sale_price}</span>
                 </div>
                 <p className="text-xs text-gray-400 mb-3">
                   {sale.start_date ? new Date(sale.start_date).toLocaleDateString() : 'No start date'} - {sale.end_date ? new Date(sale.end_date).toLocaleDateString() : 'No end date'}
@@ -426,7 +426,7 @@ const SalesManagement = () => {
                   <option value="">Select a product</option>
                   {products.map(product => (
                     <option key={product.id} value={product.id}>
-                      {product.name} - TK {product.price}
+                      {product.name} - Tk {product.price}
                     </option>
                   ))}
                 </select>

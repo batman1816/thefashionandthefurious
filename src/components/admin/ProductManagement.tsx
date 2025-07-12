@@ -522,7 +522,7 @@ const ProductManagement = () => {
                       <span className="text-gray-500">No tags</span>
                     )}
                   </td>
-                  <td className="px-6 py-4 text-white bg-zinc-800">TK {product.price}</td>
+                  <td className="px-6 py-4 text-white bg-zinc-800">Tk {product.price}</td>
                   <td className="px-6 py-4 text-gray-300 bg-zinc-800">
                     {product.color_variants && product.color_variants.length > 0 ? (
                       <div className="flex flex-wrap gap-1">

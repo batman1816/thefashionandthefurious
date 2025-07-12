@@ -114,7 +114,7 @@ const SalesChart = () => {
           <p className="text-white font-medium mb-2">{label}</p>
           <div className="space-y-1">
             <p className="text-red-400">
-              Sales: <span className="font-bold">TK{data.sales.toFixed(2)}</span>
+              Sales: <span className="font-bold">Tk{data.sales.toFixed(2)}</span>
             </p>
             <p className="text-blue-400">
               Orders: <span className="font-bold">{data.orders}</span>
@@ -195,7 +195,7 @@ const SalesChart = () => {
                   stroke="#9ca3af"
                   fontSize={12}
                   tick={{ fill: '#9ca3af' }}
-                  tickFormatter={(value) => `TK${value}`}
+                  tickFormatter={(value) => `Tk${value}`}
                 />
                 <Tooltip content={<CustomTooltip />} />
                 <Line
@@ -217,7 +217,7 @@ const SalesChart = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="p-6 rounded-lg text-center bg-zinc-900">
             <div className="text-2xl font-bold text-white mb-2">
-              TK{salesData.reduce((sum, item) => sum + item.sales, 0).toFixed(2)}
+              Tk{salesData.reduce((sum, item) => sum + item.sales, 0).toFixed(2)}
             </div>
             <div className="text-sm text-gray-400">Total Sales</div>
           </div>

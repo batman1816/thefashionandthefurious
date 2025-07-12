@@ -48,11 +48,36 @@ const BannerImageUpload = ({
     }
   };
 
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      const file = files[0];
+      if (file.type.startsWith('image/')) {
+        // Create a synthetic event to reuse the upload logic
+        const syntheticEvent = {
+          target: { files: [file] }
+        } as unknown as React.ChangeEvent<HTMLInputElement>;
+        handleImageUpload(syntheticEvent);
+      } else {
+        toast.error('Please drop a valid image file');
+      }
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
   return (
     <div>
       <label className="block text-white mb-2">Banner Image *</label>
       <div className="space-y-4">
-        <div className="border-2 border-dashed border-gray-600 rounded-lg p-4">
+        <div 
+          className="border-2 border-dashed border-gray-600 rounded-lg p-6 transition-colors hover:border-gray-500"
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+        >
           <input
             type="file"
             accept="image/*"
@@ -69,7 +94,7 @@ const BannerImageUpload = ({
           >
             <Upload size={32} className="mb-2" />
             <span className="text-center">
-              {uploading ? 'Uploading...' : 'Click to upload banner image'}
+              {uploading ? 'Uploading...' : 'Click to upload or drag & drop image'}
               <br />
               <small className="text-gray-500">Max size: 5MB</small>
             </span>

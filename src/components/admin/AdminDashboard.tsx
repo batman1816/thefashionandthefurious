@@ -36,7 +36,7 @@ const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
           <div className="grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-gray-700">
             <div className="p-4 rounded text-center bg-zinc-900">
               <div className="text-2xl font-bold text-white">
-                {loading ? '...' : `TK${analytics.total_revenue.toFixed(2)}`}
+                {loading ? '...' : `Tk${analytics.total_revenue.toFixed(2)}`}
               </div>
               <div className="text-sm text-gray-400">Total Sales</div>
             </div>
