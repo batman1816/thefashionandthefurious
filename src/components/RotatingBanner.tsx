@@ -6,7 +6,9 @@ import { useBanners } from '../context/BannerContext';
 
 const RotatingBanner = () => {
   const { banners, loading } = useBanners();
-  const activeBanners = banners.filter(banner => banner.is_active);
+  const activeBanners = banners.filter(banner => 
+    banner.is_active && (banner.category === 'home' || !banner.category)
+  );
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
@@ -106,19 +108,32 @@ const RotatingBanner = () => {
                   muted
                   loop
                   playsInline
-                  preload="auto"
+                  webkit-playsinline="true"
+                  preload="metadata"
                   className="w-full h-full object-cover"
                   style={{
                     objectPosition: 'center center'
                   }}
+                  onLoadedData={(e) => {
+                    // Force play for mobile devices
+                    const video = e.currentTarget;
+                    const playPromise = video.play();
+                    if (playPromise !== undefined) {
+                      playPromise.catch(error => {
+                        console.log('Autoplay prevented:', error);
+                        // Fallback: try to play on user interaction
+                        const playOnInteraction = () => {
+                          video.play();
+                          document.removeEventListener('touchstart', playOnInteraction);
+                          document.removeEventListener('click', playOnInteraction);
+                        };
+                        document.addEventListener('touchstart', playOnInteraction);
+                        document.addEventListener('click', playOnInteraction);
+                      });
+                    }
+                  }}
                   onError={(e) => {
                     console.error('Failed to load banner video:', banner.video_url);
-                  }}
-                  onLoadStart={() => {
-                    console.log('Video started loading:', banner.video_url);
-                  }}
-                  onCanPlay={() => {
-                    console.log('Video can play:', banner.video_url);
                   }}
                 />
                 {/* Mobile optimization: ensure video content isn't cut off */}

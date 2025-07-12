@@ -41,6 +41,9 @@ export interface Banner {
   button_link?: string;
   is_active: boolean;
   media_type: 'image' | 'video'; // Specify media type
+  category?: string; // Add category support
+  title?: string; // Add title support
+  description?: string; // Add description support
   created_at?: string;
   updated_at?: string;
 }

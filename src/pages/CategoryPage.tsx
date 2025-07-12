@@ -4,6 +4,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ProductGrid from '../components/ProductGrid';
 import { useProducts } from '../context/ProductsContext';
+import CategoryBanner from '../components/CategoryBanner';
 
 const CategoryPage = () => {
   const location = useLocation();
@@ -47,17 +48,8 @@ const CategoryPage = () => {
     <div className="min-h-screen bg-white">
       <Header />
       
-      {/* Category Hero */}
-      <section className="bg-black text-white py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">
-            {getCategoryTitle(category || '')}
-          </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            {getCategoryDescription(category || '')}
-          </p>
-        </div>
-      </section>
+      {/* Category Banner */}
+      <CategoryBanner category={category || ''} />
 
       {/* Products */}
       <section className="py-16">

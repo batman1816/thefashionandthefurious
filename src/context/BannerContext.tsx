@@ -33,11 +33,14 @@ export const BannerProvider = ({ children }: { children: ReactNode }) => {
       }
 
       console.log('Banners fetched successfully:', data);
-      // Map the data to include media_type if missing (default to 'image')
+      // Map the data to include all new fields
       const mappedBanners = (data || []).map(banner => ({
         ...banner,
         media_type: (banner as any).media_type || 'image' as 'image' | 'video',
-        video_url: (banner as any).video_url || undefined
+        video_url: (banner as any).video_url || undefined,
+        category: (banner as any).category || 'home',
+        title: (banner as any).title || undefined,
+        description: (banner as any).description || undefined
       }));
       setBanners(mappedBanners);
     } catch (error) {
@@ -64,6 +67,9 @@ export const BannerProvider = ({ children }: { children: ReactNode }) => {
           button_text: updatedBanner.button_text,
           button_link: updatedBanner.button_link,
           is_active: updatedBanner.is_active,
+          category: updatedBanner.category,
+          title: updatedBanner.title,
+          description: updatedBanner.description,
           updated_at: new Date().toISOString()
         })
         .eq('id', updatedBanner.id);
@@ -93,7 +99,10 @@ export const BannerProvider = ({ children }: { children: ReactNode }) => {
           media_type: newBanner.media_type,
           button_text: newBanner.button_text,
           button_link: newBanner.button_link,
-          is_active: newBanner.is_active
+          is_active: newBanner.is_active,
+          category: newBanner.category,
+          title: newBanner.title,
+          description: newBanner.description
         })
         .select()
         .single();
@@ -106,7 +115,10 @@ export const BannerProvider = ({ children }: { children: ReactNode }) => {
       const mappedBanner: Banner = {
         ...data,
         media_type: newBanner.media_type || 'image',
-        video_url: newBanner.video_url || undefined
+        video_url: newBanner.video_url || undefined,
+        category: newBanner.category || 'home',
+        title: newBanner.title || undefined,
+        description: newBanner.description || undefined
       };
       setBanners(prev => [mappedBanner, ...prev]);
       console.log('Banner added successfully:', data);

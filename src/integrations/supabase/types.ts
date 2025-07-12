@@ -18,33 +18,42 @@ export type Database = {
         Row: {
           button_link: string | null
           button_text: string | null
+          category: string | null
           created_at: string
+          description: string | null
           id: string
           image_url: string
           is_active: boolean
           media_type: string | null
+          title: string | null
           updated_at: string
           video_url: string | null
         }
         Insert: {
           button_link?: string | null
           button_text?: string | null
+          category?: string | null
           created_at?: string
+          description?: string | null
           id?: string
           image_url: string
           is_active?: boolean
           media_type?: string | null
+          title?: string | null
           updated_at?: string
           video_url?: string | null
         }
         Update: {
           button_link?: string | null
           button_text?: string | null
+          category?: string | null
           created_at?: string
+          description?: string | null
           id?: string
           image_url?: string
           is_active?: boolean
           media_type?: string | null
+          title?: string | null
           updated_at?: string
           video_url?: string | null
         }

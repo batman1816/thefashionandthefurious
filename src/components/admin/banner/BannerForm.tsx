@@ -25,7 +25,10 @@ const BannerForm = ({ editingBanner, onSubmit, onCancel }: BannerFormProps) => {
         button_text: editingBanner.button_text || '',
         button_link: editingBanner.button_link || '',
         is_active: editingBanner.is_active || false,
-        media_type: editingBanner.media_type || 'image'
+        media_type: editingBanner.media_type || 'image',
+        category: editingBanner.category || 'home',
+        title: editingBanner.title || '',
+        description: editingBanner.description || ''
       }
     : {
         image_url: '',
@@ -33,7 +36,10 @@ const BannerForm = ({ editingBanner, onSubmit, onCancel }: BannerFormProps) => {
         button_text: '',
         button_link: '',
         is_active: true,
-        media_type: 'image' as 'image' | 'video'
+        media_type: 'image' as 'image' | 'video',
+        category: 'home',
+        title: '',
+        description: ''
       };
 
   const [formData, setFormData] = useState(initialFormData);
@@ -88,7 +94,10 @@ const BannerForm = ({ editingBanner, onSubmit, onCancel }: BannerFormProps) => {
         button_text: '',
         button_link: '',
         is_active: true,
-        media_type: 'image'
+        media_type: 'image',
+        category: 'home',
+        title: '',
+        description: ''
       });
     } catch (error) {
       console.error('Error submitting banner:', error);
@@ -129,6 +138,51 @@ const BannerForm = ({ editingBanner, onSubmit, onCancel }: BannerFormProps) => {
           onUploadingChange={setUploading}
         />
       )}
+
+      {/* Category Selection */}
+      <div>
+        <Label className="text-white">Category</Label>
+        <Select onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))} defaultValue={formData.category}>
+          <SelectTrigger className="bg-zinc-800 text-white">
+            <SelectValue placeholder="Select category" />
+          </SelectTrigger>
+          <SelectContent className="bg-zinc-800 text-white">
+            <SelectItem value="home">Home Page</SelectItem>
+            <SelectItem value="drivers">Drivers</SelectItem>
+            <SelectItem value="teams">Teams</SelectItem>
+            <SelectItem value="f1-classic">F1 Classic</SelectItem>
+            <SelectItem value="shop-all">Shop All</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Title and Description */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="title" className="text-white">Title (Optional)</Label>
+          <Input
+            type="text"
+            id="title"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            placeholder="Banner title"
+            className="bg-zinc-800 text-white"
+          />
+        </div>
+        <div>
+          <Label htmlFor="description" className="text-white">Description (Optional)</Label>
+          <Input
+            type="text"
+            id="description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            placeholder="Banner description"
+            className="bg-zinc-800 text-white"
+          />
+        </div>
+      </div>
 
       <div>
         <Label htmlFor="button_text" className="text-white">Button Text</Label>
