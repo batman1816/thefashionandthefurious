@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import FormattedText from '../components/FormattedText';
 import ProductImageCarousel from '../components/ProductImageCarousel';
+import RecommendedProducts from '../components/RecommendedProducts';
 import SizeChart from '../components/SizeChart';
 import { useProducts } from '../context/ProductsContext';
 import { useCart } from '../context/CartContext';
@@ -234,6 +235,12 @@ const ProductDetail = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* You may also like section */}
+        <div className="mt-16 border-t pt-12">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-8 text-center">You may also like</h2>
+          <RecommendedProducts currentProductId={product.id} />
         </div>
       </div>
 
