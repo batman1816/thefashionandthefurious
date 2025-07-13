@@ -58,17 +58,17 @@ const ProductImageCarousel = ({ images, productName, className = "" }: ProductIm
           </>
         )}
         
-        {/* Image indicators - more prominent dots like pagination */}
+        {/* Image pagination dots - exactly like the reference */}
         {validImages.length > 1 && (
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-1">
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
             {validImages.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentImageIndex(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-200 border-2 ${
+                className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
                   index === currentImageIndex 
-                    ? 'bg-white border-white' 
-                    : 'bg-transparent border-white hover:bg-white hover:bg-opacity-50'
+                    ? 'bg-gray-800' 
+                    : 'bg-gray-300 hover:bg-gray-500'
                 }`}
                 aria-label={`Go to image ${index + 1}`}
               />

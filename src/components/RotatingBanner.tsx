@@ -202,22 +202,6 @@ const RotatingBanner = () => {
             >
               <ChevronRight size={24} className="sm:w-8 sm:h-8" />
             </button>
-            
-            {/* Banner pagination dots */}
-            <div className="absolute bottom-20 sm:bottom-24 left-1/2 transform -translate-x-1/2 flex space-x-2 z-30">
-              {activeBanners.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentBannerIndex(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    index === currentBannerIndex 
-                      ? 'bg-white' 
-                      : 'bg-white bg-opacity-50 hover:bg-opacity-75'
-                  }`}
-                  aria-label={`Go to banner ${index + 1}`}
-                />
-              ))}
-            </div>
           </>
         )}
       </div>
