@@ -41,30 +41,30 @@ const Cart = () => {
   const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       <Header />
       
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <h1 className="text-2xl font-semibold text-gray-900 mb-8">Shopping Cart</h1>
         
         {/* Bundle Deal Status */}
         {activeBundleDeal && (
-          <div className={`border px-4 py-3 rounded mb-6 ${
+          <div className={`border px-4 py-3 rounded-lg mb-6 ${
             totalQuantity >= activeBundleDeal.minimum_quantity
-              ? 'bg-green-100 border-green-400 text-green-700'
-              : 'bg-yellow-100 border-yellow-400 text-yellow-700'
+              ? 'bg-green-50 border-green-200 text-green-800'
+              : 'bg-blue-50 border-blue-200 text-blue-800'
           }`}>
             {totalQuantity >= activeBundleDeal.minimum_quantity ? (
               <>
                 <p className="font-semibold">🎉 Bundle Deal Applied!</p>
-                <p>{activeBundleDeal.description}</p>
-                <p>You saved Tk {bundleDiscount.toFixed(2)}!</p>
+                <p className="text-sm">{activeBundleDeal.description}</p>
+                <p className="text-sm">You saved Tk {bundleDiscount.toFixed(2)}!</p>
               </>
             ) : (
               <>
                 <p className="font-semibold">📦 Bundle Deal Available!</p>
-                <p>{activeBundleDeal.description}</p>
-                <p>Add {activeBundleDeal.minimum_quantity - totalQuantity} more item{(activeBundleDeal.minimum_quantity - totalQuantity) > 1 ? 's' : ''} to unlock {activeBundleDeal.discount_percentage}% off!</p>
+                <p className="text-sm">{activeBundleDeal.description}</p>
+                <p className="text-sm">Add {activeBundleDeal.minimum_quantity - totalQuantity} more item{(activeBundleDeal.minimum_quantity - totalQuantity) > 1 ? 's' : ''} to unlock {activeBundleDeal.discount_percentage}% off!</p>
               </>
             )}
           </div>
@@ -73,56 +73,60 @@ const Cart = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2">
-            <div className="space-y-6">
-              {cartItems.map((item) => (
-                <div key={`${item.product.id}-${item.size}`} className="flex gap-4 p-4 border border-gray-200">
-                  <img
-                    src={item.product.image_url}
-                    alt={item.product.name}
-                    className="w-24 h-24 object-cover"
-                  />
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+              {cartItems.map((item, index) => (
+                <div key={`${item.product.id}-${item.size}`} className={`flex gap-6 p-6 ${index !== cartItems.length - 1 ? 'border-b border-gray-100' : ''}`}>
+                  <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                    <img
+                      src={item.product.image_url}
+                      alt={item.product.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                   
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900 mb-2">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-medium text-gray-900 mb-1 text-sm">
                       {item.product.name}
                     </h3>
-                    <p className="text-gray-600 mb-2">Size: {item.size}</p>
-                    <p className="text-lg font-normal text-gray-900">
-                      Tk {item.product.price}
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col items-end gap-2">
+                    <p className="text-gray-500 text-sm mb-3">Size: {item.size}</p>
+                    
                     {/* Quantity Controls */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center border border-gray-200 rounded-lg">
+                        <button
+                          onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1)}
+                          className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                          disabled={item.quantity <= 1}
+                        >
+                          <Minus size={16} />
+                        </button>
+                        <span className="px-3 py-2 text-sm font-medium min-w-[40px] text-center">{item.quantity}</span>
+                        <button
+                          onClick={() => updateQuantity(item.product.id, item.size, item.quantity + 1)}
+                          className="p-2 hover:bg-gray-50"
+                        >
+                          <Plus size={16} />
+                        </button>
+                      </div>
+                      
                       <button
-                        onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1)}
-                        className="p-1 border border-gray-300 hover:border-gray-400"
-                        disabled={item.quantity <= 1}
+                        onClick={() => removeFromCart(item.product.id, item.size)}
+                        className="text-gray-400 hover:text-red-500 p-1 transition-colors"
                       >
-                        <Minus size={14} />
-                      </button>
-                      <span className="w-8 text-center">{item.quantity}</span>
-                      <button
-                        onClick={() => updateQuantity(item.product.id, item.size, item.quantity + 1)}
-                        className="p-1 border border-gray-300 hover:border-gray-400"
-                      >
-                        <Plus size={14} />
+                        <Trash2 size={16} />
                       </button>
                     </div>
+                  </div>
 
-                    {/* Remove Button */}
-                    <button
-                      onClick={() => removeFromCart(item.product.id, item.size)}
-                      className="text-red-600 hover:text-red-800 p-1"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-
-                    {/* Item Total */}
-                    <p className="font-normal text-gray-900">
+                  <div className="text-right flex-shrink-0">
+                    <p className="font-semibold text-gray-900 text-lg">
                       Tk {(item.product.price * item.quantity).toFixed(2)}
                     </p>
+                    {item.quantity > 1 && (
+                      <p className="text-gray-500 text-sm">
+                        Tk {item.product.price} each
+                      </p>
+                    )}
                   </div>
                 </div>
               ))}
@@ -131,45 +135,49 @@ const Cart = () => {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-gray-50 p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">Order Summary</h2>
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-4">
+              <h2 className="text-lg font-semibold text-gray-900 mb-6">Order Summary</h2>
               
-              <div className="space-y-2 mb-6">
-                <div className="flex justify-between font-normal text-lg">
-                  <span>Subtotal ({totalQuantity} item{totalQuantity > 1 ? 's' : ''}):</span>
+              <div className="space-y-3 mb-6">
+                <div className="flex justify-between text-gray-600">
+                  <span>Subtotal ({totalQuantity} item{totalQuantity > 1 ? 's' : ''})</span>
                   <span>Tk {subtotal.toFixed(2)}</span>
                 </div>
                 
                 {bundleDiscount > 0 && (
-                  <div className="flex justify-between text-green-600 font-normal">
-                    <span>Bundle Discount:</span>
+                  <div className="flex justify-between text-green-600">
+                    <span>Bundle Discount</span>
                     <span>-Tk {bundleDiscount.toFixed(2)}</span>
                   </div>
                 )}
                 
-                <div className="flex justify-between font-bold text-xl border-t pt-2">
-                  <span>Total:</span>
-                  <span>Tk {total.toFixed(2)}</span>
+                <div className="border-t border-gray-200 pt-3">
+                  <div className="flex justify-between font-semibold text-lg text-gray-900">
+                    <span>Total</span>
+                    <span>Tk {total.toFixed(2)}</span>
+                  </div>
                 </div>
                 
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-500 mt-2">
                   Shipping will be calculated at checkout
                 </p>
               </div>
 
-              <Link
-                to="/checkout"
-                className="w-full bg-black hover:bg-gray-800 text-white py-3 px-6 font-semibold transition-colors duration-300 block text-center"
-              >
-                PROCEED TO CHECKOUT
-              </Link>
+              <div className="space-y-3">
+                <Link
+                  to="/checkout"
+                  className="w-full bg-black hover:bg-gray-800 text-white py-3 px-6 font-medium transition-colors duration-200 block text-center rounded-lg"
+                >
+                  Proceed to Checkout
+                </Link>
 
-              <Link
-                to="/"
-                className="w-full bg-gray-200 hover:bg-gray-300 text-gray-900 py-3 px-6 font-semibold transition-colors duration-300 block text-center mt-4"
-              >
-                CONTINUE SHOPPING
-              </Link>
+                <Link
+                  to="/"
+                  className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-6 font-medium transition-colors duration-200 block text-center rounded-lg"
+                >
+                  Continue Shopping
+                </Link>
+              </div>
             </div>
           </div>
         </div>
