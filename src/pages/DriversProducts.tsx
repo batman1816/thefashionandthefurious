@@ -4,7 +4,6 @@ import { useProducts } from '../context/ProductsContext';
 import { useCart } from '../context/CartContext';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import AnnouncementBanner from '../components/AnnouncementBanner';
 import ProductModal from '../components/ProductModal';
 import { Product } from '../types/Product';
 
@@ -43,7 +42,6 @@ const DriversProducts = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <AnnouncementBanner />
       <Header />
       
       <div className="container mx-auto px-4 py-16">

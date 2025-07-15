@@ -142,16 +142,28 @@ const AnnouncementBannerManagement = () => {
         </CardHeader>
         <CardContent>
           {bannerData.is_active ? (
-            <div className="bg-red-600 text-white py-2 overflow-hidden relative rounded">
-              <div className="whitespace-nowrap flex animate-scroll">
-                {Array.from({ length: 4 }, (_, i) => (
-                  <span
-                    key={i}
-                    className="inline-block px-8 text-sm font-semibold tracking-wide"
-                  >
-                    {bannerData.text}
-                  </span>
-                ))}
+            <div className="bg-red-600 text-white py-2 overflow-hidden relative rounded font-poppins">
+              <div className="flex animate-scroll-continuous">
+                <div className="flex whitespace-nowrap">
+                  {Array.from({ length: 6 }, (_, i) => (
+                    <span
+                      key={`first-${i}`}
+                      className="inline-block px-8 text-sm font-semibold tracking-wide"
+                    >
+                      {bannerData.text}
+                    </span>
+                  ))}
+                </div>
+                <div className="flex whitespace-nowrap">
+                  {Array.from({ length: 6 }, (_, i) => (
+                    <span
+                      key={`second-${i}`}
+                      className="inline-block px-8 text-sm font-semibold tracking-wide"
+                    >
+                      {bannerData.text}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           ) : (

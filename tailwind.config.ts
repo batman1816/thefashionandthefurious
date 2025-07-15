@@ -21,6 +21,7 @@ export default {
 		extend: {
 			fontFamily: {
 				sans: ['Inter', 'sans-serif'],
+				poppins: ['Poppins', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -99,9 +100,9 @@ export default {
 						transform: 'translateY(0)'
 					}
 				},
-				'scroll': {
+				'scroll-continuous': {
 					'0%': {
-						transform: 'translateX(100%)'
+						transform: 'translateX(0%)'
 					},
 					'100%': {
 						transform: 'translateX(-100%)'
@@ -112,7 +113,7 @@ export default {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.3s ease-out',
-				'scroll': 'scroll 20s linear infinite'
+				'scroll-continuous': 'scroll-continuous 30s linear infinite'
 			}
 		}
 	},

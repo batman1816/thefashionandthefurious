@@ -38,17 +38,29 @@ const AnnouncementBanner = () => {
   }
 
   return (
-    <div className="bg-red-600 text-white py-2 overflow-hidden relative">
-      <div className="whitespace-nowrap flex animate-scroll">
-        {/* Repeat the text multiple times to create continuous scroll */}
-        {Array.from({ length: 8 }, (_, i) => (
-          <span
-            key={i}
-            className="inline-block px-8 text-sm font-semibold tracking-wide"
-          >
-            {bannerData.text}
-          </span>
-        ))}
+    <div className="bg-red-600 text-white py-2 overflow-hidden relative font-poppins">
+      <div className="flex animate-scroll-continuous">
+        {/* Create a seamless loop by duplicating the content */}
+        <div className="flex whitespace-nowrap">
+          {Array.from({ length: 12 }, (_, i) => (
+            <span
+              key={`first-${i}`}
+              className="inline-block px-8 text-sm font-semibold tracking-wide"
+            >
+              {bannerData.text}
+            </span>
+          ))}
+        </div>
+        <div className="flex whitespace-nowrap">
+          {Array.from({ length: 12 }, (_, i) => (
+            <span
+              key={`second-${i}`}
+              className="inline-block px-8 text-sm font-semibold tracking-wide"
+            >
+              {bannerData.text}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );
