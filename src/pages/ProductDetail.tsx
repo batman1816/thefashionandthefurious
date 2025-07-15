@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Minus, Plus } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import AnnouncementBanner from '../components/AnnouncementBanner';
 import FormattedText from '../components/FormattedText';
 import ProductImageCarousel from '../components/ProductImageCarousel';
 import RecommendedProducts from '../components/RecommendedProducts';
@@ -112,6 +113,7 @@ const ProductDetail = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <AnnouncementBanner />
       <Header />
       
       <div className="container mx-auto px-4 py-8">

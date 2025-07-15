@@ -1,6 +1,7 @@
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import AnnouncementBanner from '../components/AnnouncementBanner';
 import ProductGrid from '../components/ProductGrid';
 import { useProducts } from '../context/ProductsContext';
 
@@ -12,6 +13,7 @@ const ShopAll = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <AnnouncementBanner />
       <Header />
       
       {/* Category Hero */}

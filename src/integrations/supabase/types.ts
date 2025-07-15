@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      announcement_banner: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          text: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          text?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          text?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       banners: {
         Row: {
           button_link: string | null

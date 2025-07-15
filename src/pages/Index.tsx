@@ -2,6 +2,7 @@
 import { Suspense, lazy } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import AnnouncementBanner from '../components/AnnouncementBanner';
 
 // Lazy load components that are not immediately visible  
 const NewProductsSection = lazy(() => import('../components/NewProductsSection'));
@@ -19,6 +20,7 @@ const SectionLoader = () => (
 const Index = () => {
   return (
     <div className="min-h-screen bg-white">
+      <AnnouncementBanner />
       <Header />
       
       {/* Rotating Banner - Load immediately as it's above the fold */}

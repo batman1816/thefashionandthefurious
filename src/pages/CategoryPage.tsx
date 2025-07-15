@@ -2,6 +2,7 @@
 import { useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import AnnouncementBanner from '../components/AnnouncementBanner';
 import ProductGrid from '../components/ProductGrid';
 import { useProducts } from '../context/ProductsContext';
 import CategoryBanner from '../components/CategoryBanner';
@@ -46,6 +47,7 @@ const CategoryPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <AnnouncementBanner />
       <Header />
       
       {/* Category Banner */}

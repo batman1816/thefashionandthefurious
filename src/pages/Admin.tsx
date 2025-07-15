@@ -8,6 +8,7 @@ import AdminDashboard from '../components/admin/AdminDashboard';
 import ProductManagement from '../components/admin/ProductManagement';
 import OrderManagement from '../components/admin/OrderManagement';
 import BannerManagement from '../components/admin/BannerManagement';
+import AnnouncementBannerManagement from '../components/admin/AnnouncementBannerManagement';
 import SalesManagement from '../components/admin/SalesManagement';
 import SiteSettings from '../components/admin/SiteSettings';
 import MakeIntegration from '../components/admin/MakeIntegration';
@@ -55,6 +56,8 @@ const Admin = () => {
         return <OrderManagement />;
       case 'banners':
         return <BannerManagement />;
+      case 'announcement':
+        return <AnnouncementBannerManagement />;
       case 'sales':
         return <SalesManagement />;
       case 'make':
@@ -81,6 +84,7 @@ const Admin = () => {
                 { id: 'products', label: 'Products', icon: '📦' },
                 { id: 'orders', label: 'Orders', icon: '🛒' },
                 { id: 'banners', label: 'Banners', icon: '🖼️' },
+                { id: 'announcement', label: 'Announcement', icon: '📢' },
                 { id: 'sales', label: 'Sales', icon: '🏷️' },
                 { id: 'make', label: 'Make.com', icon: '🔗' },
                 { id: 'settings', label: 'Settings', icon: '⚙️' }

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../integrations/supabase/client';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import AnnouncementBanner from '../components/AnnouncementBanner';
 import ProductGrid from '../components/ProductGrid';
 import { Product } from '../types/Product';
 interface Sale {
@@ -123,6 +124,7 @@ const Sales = () => {
   };
   const activeBundleDeal = bundleDeals.find(deal => deal.is_active);
   return <div className="min-h-screen bg-white">
+      <AnnouncementBanner />
       <Header />
       
       <div className="container mx-auto px-4 py-8">
