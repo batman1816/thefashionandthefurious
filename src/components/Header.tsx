@@ -52,7 +52,7 @@ const Header = () => {
             <img 
               src="/lovable-uploads/f50749f8-7e4e-41ba-b8e4-18d0a369170e.png" 
               alt="Cart" 
-              className="w-5 h-5 hover:opacity-75 transition-opacity" 
+              className="w-8 h-8 hover:opacity-75 transition-opacity" 
             />
             {cartItemsCount > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
