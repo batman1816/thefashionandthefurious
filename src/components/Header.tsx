@@ -30,19 +30,19 @@ const Header = () => {
 
           {/* Desktop Navigation - Right aligned */}
           <nav className="hidden md:flex space-x-8 ml-auto mr-8">
-            <Link to="/shop-all" className="text-white hover:text-red-500 transition-colors font-medium text-sm">
+            <Link to="/shop-all" className="text-white hover:text-red-500 transition-colors font-medium text-sm uppercase tracking-wider">
               Shop All
             </Link>
-            <Link to="/drivers" className="text-white hover:text-red-500 transition-colors font-medium text-sm">
+            <Link to="/drivers" className="text-white hover:text-red-500 transition-colors font-medium text-sm uppercase tracking-wider">
               Drivers
             </Link>
-            <Link to="/f1-classic" className="text-white hover:text-red-500 transition-colors font-medium text-sm">
+            <Link to="/f1-classic" className="text-white hover:text-red-500 transition-colors font-medium text-sm uppercase tracking-wider">
               F1 Classics
             </Link>
-            <Link to="/teams" className="text-white hover:text-red-500 transition-colors font-medium text-sm">
+            <Link to="/teams" className="text-white hover:text-red-500 transition-colors font-medium text-sm uppercase tracking-wider">
               Teams
             </Link>
-            <Link to="/sales" className="text-white hover:text-red-500 transition-colors font-medium text-sm">
+            <Link to="/sales" className="text-white hover:text-red-500 transition-colors font-medium text-sm uppercase tracking-wider">
               Sales
             </Link>
           </nav>
@@ -52,7 +52,7 @@ const Header = () => {
             <img 
               src="/lovable-uploads/f50749f8-7e4e-41ba-b8e4-18d0a369170e.png" 
               alt="Cart" 
-              className="w-8 h-8 hover:opacity-75 transition-opacity" 
+              className="w-10 h-10 hover:opacity-75 transition-opacity" 
             />
             {cartItemsCount > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
@@ -66,19 +66,19 @@ const Header = () => {
         {isMenuOpen && (
           <nav className="md:hidden py-4 border-t border-gray-800">
             <div className="flex flex-col space-y-4">
-              <Link to="/shop-all" className="text-white hover:text-red-500 transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/shop-all" className="text-white hover:text-red-500 transition-colors font-medium uppercase tracking-wider" onClick={() => setIsMenuOpen(false)}>
                 Shop All
               </Link>
-              <Link to="/drivers" className="text-white hover:text-red-500 transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/drivers" className="text-white hover:text-red-500 transition-colors font-medium uppercase tracking-wider" onClick={() => setIsMenuOpen(false)}>
                 Drivers
               </Link>
-              <Link to="/f1-classic" className="text-white hover:text-red-500 transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/f1-classic" className="text-white hover:text-red-500 transition-colors font-medium uppercase tracking-wider" onClick={() => setIsMenuOpen(false)}>
                 F1 Classics
               </Link>
-              <Link to="/teams" className="text-white hover:text-red-500 transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/teams" className="text-white hover:text-red-500 transition-colors font-medium uppercase tracking-wider" onClick={() => setIsMenuOpen(false)}>
                 Teams
               </Link>
-              <Link to="/sales" className="text-white hover:text-red-500 transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/sales" className="text-white hover:text-red-500 transition-colors font-medium uppercase tracking-wider" onClick={() => setIsMenuOpen(false)}>
                 Sales
               </Link>
             </div>
