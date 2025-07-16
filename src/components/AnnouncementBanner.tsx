@@ -39,7 +39,7 @@ const AnnouncementBanner = () => {
 
   return (
     <div className="bg-red-600 text-white py-2 overflow-hidden relative font-poppins">
-      <div className="flex animate-scroll-continuous">
+      <div className="flex animate-scroll-continuous-mobile md:animate-scroll-continuous">
         {/* Create a seamless loop by duplicating the content */}
         <div className="flex whitespace-nowrap">
           {Array.from({ length: 12 }, (_, i) => (
