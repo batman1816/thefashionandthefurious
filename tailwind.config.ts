@@ -23,6 +23,10 @@ export default {
 				sans: ['Inter', 'sans-serif'],
 				poppins: ['Poppins', 'sans-serif'],
 				'small-caps': ['Alegreya Sans SC', 'sans-serif'],
+				'poppins-extralight': ['Poppins', 'sans-serif'],
+			},
+			fontWeight: {
+				'extralight': '200',
 			},
 			colors: {
 				border: 'hsl(var(--border))',

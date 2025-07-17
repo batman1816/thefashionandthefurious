@@ -30,19 +30,19 @@ const Header = () => {
 
           {/* Desktop Navigation - Right aligned */}
           <nav className="hidden md:flex space-x-8 ml-auto mr-8">
-            <Link to="/shop-all" className="text-white hover:text-white transition-all font-medium text-sm font-small-caps tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left">
+            <Link to="/shop-all" className="text-white hover:text-white transition-all font-poppins-extralight font-extralight text-sm tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left">
               Shop All
             </Link>
-            <Link to="/drivers" className="text-white hover:text-white transition-all font-medium text-sm font-small-caps tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left">
+            <Link to="/drivers" className="text-white hover:text-white transition-all font-poppins-extralight font-extralight text-sm tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left">
               Drivers
             </Link>
-            <Link to="/f1-classic" className="text-white hover:text-white transition-all font-medium text-sm font-small-caps tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left">
+            <Link to="/f1-classic" className="text-white hover:text-white transition-all font-poppins-extralight font-extralight text-sm tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left">
               F1 Classics
             </Link>
-            <Link to="/teams" className="text-white hover:text-white transition-all font-medium text-sm font-small-caps tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left">
+            <Link to="/teams" className="text-white hover:text-white transition-all font-poppins-extralight font-extralight text-sm tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left">
               Teams
             </Link>
-            <Link to="/sales" className="text-white hover:text-white transition-all font-medium text-sm font-small-caps tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left">
+            <Link to="/sales" className="text-white hover:text-white transition-all font-poppins-extralight font-extralight text-sm tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left">
               Sales
             </Link>
           </nav>
@@ -55,7 +55,7 @@ const Header = () => {
               className="w-10 h-10 hover:opacity-75 transition-opacity" 
             />
             {cartItemsCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-white text-black text-xs rounded-full h-4 w-4 flex items-center justify-center font-medium">
                 {cartItemsCount}
               </span>
             )}
@@ -66,19 +66,19 @@ const Header = () => {
         {isMenuOpen && (
           <nav className="md:hidden py-4 border-t border-gray-800">
             <div className="flex flex-col space-y-4">
-              <Link to="/shop-all" className="text-white hover:text-white transition-all font-medium font-small-caps tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/shop-all" className="text-white hover:text-white transition-all font-poppins-extralight font-extralight tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" onClick={() => setIsMenuOpen(false)}>
                 Shop All
               </Link>
-              <Link to="/drivers" className="text-white hover:text-white transition-all font-medium font-small-caps tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/drivers" className="text-white hover:text-white transition-all font-poppins-extralight font-extralight tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" onClick={() => setIsMenuOpen(false)}>
                 Drivers
               </Link>
-              <Link to="/f1-classic" className="text-white hover:text-white transition-all font-medium font-small-caps tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/f1-classic" className="text-white hover:text-white transition-all font-poppins-extralight font-extralight tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" onClick={() => setIsMenuOpen(false)}>
                 F1 Classics
               </Link>
-              <Link to="/teams" className="text-white hover:text-white transition-all font-medium font-small-caps tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/teams" className="text-white hover:text-white transition-all font-poppins-extralight font-extralight tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" onClick={() => setIsMenuOpen(false)}>
                 Teams
               </Link>
-              <Link to="/sales" className="text-white hover:text-white transition-all font-medium font-small-caps tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/sales" className="text-white hover:text-white transition-all font-poppins-extralight font-extralight tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" onClick={() => setIsMenuOpen(false)}>
                 Sales
               </Link>
             </div>
