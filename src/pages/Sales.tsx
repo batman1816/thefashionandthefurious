@@ -158,12 +158,7 @@ const Sales = () => {
             </p>
           </div>}
 
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-center mb-4">🏁 SALE PRODUCTS 🏁</h1>
-          <p className="text-center text-gray-600 mb-8">
-            Get the best deals on your favorite F1 merchandise!
-          </p>
-        </div>
+        
 
         {loading ? <div className="flex justify-center items-center h-64">
             <div className="text-gray-600">Loading sales...</div>
