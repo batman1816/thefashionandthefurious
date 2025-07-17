@@ -134,9 +134,16 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
               {product.name.toUpperCase()}
             </h1>
             
-            <div className="text-xl font-normal text-black mb-2">
-              Tk {product.price}.00
-            </div>
+            {product.saleInfo && product.originalPrice ? (
+              <div className="text-xl font-normal text-black mb-2">
+                <span className="line-through text-gray-400 mr-2">Tk {product.originalPrice}.00</span>
+                <span>Tk {product.price}.00 BDT</span>
+              </div>
+            ) : (
+              <div className="text-xl font-normal text-black mb-2">
+                Tk {product.price}.00
+              </div>
+            )}
 
             <p className="text-sm text-gray-500 mb-8 underline">
               Shipping calculated at checkout.

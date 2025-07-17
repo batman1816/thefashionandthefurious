@@ -69,7 +69,7 @@ const ProductGrid = ({ products, showSaleTag = false }: ProductGridProps) => {
                 {/* Sale Tag */}
                 {showSaleTag && product.saleInfo && (
                   <div className="absolute top-2 left-2 z-10">
-                    <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 uppercase tracking-wide">
+                    <span style={{ backgroundColor: '#C24242' }} className="text-white text-xs font-bold px-2 py-1 uppercase tracking-wide">
                       SALE
                     </span>
                   </div>
@@ -123,9 +123,16 @@ const ProductGrid = ({ products, showSaleTag = false }: ProductGridProps) => {
                 <h3 className="text-sm sm:text-base font-normal text-gray-900 mb-1 sm:mb-2 line-clamp-2">
                   {product.name}
                 </h3>
-                <p className="text-sm sm:text-base font-normal text-gray-900">
-                  Tk {product.price}
-                </p>
+                {product.saleInfo && product.originalPrice ? (
+                  <div className="text-sm sm:text-base font-normal text-gray-900">
+                    <span className="line-through text-gray-400 mr-2">Tk {product.originalPrice}.00</span>
+                    <span>Tk {product.price}.00 BDT</span>
+                  </div>
+                ) : (
+                  <p className="text-sm sm:text-base font-normal text-gray-900">
+                    Tk {product.price}
+                  </p>
+                )}
               </div>
             </div>
           );

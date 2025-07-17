@@ -23,7 +23,16 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
       <div className="space-y-3 mb-6">
         {cartItems.map((item, index) => <div key={`${item.product.id}-${item.size}`} className="flex justify-between text-gray-300">
             <span>{item.product.name} x{item.quantity}</span>
-            <span>Tk {(item.product.price * item.quantity).toFixed(2)}</span>
+            <span>
+              {item.product.saleInfo && item.product.originalPrice ? (
+                <>
+                  <span className="line-through text-gray-500 mr-2">Tk {(item.product.originalPrice * item.quantity).toFixed(2)}</span>
+                  <span>Tk {(item.product.price * item.quantity).toFixed(2)} BDT</span>
+                </>
+              ) : (
+                <span>Tk {(item.product.price * item.quantity).toFixed(2)}</span>
+              )}
+            </span>
           </div>)}
       </div>
 

@@ -92,7 +92,7 @@ const NewProductsSection = () => {
                     <div className="aspect-square overflow-hidden bg-gray-50 relative mb-2 md:mb-4">
                       {/* Sale Badge */}
                       {isOnSale && (
-                        <div className="absolute top-2 left-2 md:top-3 md:left-3 bg-red-600 text-white text-xs md:text-sm font-bold px-3 py-1 md:px-4 md:py-2 z-10 uppercase tracking-wide">
+                        <div className="absolute top-2 left-2 md:top-3 md:left-3 text-white text-xs md:text-sm font-bold px-3 py-1 md:px-4 md:py-2 z-10 uppercase tracking-wide" style={{ backgroundColor: '#C24242' }}>
                           SALE
                         </div>
                       )}
@@ -133,8 +133,8 @@ const NewProductsSection = () => {
                       <div className="text-sm md:text-base font-normal text-black">
                         {isOnSale ? (
                           <div className="flex flex-col md:flex-row md:items-center md:gap-2">
-                            <span className="text-gray-400 line-through text-xs md:text-sm">Tk {product.originalPrice}</span>
-                            <span className="text-red-600 font-bold">Tk {product.price}</span>
+                            <span className="text-gray-400 line-through text-xs md:text-sm">Tk {product.originalPrice}.00</span>
+                            <span>Tk {product.price}.00 BDT</span>
                           </div>
                         ) : (
                           <span>Tk {product.price}</span>
