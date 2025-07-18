@@ -39,7 +39,7 @@ const Cart = () => {
           {/* Left Side - Cart Items */}
           <div className="flex-1 lg:max-w-3xl">
             <div className="flex justify-between items-center mb-8">
-              <h1 className="text-2xl lg:text-4xl font-poppins-extralight font-extralight text-gray-900">Your cart</h1>
+              <h1 className="text-2xl font-poppins-extralight text-zinc-950 font-normal lg:text-4xl">Your cart</h1>
               <Link to="/" className="text-gray-600 hover:text-gray-900 underline font-poppins-extralight font-extralight text-sm lg:text-base">
                 Continue shopping
               </Link>
@@ -74,7 +74,7 @@ const Cart = () => {
                           <p className="line-through font-poppins-extralight font-normal text-zinc-700 text-sm">
                             Tk {item.product.originalPrice.toFixed(2)}
                           </p>
-                          <p className="font-poppins-extralight text-zinc-950 font-normal text-base">
+                          <p className="font-poppins-extralight text-zinc-950 font-normal text-base text-left">
                             Tk {item.product.price.toFixed(2)}
                           </p>
                         </div> : <p className="font-poppins-extralight mb-2 text-zinc-950 font-normal text-base text-left">
@@ -93,7 +93,7 @@ const Cart = () => {
                         <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1, item.color)} className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled={item.quantity <= 1}>
                           <Minus size={16} />
                         </button>
-                        <span className="px-4 py-2 text-center min-w-[60px] font-poppins-extralight font-extralight">
+                        <span className="px-4 py-2 min-w-[60px] font-poppins-extralight text-base text-zinc-950 text-center font-normal">
                           {item.quantity}
                         </span>
                         <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity + 1, item.color)} className="p-2 hover:bg-gray-50">
@@ -126,7 +126,7 @@ const Cart = () => {
               <div className="border-t border-gray-200 pt-6 lg:pt-8">
                 <div className="flex justify-between items-center mb-6">
                   <span className="text-lg lg:text-xl font-poppins-extralight font-normal text-zinc-950">Total</span>
-                  <span className="text-xl lg:text-2xl font-poppins-light font-light text-gray-900">
+                  <span className="text-xl font-poppins-light lg:text-xl text-zinc-950 font-light">
                     Tk {total.toFixed(2)} BDT
                   </span>
                 </div>
