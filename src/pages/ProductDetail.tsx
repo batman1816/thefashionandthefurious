@@ -112,7 +112,7 @@ const ProductDetail = () => {
             {product.saleInfo && product.originalPrice ? <div className="text-2xl font-normal text-gray-900 mb-6">
                 <span className="line-through mr-2 text-base text-zinc-600">Tk {product.originalPrice}.00</span>
                 <span className="text-lg text-zinc-950">Tk {product.price}.00 BDT</span>
-              </div> : <div className="text-2xl font-normal text-gray-900 mb-6">
+              </div> : <div className="text-xl font-normal text-gray-900 mb-6">
                 Tk {product.price}.00
               </div>}
 
