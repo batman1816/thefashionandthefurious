@@ -24,9 +24,11 @@ export default {
 				poppins: ['Poppins', 'sans-serif'],
 				'small-caps': ['Alegreya Sans SC', 'sans-serif'],
 				'poppins-extralight': ['Poppins', 'sans-serif'],
+				'poppins-light': ['Poppins', 'sans-serif'],
 			},
 			fontWeight: {
 				'extralight': '200',
+				'light': '300',
 			},
 			colors: {
 				border: 'hsl(var(--border))',

@@ -93,24 +93,24 @@ const Cart = () => {
                     {/* Quantity Controls */}
                     <div className="flex items-center gap-3">
                       <div className="flex items-center border border-gray-200 rounded-lg">
-                        <button
-                          onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1)}
-                          className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                          disabled={item.quantity <= 1}
-                        >
-                          <Minus size={16} />
-                        </button>
-                        <span className="px-3 py-2 text-sm font-medium min-w-[40px] text-center">{item.quantity}</span>
-                        <button
-                          onClick={() => updateQuantity(item.product.id, item.size, item.quantity + 1)}
-                          className="p-2 hover:bg-gray-50"
-                        >
-                          <Plus size={16} />
-                        </button>
+                      <button
+                        onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1, item.color)}
+                        className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={item.quantity <= 1}
+                      >
+                        <Minus size={16} />
+                      </button>
+                      <span className="px-3 py-2 text-sm font-medium min-w-[40px] text-center">{item.quantity}</span>
+                      <button
+                        onClick={() => updateQuantity(item.product.id, item.size, item.quantity + 1, item.color)}
+                        className="p-2 hover:bg-gray-50"
+                      >
+                        <Plus size={16} />
+                      </button>
                       </div>
                       
                       <button
-                        onClick={() => removeFromCart(item.product.id, item.size)}
+                        onClick={() => removeFromCart(item.product.id, item.size, item.color)}
                         className="text-gray-400 hover:text-red-500 p-1 transition-colors"
                       >
                         <Trash2 size={16} />
