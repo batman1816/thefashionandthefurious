@@ -380,6 +380,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      update_product_slug: {
+        Args: { p_product_id: number; p_new_name: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

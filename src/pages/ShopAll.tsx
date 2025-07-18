@@ -36,7 +36,7 @@ const ShopAll = () => {
                   {allProducts.length} Products
                 </h2>
               </div>
-              <ProductGrid products={allProducts} />
+              <ProductGrid products={allProducts} showSaleTag={true} />
             </>
           ) : (
             <div className="text-center py-16">

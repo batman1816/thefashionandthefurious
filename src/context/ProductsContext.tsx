@@ -22,22 +22,45 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
   const fetchProducts = async () => {
     try {
       console.log('Fetching products from database...');
-      const { data, error } = await supabase
+      const { data: productsData, error: productsError } = await supabase
         .from('products')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (productsError) throw productsError;
+
+      // Fetch active sales
+      const { data: salesData, error: salesError } = await supabase
+        .from('sales')
+        .select('*')
+        .eq('is_active', true)
+        .gte('end_date', new Date().toISOString());
+
+      if (salesError) throw salesError;
 
       // Transform database fields to match our Product interface
-      const transformedProducts = data.map(product => ({
-        ...product,
-        category: product.category as 'drivers' | 'f1-classic' | 'teams',
-        images: product.images || (product.image_url ? [product.image_url] : []),
-        tags: product.tags || [],
-        is_active: product.is_active !== undefined ? product.is_active : true,
-        slug: product.slug
-      }));
+      const transformedProducts = productsData.map(product => {
+        const sale = salesData?.find(s => s.product_id === product.id);
+        
+        return {
+          ...product,
+          category: product.category as 'drivers' | 'f1-classic' | 'teams',
+          images: product.images || (product.image_url ? [product.image_url] : []),
+          tags: product.tags || [],
+          is_active: product.is_active !== undefined ? product.is_active : true,
+          slug: product.slug,
+          // Add sale information if available
+          ...(sale && {
+            originalPrice: sale.original_price,
+            price: sale.sale_price,
+            saleInfo: {
+              title: sale.sale_title,
+              description: sale.sale_description,
+              endDate: sale.end_date
+            }
+          })
+        };
+      });
 
       console.log('Fetched products:', transformedProducts);
       setProducts(transformedProducts);

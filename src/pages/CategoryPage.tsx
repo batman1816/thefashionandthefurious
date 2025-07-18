@@ -61,7 +61,7 @@ const CategoryPage = () => {
                   {categoryProducts.length} Products
                 </h2>
               </div>
-              <ProductGrid products={categoryProducts} />
+              <ProductGrid products={categoryProducts} showSaleTag={true} />
             </>
           ) : (
             <div className="text-center py-16">

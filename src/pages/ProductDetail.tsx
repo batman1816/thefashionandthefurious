@@ -136,7 +136,7 @@ const ProductDetail = () => {
               </div>
             ) : (
               <div className="text-2xl font-normal text-gray-900 mb-6">
-                Tk {product.price}
+                Tk {product.price}.00
               </div>
             )}
 

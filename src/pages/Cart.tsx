@@ -119,9 +119,20 @@ const Cart = () => {
                   </div>
 
                   <div className="text-right flex-shrink-0">
-                    <p className="font-semibold text-gray-900 text-lg">
-                      Tk {(item.product.price * item.quantity).toFixed(2)}
-                    </p>
+                    {item.product.saleInfo && item.product.originalPrice ? (
+                      <div>
+                        <p className="text-gray-400 text-sm line-through">
+                          Tk {(item.product.originalPrice * item.quantity).toFixed(2)}
+                        </p>
+                        <p className="font-semibold text-gray-900 text-lg">
+                          Tk {(item.product.price * item.quantity).toFixed(2)} BDT
+                        </p>
+                      </div>
+                    ) : (
+                      <p className="font-semibold text-gray-900 text-lg">
+                        Tk {(item.product.price * item.quantity).toFixed(2)}
+                      </p>
+                    )}
                     {item.quantity > 1 && (
                       <p className="text-gray-500 text-sm">
                         Tk {item.product.price} each
