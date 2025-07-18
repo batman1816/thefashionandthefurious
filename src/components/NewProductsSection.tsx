@@ -98,9 +98,9 @@ const NewProductsSection = () => {
                       </h3>
                       <div className="text-sm md:text-base font-normal text-black">
                         {isOnSale ? <div className="flex flex-col md:flex-row md:items-center md:gap-2">
-                            <span className="text-gray-400 line-through text-xs md:text-sm">Tk {product.originalPrice}.00</span>
-                            <span className="font-normal text-zinc-950 text-sm">Tk {product.price}.00 BDT</span>
-                          </div> : <span className="font-normal text-zinc-950 text-sm">Tk {product.price}</span>}
+                            <span className="line-through md:text-sm text-sm text-zinc-600">Tk {product.originalPrice}.00</span>
+                            <span className="font-normal text-zinc-950 text-base">Tk {product.price}.00 BDT</span>
+                          </div> : <span className="font-normal text-zinc-950 text-base">Tk {product.price}</span>}
                       </div>
                       <div className="pt-2">
                         <button onClick={e => handleChooseOptions(product, e)} className="w-full border border-gray-400 text-black py-2 px-2 md:px-4 text-xs md:text-sm font-normal hover:bg-gray-50 transition-colors duration-200">
