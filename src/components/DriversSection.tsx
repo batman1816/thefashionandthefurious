@@ -98,8 +98,8 @@ const DriversSection = () => {
                       </h3>
                       <div className="text-sm md:text-base font-normal text-black">
                         {isOnSale ? <div className="flex flex-col md:flex-row md:items-center md:gap-2">
-                            <span className="line-through text-xs text-zinc-600 font-normal md:text-sm">Tk {product.originalPrice}.00</span>
-                            <span className="font-normal text-zinc-950 text-left text-sm">Tk {product.price}.00 BDT</span>
+                            <span className="line-through text-zinc-600 font-normal md:text-sm text-sm">Tk {product.originalPrice}.00</span>
+                            <span className="font-normal text-zinc-950 text-left text-base">Tk {product.price}.00 BDT</span>
                           </div> : <span>Tk {product.price}</span>}
                       </div>
                       <div className="pt-2">
