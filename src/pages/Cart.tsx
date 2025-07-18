@@ -21,11 +21,11 @@ const Cart = () => {
       <div className="min-h-screen bg-white">
         <Header />
         <div className="container mx-auto px-4 py-16 text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">Your Cart is Empty</h1>
-          <p className="text-gray-600 mb-8">Add some amazing F1 apparel to get started!</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-8 font-poppins-extralight font-extralight">Your Cart is Empty</h1>
+          <p className="text-gray-600 mb-8 font-poppins-extralight font-extralight">Add some amazing F1 apparel to get started!</p>
           <Link 
             to="/" 
-            className="inline-block bg-black hover:bg-gray-800 text-white px-8 py-3 font-semibold transition-colors"
+            className="inline-block bg-black hover:bg-gray-800 text-white px-8 py-3 font-semibold transition-colors font-poppins-light font-light"
           >
             CONTINUE SHOPPING
           </Link>
@@ -41,152 +41,139 @@ const Cart = () => {
   const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       <Header />
       
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <h1 className="text-2xl font-semibold text-gray-900 mb-8">Shopping Cart</h1>
-        
-        {/* Bundle Deal Status */}
-        {activeBundleDeal && (
-          <div className={`border px-4 py-3 rounded-lg mb-6 ${
-            totalQuantity >= activeBundleDeal.minimum_quantity
-              ? 'bg-green-50 border-green-200 text-green-800'
-              : 'bg-blue-50 border-blue-200 text-blue-800'
-          }`}>
-            {totalQuantity >= activeBundleDeal.minimum_quantity ? (
-              <>
-                <p className="font-semibold">🎉 Bundle Deal Applied!</p>
-                <p className="text-sm">{activeBundleDeal.description}</p>
-                <p className="text-sm">You saved Tk {bundleDiscount.toFixed(2)}!</p>
-              </>
-            ) : (
-              <>
-                <p className="font-semibold">📦 Bundle Deal Available!</p>
-                <p className="text-sm">{activeBundleDeal.description}</p>
-                <p className="text-sm">Add {activeBundleDeal.minimum_quantity - totalQuantity} more item{(activeBundleDeal.minimum_quantity - totalQuantity) > 1 ? 's' : ''} to unlock {activeBundleDeal.discount_percentage}% off!</p>
-              </>
-            )}
-          </div>
-        )}
-        
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Cart Items */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        {/* Desktop and Mobile Layout */}
+        <div className="flex flex-col lg:flex-row lg:justify-between lg:gap-16">
+          {/* Left Side - Cart Items */}
+          <div className="flex-1 lg:max-w-3xl">
+            <div className="flex justify-between items-center mb-8">
+              <h1 className="text-2xl lg:text-4xl font-poppins-extralight font-extralight text-gray-900">Your cart</h1>
+              <Link 
+                to="/" 
+                className="text-gray-600 hover:text-gray-900 underline font-poppins-extralight font-extralight text-sm lg:text-base"
+              >
+                Continue shopping
+              </Link>
+            </div>
+
+            {/* Header Row for Desktop */}
+            <div className="hidden lg:grid lg:grid-cols-12 gap-4 pb-4 border-b border-gray-200 mb-6">
+              <div className="col-span-6">
+                <span className="text-xs uppercase text-gray-500 font-poppins-extralight font-extralight tracking-wider">PRODUCT</span>
+              </div>
+              <div className="col-span-3 text-center">
+                <span className="text-xs uppercase text-gray-500 font-poppins-extralight font-extralight tracking-wider">QUANTITY</span>
+              </div>
+              <div className="col-span-3 text-right">
+                <span className="text-xs uppercase text-gray-500 font-poppins-extralight font-extralight tracking-wider">TOTAL</span>
+              </div>
+            </div>
+            {/* Cart Items */}
+            <div className="space-y-6 lg:space-y-8">
               {cartItems.map((item, index) => (
-                <div key={`${item.product.id}-${item.size}`} className={`flex gap-6 p-6 ${index !== cartItems.length - 1 ? 'border-b border-gray-100' : ''}`}>
-                  <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-                    <img
-                      src={item.product.image_url}
-                      alt={item.product.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-gray-900 mb-1 text-sm">
-                      {item.product.name}
-                    </h3>
-                    <p className="text-gray-500 text-sm mb-3">Size: {item.size}</p>
+                <div key={`${item.product.id}-${item.size}-${item.color || 'default'}`} className="flex flex-col lg:grid lg:grid-cols-12 gap-4 pb-6 lg:pb-8 border-b border-gray-100">
+                  {/* Product Info */}
+                  <div className="lg:col-span-6 flex gap-4">
+                    <div className="w-24 h-24 lg:w-32 lg:h-32 bg-white overflow-hidden flex-shrink-0">
+                      <img
+                        src={item.product.image_url}
+                        alt={item.product.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                     
-                    {/* Quantity Controls */}
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center border border-gray-200 rounded-lg">
-                      <button
-                        onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1, item.color)}
-                        className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={item.quantity <= 1}
-                      >
-                        <Minus size={16} />
-                      </button>
-                      <span className="px-3 py-2 text-sm font-medium min-w-[40px] text-center">{item.quantity}</span>
-                      <button
-                        onClick={() => updateQuantity(item.product.id, item.size, item.quantity + 1, item.color)}
-                        className="p-2 hover:bg-gray-50"
-                      >
-                        <Plus size={16} />
-                      </button>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-poppins-light font-light text-base lg:text-lg text-gray-900 mb-2">
+                        {item.product.name}
+                      </h3>
+                      {item.product.saleInfo && item.product.originalPrice ? (
+                        <div className="mb-2">
+                          <p className="text-gray-400 text-sm line-through font-poppins-extralight font-extralight">
+                            Tk {item.product.originalPrice.toFixed(2)}
+                          </p>
+                          <p className="text-gray-500 text-sm font-poppins-extralight font-extralight">
+                            Tk {item.product.price.toFixed(2)}
+                          </p>
+                        </div>
+                      ) : (
+                        <p className="text-gray-500 text-sm font-poppins-extralight font-extralight mb-2">
+                          Tk {item.product.price.toFixed(2)}
+                        </p>
+                      )}
+                      <p className="text-gray-500 text-sm font-poppins-extralight font-extralight">
+                        SIZE: {item.size}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Quantity Controls */}
+                  <div className="lg:col-span-3 flex lg:justify-center items-center">
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center border border-gray-300">
+                        <button
+                          onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1, item.color)}
+                          className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                          disabled={item.quantity <= 1}
+                        >
+                          <Minus size={16} />
+                        </button>
+                        <span className="px-4 py-2 text-center min-w-[60px] font-poppins-extralight font-extralight">
+                          {item.quantity}
+                        </span>
+                        <button
+                          onClick={() => updateQuantity(item.product.id, item.size, item.quantity + 1, item.color)}
+                          className="p-2 hover:bg-gray-50"
+                        >
+                          <Plus size={16} />
+                        </button>
                       </div>
                       
                       <button
                         onClick={() => removeFromCart(item.product.id, item.size, item.color)}
                         className="text-gray-400 hover:text-red-500 p-1 transition-colors"
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={18} />
                       </button>
                     </div>
                   </div>
 
-                  <div className="text-right flex-shrink-0">
-                    {item.product.saleInfo && item.product.originalPrice ? (
-                      <div>
-                        <p className="text-gray-400 text-sm line-through">
-                          Tk {(item.product.originalPrice * item.quantity).toFixed(2)}
-                        </p>
-                        <p className="font-semibold text-gray-900 text-lg">
-                          Tk {(item.product.price * item.quantity).toFixed(2)} BDT
-                        </p>
-                      </div>
-                    ) : (
-                      <p className="font-semibold text-gray-900 text-lg">
+                  {/* Total Price */}
+                  <div className="lg:col-span-3 flex lg:justify-end items-center">
+                    <div className="text-right">
+                      <p className="font-poppins-light font-light text-lg lg:text-xl text-gray-900">
                         Tk {(item.product.price * item.quantity).toFixed(2)}
                       </p>
-                    )}
-                    {item.quantity > 1 && (
-                      <p className="text-gray-500 text-sm">
-                        Tk {item.product.price} each
-                      </p>
-                    )}
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Order Summary */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-4">
-              <h2 className="text-lg font-semibold text-gray-900 mb-6">Order Summary</h2>
-              
-              <div className="space-y-3 mb-6">
-                <div className="flex justify-between text-gray-600">
-                  <span>Subtotal ({totalQuantity} item{totalQuantity > 1 ? 's' : ''})</span>
-                  <span>Tk {subtotal.toFixed(2)}</span>
+          {/* Right Side - Order Summary for Desktop, Bottom for Mobile */}
+          <div className="lg:w-80 mt-8 lg:mt-0">
+            <div className="bg-white lg:sticky lg:top-8">
+              {/* Total Section */}
+              <div className="border-t border-gray-200 pt-6 lg:pt-8">
+                <div className="flex justify-between items-center mb-6">
+                  <span className="text-lg lg:text-xl font-poppins-extralight font-extralight text-gray-900">total</span>
+                  <span className="text-xl lg:text-2xl font-poppins-light font-light text-gray-900">
+                    Tk {total.toFixed(2)} BDT
+                  </span>
                 </div>
                 
-                {bundleDiscount > 0 && (
-                  <div className="flex justify-between text-green-600">
-                    <span>Bundle Discount</span>
-                    <span>-Tk {bundleDiscount.toFixed(2)}</span>
-                  </div>
-                )}
-                
-                <div className="border-t border-gray-200 pt-3">
-                  <div className="flex justify-between font-semibold text-lg text-gray-900">
-                    <span>Total</span>
-                    <span>Tk {total.toFixed(2)}</span>
-                  </div>
-                </div>
-                
-                <p className="text-sm text-gray-500 mt-2">
-                  Shipping will be calculated at checkout
+                <p className="text-sm text-gray-500 font-poppins-extralight font-extralight mb-8">
+                  shipping calculated at checkout.
                 </p>
-              </div>
 
-              <div className="space-y-3">
                 <Link
                   to="/checkout"
-                  className="w-full bg-black hover:bg-gray-800 text-white py-3 px-6 font-medium transition-colors duration-200 block text-center rounded-lg"
+                  className="w-full bg-black hover:bg-gray-800 text-white py-4 px-6 font-poppins-light font-light text-center transition-colors duration-200 block text-lg"
                 >
-                  Proceed to Checkout
-                </Link>
-
-                <Link
-                  to="/"
-                  className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-6 font-medium transition-colors duration-200 block text-center rounded-lg"
-                >
-                  Continue Shopping
+                  Check out
                 </Link>
               </div>
             </div>
