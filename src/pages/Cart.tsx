@@ -33,13 +33,13 @@ const Cart = () => {
   return <div className="min-h-screen bg-white">
       <Header />
       
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="container mx-auto px-3 py-6 max-w-7xl">
         {/* Desktop and Mobile Layout */}
         <div className="flex flex-col lg:flex-row lg:justify-between lg:gap-16">
           {/* Left Side - Cart Items */}
           <div className="flex-1 lg:max-w-3xl">
-            <div className="flex justify-between items-center mb-8">
-              <h1 className="text-2xl font-poppins-extralight text-zinc-950 font-normal lg:text-4xl">Your cart</h1>
+            <div className="flex justify-between items-center mb-6">
+              <h1 className="text-xl font-poppins-extralight text-zinc-950 font-normal lg:text-4xl">Your cart</h1>
               <Link to="/" className="text-gray-600 hover:text-gray-900 underline font-poppins-extralight font-extralight text-sm lg:text-base">
                 Continue shopping
               </Link>
@@ -61,9 +61,9 @@ const Cart = () => {
             <div className="space-y-6 lg:space-y-8">
               {cartItems.map((item, index) => <div key={`${item.product.id}-${item.size}-${item.color || 'default'}`} className="flex lg:grid lg:grid-cols-12 gap-4 pb-6 lg:pb-8 border-b border-gray-100">
                   {/* Mobile Layout */}
-                  <div className="flex gap-4 w-full lg:hidden">
+                  <div className="flex gap-3 w-full lg:hidden">
                     {/* Product Image */}
-                    <div className="w-28 h-28 bg-white overflow-hidden flex-shrink-0">
+                    <div className="w-20 h-20 bg-white overflow-hidden flex-shrink-0">
                       <img src={item.product.image_url} alt={item.product.name} className="w-full h-full object-cover" />
                     </div>
                     
@@ -97,19 +97,19 @@ const Cart = () => {
                       {/* Quantity Controls */}
                       <div className="flex items-center justify-between">
                         <div className="flex items-center border border-gray-300 bg-transparent rounded-none">
-                          <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1, item.color)} className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled={item.quantity <= 1}>
-                            <Minus size={16} />
+                          <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1, item.color)} className="p-1.5 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled={item.quantity <= 1}>
+                            <Minus size={14} />
                           </button>
-                          <span className="px-3 py-2 min-w-[40px] font-poppins-extralight text-base text-zinc-950 text-center font-normal">
+                          <span className="px-2 py-1.5 min-w-[35px] font-poppins-extralight text-sm text-zinc-950 text-center font-normal">
                             {item.quantity}
                           </span>
-                          <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity + 1, item.color)} className="p-2 hover:bg-gray-50">
-                            <Plus size={16} />
+                          <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity + 1, item.color)} className="p-1.5 hover:bg-gray-50">
+                            <Plus size={14} />
                           </button>
                         </div>
                         
                         <button onClick={() => removeFromCart(item.product.id, item.size, item.color)} className="text-gray-400 hover:text-red-500 p-1 transition-colors ml-2">
-                          <Trash2 size={18} />
+                          <Trash2 size={16} />
                         </button>
                       </div>
                     </div>
