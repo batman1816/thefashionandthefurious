@@ -88,7 +88,7 @@ const RotatingBanner = () => {
   }
 
   return (
-    <section className="relative h-[50vh] sm:h-[60vh] md:h-[80vh] min-h-[400px] overflow-hidden">
+    <section className="relative max-h-[50vh] sm:max-h-[60vh] md:max-h-[80vh] min-h-[400px] overflow-hidden flex items-center justify-center bg-black">
       <div className="relative w-full h-full">
         {/* Render all banners with stacking and opacity transitions */}
         {activeBanners.map((banner, index) => (
@@ -110,7 +110,7 @@ const RotatingBanner = () => {
                   playsInline
                   webkit-playsinline="true"
                   preload="auto"
-                  className="w-full h-full object-cover"
+                  className="w-full max-h-full object-contain bg-black"
                   style={{
                     objectPosition: 'center center',
                     willChange: 'transform'
