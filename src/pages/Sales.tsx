@@ -162,7 +162,7 @@ const Sales = () => {
 
         {loading ? <div className="flex justify-center items-center h-64">
             <div className="text-gray-600">Loading sales...</div>
-          </div> : products.length > 0 ? <ProductGrid products={products} showSaleTag={true} /> : <div className="text-center py-16">
+          </div> : products.length > 0 ? <ProductGrid products={products} /> : <div className="text-center py-16">
             <h3 className="text-xl text-gray-700 mb-2 font-extrabold">Oops sorry there is no active sales currently, come back and check again</h3>
             <p className="text-gray-500">Check back soon for amazing deals!</p>
           </div>}

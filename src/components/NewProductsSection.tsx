@@ -62,14 +62,14 @@ const NewProductsSection = () => {
         </h2>
         
         {productsWithSales.length > 0 ? <>
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 mb-8 md:mb-12">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6 mb-8 md:mb-12">
               {productsWithSales.map(product => {
             const primaryImage = product.images && product.images.length > 0 ? product.images[0] : product.image_url;
             const hoverImage = product.images && product.images.length > 1 ? product.images[1] : primaryImage;
             const isOnSale = product.originalPrice && product.originalPrice > product.price;
             return <div key={product.id} className="group cursor-pointer bg-white" onClick={() => handleProductClick(product)}>
                     {/* Product Image */}
-                    <div className="aspect-square overflow-hidden bg-gray-50 relative mb-2 sm:mb-4">
+                    <div className="aspect-square overflow-hidden bg-gray-50 relative mb-2 md:mb-4">
                       {/* Sale Badge */}
                       {isOnSale && <div className="absolute top-2 left-2 md:top-2 md:left-2 text-white text-xs font-bold px-2 py-1 md:px-3 md:py-1 z-10 uppercase tracking-wide" style={{
                   backgroundColor: '#C24242'
@@ -93,17 +93,17 @@ const NewProductsSection = () => {
                     
                     {/* Product Info */}
                     <div className="text-left space-y-1">
-                      <h3 className="text-sm sm:text-base font-normal text-black leading-tight line-clamp-2">
+                      <h3 className="text-sm md:text-base font-normal text-black leading-tight">
                         {product.name}
                       </h3>
-                      <div className="text-sm sm:text-base font-normal text-black">
-                        {isOnSale ? <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
-                            <span className="line-through text-sm text-zinc-600">Tk {product.originalPrice}.00</span>
+                      <div className="text-sm md:text-base font-normal text-black">
+                        {isOnSale ? <div className="flex flex-col md:flex-row md:items-center md:gap-2">
+                            <span className="line-through md:text-sm text-sm text-zinc-600">Tk {product.originalPrice}.00</span>
                             <span className="font-normal text-zinc-950 text-base">Tk {product.price}.00 BDT</span>
                           </div> : <span className="font-normal text-zinc-950 text-base">Tk {product.price}</span>}
                       </div>
                       <div className="pt-2">
-                        <button onClick={e => handleChooseOptions(product, e)} className="w-full border border-gray-400 text-black py-2 px-2 sm:px-4 text-xs sm:text-sm font-normal hover:bg-gray-50 transition-colors duration-200">
+                        <button onClick={e => handleChooseOptions(product, e)} className="w-full border border-gray-400 text-black py-2 px-2 md:px-4 text-xs md:text-sm font-normal hover:bg-gray-50 transition-colors duration-200">
                           Choose options
                         </button>
                       </div>
