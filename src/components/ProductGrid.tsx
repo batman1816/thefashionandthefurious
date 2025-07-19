@@ -96,43 +96,32 @@ const ProductGrid = ({ products, showSaleTag = false }: ProductGridProps) => {
                 )}
               </div>
 
-              {/* Color Selection */}
-              {product.color_variants && product.color_variants.length > 0 && (
-                <div className="mb-2 flex gap-2 justify-center">
-                  {product.color_variants.map((variant) => (
-                    <button
-                      key={variant.color}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleColorSelect(product.id, variant.color);
-                      }}
-                      className={`px-3 py-1 text-xs font-medium border transition-all duration-200 ${
-                        selectedColors[product.id] === variant.color
-                          ? 'bg-black text-white border-black'
-                          : 'bg-white text-black border-gray-300 hover:border-black'
-                      }`}
-                    >
-                      {variant.color}
-                    </button>
-                  ))}
-                </div>
-              )}
-
               {/* Product Info */}
-              <div className="text-center">
+              <div className="text-left space-y-1">
                 <h3 className="text-sm sm:text-base font-normal text-gray-900 mb-1 sm:mb-2 line-clamp-2">
                   {product.name}
                 </h3>
                 {product.saleInfo && product.originalPrice ? (
-                  <div className="text-sm sm:text-base font-normal text-gray-900">
-                    <span className="line-through text-gray-400 mr-2">Tk {product.originalPrice}.00</span>
-                    <span>Tk {product.price}.00 BDT</span>
+                  <div className="text-sm sm:text-base font-normal text-gray-900 mb-2">
+                    <div className="line-through text-gray-400">Tk {product.originalPrice}.00</div>
+                    <div>Tk {product.price}.00 BDT</div>
                   </div>
                 ) : (
-                  <p className="text-sm sm:text-base font-normal text-gray-900">
+                  <p className="text-sm sm:text-base font-normal text-gray-900 mb-2">
                     Tk {product.price}
                   </p>
                 )}
+                
+                {/* Choose Options Button */}
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleProductClick(product);
+                  }}
+                  className="w-full border border-gray-400 text-black py-2 px-2 text-xs sm:text-sm font-normal hover:bg-gray-50 transition-colors duration-200"
+                >
+                  Choose options
+                </button>
               </div>
             </div>
           );
