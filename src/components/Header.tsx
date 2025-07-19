@@ -47,7 +47,7 @@ const Header = () => {
                       <img 
                         src="/lovable-uploads/1bfadb02-757f-46dc-b0c2-f866a1969b54.png" 
                         alt="The Fashion & The Furious" 
-                        className="h-12 object-contain" 
+                        className="h-14 object-contain" 
                       />
                     </div>
                     <Link to="/cart" className="relative" onClick={() => setIsDrawerOpen(false)}>
@@ -69,7 +69,7 @@ const Header = () => {
                     <div className="space-y-6">
                       <Link 
                         to="/sales" 
-                        className="block text-white text-xl font-light tracking-widest hover:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" 
+                        className="block text-white text-lg font-light tracking-widest hover:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" 
                         style={{ fontFamily: 'Poppins', fontWeight: 300 }}
                         onClick={() => setIsDrawerOpen(false)}
                       >
@@ -79,7 +79,7 @@ const Header = () => {
                       <div className="flex items-center justify-between">
                         <Link 
                           to="/f1-classic" 
-                          className="text-white text-xl font-light tracking-widest hover:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" 
+                          className="text-white text-lg font-light tracking-widest hover:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" 
                           style={{ fontFamily: 'Poppins', fontWeight: 300 }}
                           onClick={() => setIsDrawerOpen(false)}
                         >
@@ -90,7 +90,7 @@ const Header = () => {
 
                       <Link 
                         to="/teams" 
-                        className="block text-white text-xl font-light tracking-widest hover:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" 
+                        className="block text-white text-lg font-light tracking-widest hover:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" 
                         style={{ fontFamily: 'Poppins', fontWeight: 300 }}
                         onClick={() => setIsDrawerOpen(false)}
                       >
@@ -99,7 +99,7 @@ const Header = () => {
 
                       <Link 
                         to="/drivers" 
-                        className="block text-white text-xl font-light tracking-widest hover:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" 
+                        className="block text-white text-lg font-light tracking-widest hover:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" 
                         style={{ fontFamily: 'Poppins', fontWeight: 300 }}
                         onClick={() => setIsDrawerOpen(false)}
                       >
@@ -177,7 +177,7 @@ const Header = () => {
             <img 
               src="/lovable-uploads/f50749f8-7e4e-41ba-b8e4-18d0a369170e.png" 
               alt="Cart" 
-              className="w-10 h-10 hover:opacity-75 transition-opacity" 
+              className="w-12 h-12 hover:opacity-75 transition-opacity" 
             />
             {cartItemsCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-white text-black text-xs rounded-full h-4 w-4 flex items-center justify-center font-medium">
