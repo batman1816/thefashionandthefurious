@@ -71,7 +71,7 @@ const DriversSection = () => {
                     {/* Product Image */}
                     <div className="aspect-square overflow-hidden bg-gray-50 relative mb-2 md:mb-4">
                       {/* Sale Badge */}
-                      {isOnSale && <div className="absolute top-2 left-2 md:top-3 md:left-3 text-white text-xs md:text-sm font-bold px-3 py-1 md:px-4 md:py-2 z-10 uppercase tracking-wide" style={{
+                      {isOnSale && <div className="absolute top-2 left-2 md:top-2 md:left-2 text-white text-xs font-bold px-2 py-1 md:px-3 md:py-1 z-10 uppercase tracking-wide" style={{
                   backgroundColor: '#C24242'
                 }}>
                           SALE
@@ -114,7 +114,7 @@ const DriversSection = () => {
 
             {/* View All Button */}
             <div className="text-center">
-              <Link to="/drivers-products" className="inline-block bg-black hover:bg-gray-800 text-white px-6 md:px-8 py-2 md:py-3 font-semibold transition-colors duration-300 uppercase tracking-wide text-sm md:text-base">
+              <Link to="/drivers" className="inline-block bg-black hover:bg-gray-800 text-white px-6 md:px-8 py-2 md:py-3 font-semibold transition-colors duration-300 uppercase tracking-wide text-sm md:text-base">
                 VIEW ALL
               </Link>
             </div>

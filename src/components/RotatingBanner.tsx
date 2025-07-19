@@ -109,14 +109,31 @@ const RotatingBanner = () => {
                   loop
                   playsInline
                   webkit-playsinline="true"
-                  preload="metadata"
+                  preload="auto"
                   className="w-full h-full object-cover"
                   style={{
-                    objectPosition: 'center center'
+                    objectPosition: 'center center',
+                    willChange: 'transform'
+                  }}
+                  onCanPlay={(e) => {
+                    // Video is ready to play
+                    const video = e.currentTarget;
+                    video.style.opacity = '1';
                   }}
                   onLoadedData={(e) => {
-                    // Force play for mobile devices
+                    // Force play for mobile devices and optimize buffering
                     const video = e.currentTarget;
+                    video.style.opacity = '0';
+                    
+                    // Pre-buffer more content
+                    if (video.buffered.length > 0) {
+                      const bufferedEnd = video.buffered.end(0);
+                      const duration = video.duration;
+                      if (bufferedEnd / duration > 0.3) { // 30% buffered
+                        video.style.opacity = '1';
+                      }
+                    }
+                    
                     const playPromise = video.play();
                     if (playPromise !== undefined) {
                       playPromise.catch(error => {

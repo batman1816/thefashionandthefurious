@@ -53,6 +53,22 @@ export const BannerProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     fetchBanners();
+    
+    // Set up real-time subscription for banner changes
+    const subscription = supabase
+      .channel('banners')
+      .on('postgres_changes', 
+        { event: '*', schema: 'public', table: 'banners' },
+        (payload) => {
+          console.log('Banner change detected:', payload);
+          fetchBanners(); // Refresh banners on any change
+        }
+      )
+      .subscribe();
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const updateBanner = async (updatedBanner: Banner) => {
@@ -81,6 +97,8 @@ export const BannerProvider = ({ children }: { children: ReactNode }) => {
 
       setBanners(prev => prev.map(b => b.id === updatedBanner.id ? updatedBanner : b));
       console.log('Banner updated successfully');
+      // Refresh banners from database to ensure consistency
+      await fetchBanners();
     } catch (error) {
       console.error('Error updating banner:', error);
       toast.error('Failed to update banner');

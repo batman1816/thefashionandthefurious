@@ -68,8 +68,8 @@ const ProductGrid = ({ products, showSaleTag = false }: ProductGridProps) => {
               >
                  {/* Sale Tag */}
                 {showSaleTag && product.saleInfo && (
-                  <div className="absolute top-1.5 left-1.5 z-10">
-                    <span style={{ backgroundColor: '#C24242' }} className="text-white text-[10px] font-bold px-1.5 py-0.5 uppercase tracking-wide">
+                  <div className="absolute top-2 left-2 z-10">
+                    <span style={{ backgroundColor: '#C24242' }} className="text-white text-xs font-bold px-2 py-1 md:px-3 md:py-1 uppercase tracking-wide">
                       SALE
                     </span>
                   </div>

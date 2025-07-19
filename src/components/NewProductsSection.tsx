@@ -71,7 +71,7 @@ const NewProductsSection = () => {
                     {/* Product Image */}
                     <div className="aspect-square overflow-hidden bg-gray-50 relative mb-2 md:mb-4">
                       {/* Sale Badge */}
-                      {isOnSale && <div className="absolute top-2 left-2 md:top-3 md:left-3 text-white text-xs md:text-sm font-bold px-3 py-1 md:px-4 md:py-2 z-10 uppercase tracking-wide" style={{
+                      {isOnSale && <div className="absolute top-2 left-2 md:top-2 md:left-2 text-white text-xs font-bold px-2 py-1 md:px-3 md:py-1 z-10 uppercase tracking-wide" style={{
                   backgroundColor: '#C24242'
                 }}>
                           SALE
