@@ -59,60 +59,125 @@ const Cart = () => {
             </div>
             {/* Cart Items */}
             <div className="space-y-6 lg:space-y-8">
-              {cartItems.map((item, index) => <div key={`${item.product.id}-${item.size}-${item.color || 'default'}`} className="flex flex-col lg:grid lg:grid-cols-12 gap-4 pb-6 lg:pb-8 border-b border-gray-100">
-                  {/* Product Info */}
-                  <div className="lg:col-span-6 flex gap-4">
-                    <div className="w-24 h-24 lg:w-32 lg:h-32 bg-white overflow-hidden flex-shrink-0">
+              {cartItems.map((item, index) => <div key={`${item.product.id}-${item.size}-${item.color || 'default'}`} className="flex lg:grid lg:grid-cols-12 gap-4 pb-6 lg:pb-8 border-b border-gray-100">
+                  {/* Mobile Layout */}
+                  <div className="flex gap-4 w-full lg:hidden">
+                    {/* Product Image */}
+                    <div className="w-20 h-20 bg-white overflow-hidden flex-shrink-0">
                       <img src={item.product.image_url} alt={item.product.name} className="w-full h-full object-cover" />
                     </div>
                     
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-poppins-light lg:text-lg mb-2 text-lg font-normal text-zinc-950 text-left">
+                    {/* Product Details */}
+                    <div className="flex-1 flex flex-col">
+                      <h3 className="font-poppins-light text-base font-normal text-zinc-950 mb-1">
                         {item.product.name}
                       </h3>
-                      {item.product.saleInfo && item.product.originalPrice ? <div className="mb-2">
+                      
+                      {/* Price */}
+                      {item.product.saleInfo && item.product.originalPrice ? (
+                        <div className="mb-1">
                           <p className="line-through font-poppins-extralight font-normal text-zinc-700 text-sm">
                             Tk {item.product.originalPrice.toFixed(2)}
                           </p>
-                          <p className="font-poppins-extralight text-zinc-950 font-normal text-base text-left">
+                          <p className="font-poppins-extralight text-zinc-950 font-normal text-base">
                             Tk {item.product.price.toFixed(2)}
                           </p>
-                        </div> : <p className="font-poppins-extralight mb-2 text-zinc-950 font-normal text-base text-left">
+                        </div>
+                      ) : (
+                        <p className="font-poppins-extralight mb-1 text-zinc-950 font-normal text-base">
                           Tk {item.product.price.toFixed(2)}
-                        </p>}
-                      <p className="font-poppins-extralight text-sm font-normal text-zinc-950 text-left">
+                        </p>
+                      )}
+                      
+                      {/* Size */}
+                      <p className="font-poppins-extralight text-sm font-normal text-zinc-950 mb-3">
                         SIZE: {item.size}
                       </p>
-                    </div>
-                  </div>
-
-                  {/* Quantity Controls */}
-                  <div className="lg:col-span-3 flex lg:justify-center items-center">
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center border border-gray-300 bg-transparent rounded-none w-fit">
-                        <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1, item.color)} className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled={item.quantity <= 1}>
-                          <Minus size={16} />
-                        </button>
-                        <span className="px-3 py-2 min-w-[40px] font-poppins-extralight text-base text-zinc-950 text-center font-normal">
-                          {item.quantity}
-                        </span>
-                        <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity + 1, item.color)} className="p-2 hover:bg-gray-50">
-                          <Plus size={16} />
+                      
+                      {/* Quantity Controls */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center border border-gray-300 bg-transparent rounded-none">
+                          <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1, item.color)} className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled={item.quantity <= 1}>
+                            <Minus size={16} />
+                          </button>
+                          <span className="px-3 py-2 min-w-[40px] font-poppins-extralight text-base text-zinc-950 text-center font-normal">
+                            {item.quantity}
+                          </span>
+                          <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity + 1, item.color)} className="p-2 hover:bg-gray-50">
+                            <Plus size={16} />
+                          </button>
+                        </div>
+                        
+                        <button onClick={() => removeFromCart(item.product.id, item.size, item.color)} className="text-gray-400 hover:text-red-500 p-1 transition-colors ml-2">
+                          <Trash2 size={18} />
                         </button>
                       </div>
-                      
-                      <button onClick={() => removeFromCart(item.product.id, item.size, item.color)} className="text-gray-400 hover:text-red-500 p-1 transition-colors">
-                        <Trash2 size={18} />
-                      </button>
+                    </div>
+                    
+                    {/* Total Price - Right aligned */}
+                    <div className="flex items-start pt-1">
+                      <p className="font-poppins-light text-lg text-gray-900 font-normal">
+                        Tk {(item.product.price * item.quantity).toFixed(2)}
+                      </p>
                     </div>
                   </div>
 
-                  {/* Total Price */}
-                  <div className="lg:col-span-3 flex lg:justify-end items-center">
-                    <div className="text-right">
-                      <p className="font-poppins-light text-lg text-gray-900 lg:text-lg font-normal">
-                        Tk {(item.product.price * item.quantity).toFixed(2)}
-                      </p>
+                  {/* Desktop Layout */}
+                  <div className="hidden lg:contents">
+                    {/* Product Info */}
+                    <div className="lg:col-span-6 flex gap-4">
+                      <div className="w-32 h-32 bg-white overflow-hidden flex-shrink-0">
+                        <img src={item.product.image_url} alt={item.product.name} className="w-full h-full object-cover" />
+                      </div>
+                      
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-poppins-light text-lg mb-2 font-normal text-zinc-950 text-left">
+                          {item.product.name}
+                        </h3>
+                        {item.product.saleInfo && item.product.originalPrice ? <div className="mb-2">
+                            <p className="line-through font-poppins-extralight font-normal text-zinc-700 text-sm">
+                              Tk {item.product.originalPrice.toFixed(2)}
+                            </p>
+                            <p className="font-poppins-extralight text-zinc-950 font-normal text-base text-left">
+                              Tk {item.product.price.toFixed(2)}
+                            </p>
+                          </div> : <p className="font-poppins-extralight mb-2 text-zinc-950 font-normal text-base text-left">
+                            Tk {item.product.price.toFixed(2)}
+                          </p>}
+                        <p className="font-poppins-extralight text-sm font-normal text-zinc-950 text-left">
+                          SIZE: {item.size}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Quantity Controls */}
+                    <div className="lg:col-span-3 flex lg:justify-center items-center">
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center border border-gray-300 bg-transparent rounded-none w-fit">
+                          <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1, item.color)} className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled={item.quantity <= 1}>
+                            <Minus size={16} />
+                          </button>
+                          <span className="px-3 py-2 min-w-[40px] font-poppins-extralight text-base text-zinc-950 text-center font-normal">
+                            {item.quantity}
+                          </span>
+                          <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity + 1, item.color)} className="p-2 hover:bg-gray-50">
+                            <Plus size={16} />
+                          </button>
+                        </div>
+                        
+                        <button onClick={() => removeFromCart(item.product.id, item.size, item.color)} className="text-gray-400 hover:text-red-500 p-1 transition-colors">
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Total Price */}
+                    <div className="lg:col-span-3 flex lg:justify-end items-center">
+                      <div className="text-right">
+                        <p className="font-poppins-light text-lg text-gray-900 font-normal">
+                          Tk {(item.product.price * item.quantity).toFixed(2)}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>)}
