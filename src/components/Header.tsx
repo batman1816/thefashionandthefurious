@@ -41,7 +41,7 @@ const Header = () => {
                       onClick={() => setIsDrawerOpen(false)}
                       className="text-white"
                     >
-                      <X size={20} strokeWidth={1} />
+                      <X size={22} strokeWidth={1} />
                     </button>
                     <div className="absolute left-1/2 transform -translate-x-1/2">
                       <img 
