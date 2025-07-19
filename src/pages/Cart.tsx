@@ -3,6 +3,7 @@ import { Minus, Plus, Trash2 } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useCart } from '../context/CartContext';
+
 const Cart = () => {
   const {
     cartItems,
@@ -14,6 +15,7 @@ const Cart = () => {
     activeBundleDeal,
     getCurrentPrice
   } = useCart();
+
   if (cartItems.length === 0) {
     return <div className="min-h-screen bg-white">
         <Header />
@@ -27,11 +29,14 @@ const Cart = () => {
         <Footer />
       </div>;
   }
+
   const subtotal = getCartSubtotal();
   const bundleDiscount = getBundleDiscount();
   const total = getCartTotal();
   const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
-  return <div className="min-h-screen bg-white">
+
+  return (
+    <div className="min-h-screen bg-white">
       <Header />
       
       <div className="container mx-auto px-3 py-6 max-w-7xl">
@@ -58,9 +63,11 @@ const Cart = () => {
                 <span className="uppercase font-poppins-extralight tracking-wider text-sm font-medium text-zinc-950">TOTAL</span>
               </div>
             </div>
+
             {/* Cart Items */}
             <div className="space-y-6 lg:space-y-8">
-              {cartItems.map((item, index) => <div key={`${item.product.id}-${item.size}-${item.color || 'default'}`} className="flex lg:grid lg:grid-cols-12 gap-4 pb-6 lg:pb-8 border-b border-gray-100">
+              {cartItems.map((item, index) => (
+                <div key={`${item.product.id}-${item.size}-${item.color || 'default'}`} className="flex lg:grid lg:grid-cols-12 gap-4 pb-6 lg:pb-8 border-b border-gray-100">
                   {/* Mobile Layout */}
                   <div className="flex gap-3 w-full lg:hidden">
                     {/* Product Image */}
@@ -101,18 +108,18 @@ const Cart = () => {
                       {/* Quantity Controls */}
                       <div className="flex items-center gap-3">
                         <div className="flex items-center border border-gray-300 bg-transparent rounded-none">
-                          <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1, item.color)} className="p-1.5 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled={item.quantity <= 1}>
-                            <Minus size={14} />
+                          <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1, item.color)} className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled={item.quantity <= 1}>
+                            <Minus size={16} />
                           </button>
-                          <span className="px-2 py-1.5 min-w-[35px] font-poppins-extralight text-sm text-zinc-950 text-center font-normal">
+                          <span className="px-2.5 py-2 min-w-[40px] font-poppins-extralight text-sm text-zinc-950 text-center font-normal">
                             {item.quantity}
                           </span>
-                          <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity + 1, item.color)} className="p-1.5 hover:bg-gray-50">
-                            <Plus size={14} />
+                          <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity + 1, item.color)} className="p-2 hover:bg-gray-50">
+                            <Plus size={16} />
                           </button>
                         </div>
                         
-                        <button onClick={() => removeFromCart(item.product.id, item.size, item.color)} className="text-gray-400 hover:text-red-500 p-1 transition-colors">
+                        <button onClick={() => removeFromCart(item.product.id, item.size, item.color)} className="text-gray-400 hover:text-red-500 p-1.5 transition-colors">
                           <Trash2 size={16} />
                         </button>
                       </div>
@@ -191,7 +198,8 @@ const Cart = () => {
                       </div>
                     </div>
                   </div>
-                </div>)}
+                </div>
+              ))}
             </div>
           </div>
 
@@ -219,6 +227,8 @@ const Cart = () => {
       </div>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Cart;
