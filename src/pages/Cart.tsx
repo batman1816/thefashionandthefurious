@@ -209,7 +209,7 @@ const Cart = () => {
               {/* Total Section */}
               <div className="border-t border-gray-200 pt-6 lg:pt-8">
                 <div className="flex justify-between items-center mb-6">
-                  <span className="text-xl font-poppins-light font-semibold text-zinc-950">Total</span>
+                  <span className="text-lg lg:text-xl font-poppins-extralight font-normal text-zinc-950">Total</span>
                   <span className="text-xl font-poppins-light lg:text-xl text-zinc-950 font-light">
                     Tk {total.toFixed(2)} BDT
                   </span>
