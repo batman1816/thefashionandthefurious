@@ -59,45 +59,46 @@ const Cart = () => {
             </div>
             {/* Cart Items */}
             <div className="space-y-6 lg:space-y-8">
-              {cartItems.map((item, index) => <div key={`${item.product.id}-${item.size}-${item.color || 'default'}`} className="flex lg:grid lg:grid-cols-12 gap-4 pb-6 lg:pb-8 border-b border-gray-100">
+              {cartItems.map((item, index) => (
+                <div key={`${item.product.id}-${item.size}-${item.color || 'default'}`} className="flex lg:grid lg:grid-cols-12 gap-4 pb-6 lg:pb-8 border-b border-gray-100">
                   {/* Mobile Layout */}
-                  <div className="flex gap-4 w-full lg:hidden">
+                  <div className="flex gap-4 w-full lg:hidden overflow-hidden">
                     {/* Product Image */}
-                    <div className="w-28 h-28 bg-white overflow-hidden flex-shrink-0">
+                    <div className="w-24 h-24 bg-white overflow-hidden flex-shrink-0">
                       <img src={item.product.image_url} alt={item.product.name} className="w-full h-full object-cover" />
                     </div>
                     
-                    {/* Product Details and Quantity */}
-                    <div className="flex-1 flex flex-col justify-between">
+                    {/* Product Details and Quantity in Middle */}
+                    <div className="flex-1 min-w-0 flex flex-col justify-between">
                       <div>
-                        <h3 className="font-poppins-light text-base font-normal text-zinc-950 mb-1">
+                        <h3 className="font-poppins-light text-base font-normal text-zinc-950 mb-1 truncate">
                           {item.product.name}
                         </h3>
                         
-                        {/* Price */}
+                        {/* Price - Bold */}
                         {item.product.saleInfo && item.product.originalPrice ? (
                           <div className="mb-1">
                             <p className="line-through font-poppins-extralight font-normal text-zinc-700 text-sm">
                               Tk {item.product.originalPrice.toFixed(2)}
                             </p>
-                            <p className="font-poppins-extralight text-zinc-950 font-normal text-base">
+                            <p className="font-poppins-light text-zinc-950 font-bold text-base">
                               Tk {item.product.price.toFixed(2)}
                             </p>
                           </div>
                         ) : (
-                          <p className="font-poppins-extralight mb-1 text-zinc-950 font-normal text-base">
+                          <p className="font-poppins-light mb-1 text-zinc-950 font-bold text-base">
                             Tk {item.product.price.toFixed(2)}
                           </p>
                         )}
                         
                         {/* Size */}
-                        <p className="font-poppins-extralight text-sm font-normal text-zinc-950 mb-3">
+                        <p className="font-poppins-extralight text-sm font-normal text-zinc-950">
                           SIZE: {item.size}
                         </p>
                       </div>
                       
-                      {/* Quantity Controls - Centered */}
-                      <div className="flex items-center justify-center">
+                      {/* Quantity Controls - In middle of product info */}
+                      <div className="flex items-center justify-start mt-2">
                         <div className="flex items-center border border-gray-300 bg-transparent rounded-none">
                           <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1, item.color)} className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled={item.quantity <= 1}>
                             <Minus size={16} />
@@ -116,9 +117,9 @@ const Cart = () => {
                       </div>
                     </div>
                     
-                    {/* Total Price - Right aligned */}
-                    <div className="flex items-start pt-1">
-                      <p className="font-poppins-light text-lg text-gray-900 font-normal whitespace-nowrap">
+                    {/* Total Price - Right aligned and bold */}
+                    <div className="flex items-start pt-1 flex-shrink-0">
+                      <p className="font-poppins-light text-lg text-gray-900 font-bold whitespace-nowrap">
                         Tk {(item.product.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
@@ -136,16 +137,20 @@ const Cart = () => {
                         <h3 className="font-poppins-light text-lg mb-2 font-normal text-zinc-950 text-left">
                           {item.product.name}
                         </h3>
-                        {item.product.saleInfo && item.product.originalPrice ? <div className="mb-2">
+                        {item.product.saleInfo && item.product.originalPrice ? (
+                          <div className="mb-2">
                             <p className="line-through font-poppins-extralight font-normal text-zinc-700 text-sm">
                               Tk {item.product.originalPrice.toFixed(2)}
                             </p>
                             <p className="font-poppins-extralight text-zinc-950 font-normal text-base text-left">
                               Tk {item.product.price.toFixed(2)}
                             </p>
-                          </div> : <p className="font-poppins-extralight mb-2 text-zinc-950 font-normal text-base text-left">
+                          </div>
+                        ) : (
+                          <p className="font-poppins-extralight mb-2 text-zinc-950 font-normal text-base text-left">
                             Tk {item.product.price.toFixed(2)}
-                          </p>}
+                          </p>
+                        )}
                         <p className="font-poppins-extralight text-sm font-normal text-zinc-950 text-left">
                           SIZE: {item.size}
                         </p>
@@ -182,7 +187,8 @@ const Cart = () => {
                       </div>
                     </div>
                   </div>
-                </div>)}
+                </div>
+              ))}
             </div>
           </div>
 
