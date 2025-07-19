@@ -182,8 +182,8 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
                       onClick={() => handleSizeSelect(size)}
                       className={`flex-shrink-0 px-4 py-2 text-sm font-normal transition-all duration-200 border ${
                         selectedSize === size
-                          ? 'bg-black text-white border-black'
-                          : 'bg-white text-black border-gray-300 hover:border-black'
+                          ? 'bg-black text-white border-gray-400'
+                          : 'bg-white text-black border-gray-400 hover:border-black'
                       }`}
                     >
                       {size}
