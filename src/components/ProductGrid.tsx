@@ -74,6 +74,15 @@ const ProductGrid = ({ products, showSaleTag = false }: ProductGridProps) => {
                     </span>
                   </div>
                 )}
+                
+                {/* Sale Tag for products on sale (even without showSaleTag prop) */}
+                {!showSaleTag && product.originalPrice && product.originalPrice > product.price && (
+                  <div className="absolute top-2 left-2 z-10">
+                    <span style={{ backgroundColor: '#C24242' }} className="text-white text-xs font-bold px-2 py-1 md:px-3 md:py-1 uppercase tracking-wide">
+                      SALE
+                    </span>
+                  </div>
+                )}
 
                 {/* Main Product Image */}
                 <img

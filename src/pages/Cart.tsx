@@ -89,15 +89,15 @@ const Cart = () => {
                   {/* Quantity Controls */}
                   <div className="lg:col-span-3 flex lg:justify-center items-center">
                     <div className="flex items-center gap-4">
-                      <div className="flex items-center border border-gray-300 bg-transparent rounded-none">
-                        <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1, item.color)} className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled={item.quantity <= 1}>
-                          <Minus size={16} />
+                      <div className="flex items-center border border-gray-400 bg-white">
+                        <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1, item.color)} className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled={item.quantity <= 1}>
+                          −
                         </button>
-                        <span className="px-4 py-2 min-w-[60px] font-poppins-extralight text-base text-zinc-950 text-center font-normal">
+                        <div className="w-16 h-10 flex items-center justify-center border-x border-gray-400 font-poppins-extralight text-base text-zinc-950 font-normal">
                           {item.quantity}
-                        </span>
-                        <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity + 1, item.color)} className="p-2 hover:bg-gray-50">
-                          <Plus size={16} />
+                        </div>
+                        <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity + 1, item.color)} className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-50">
+                          +
                         </button>
                       </div>
                       
