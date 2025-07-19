@@ -113,7 +113,7 @@ const ProductModal = ({
                 Tk {product.price}.00
               </div>}
 
-            <p className="text-sm text-gray-500 mb-8 underline">
+            <p className="text-sm text-gray-500 mb-8 underline px-[13px] py-[3px]">
               Shipping calculated at checkout.
             </p>
 
