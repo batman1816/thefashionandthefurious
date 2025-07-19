@@ -5,7 +5,9 @@ import ProductModal from './ProductModal';
 import { Product } from '../types/Product';
 import { supabase } from '../integrations/supabase/client';
 const NewProductsSection = () => {
-  const { products } = useProducts();
+  const {
+    products
+  } = useProducts();
   const navigate = useNavigate();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [productsWithSales, setProductsWithSales] = useState<Product[]>([]);
@@ -56,7 +58,7 @@ const NewProductsSection = () => {
   };
   return <section className="py-8 md:py-16 bg-white">
       <div className="container mx-auto px-4">
-        <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12 text-gray-900">
+        <h2 className="text-2xl mb-8 md:mb-12 font-medium md:text-2xl text-zinc-950 text-center">
           NEW PRODUCTS
         </h2>
         
