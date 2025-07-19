@@ -47,8 +47,8 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           <span>Tk {total.toFixed(2)}</span>
         </div>
         <div className="flex justify-between text-red-400">
-          <span>Shipping (Paid via bKash)</span>
-          <span>- Tk {shippingCost.toFixed(2)}</span>
+          <span className="text-base font-semibold">Due Amount</span>
+          <span className="font-semibold">- Tk {shippingCost.toFixed(2)}</span>
         </div>
         <div className="flex justify-between font-semibold text-white text-lg border-t border-gray-600 pt-3">
           <span className="font-normal">Amount to Pay Here</span>
