@@ -193,7 +193,7 @@ const RotatingBanner = () => {
               }`}>
                 <Link
                   to={banner.button_link}
-                  className="inline-block bg-transparent border-2 border-white text-white px-4 sm:px-8 py-2 sm:py-3 font-semibold text-sm sm:text-lg tracking-wide hover:bg-white hover:text-black transition-all duration-300"
+                  className="inline-block bg-transparent border-2 border-white text-white px-4 sm:px-8 py-2 sm:py-3 font-semibold text-sm sm:text-lg tracking-wide text-center hover:bg-white hover:text-black transition-all duration-300"
                 >
                   {banner.button_text}
                 </Link>
