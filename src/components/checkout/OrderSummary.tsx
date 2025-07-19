@@ -17,21 +17,17 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   onSubmit
 }) => {
   return <div className="p-6 rounded-lg border border-gray-700 bg-zinc-900">
-      <h3 className="text-xl font-semibold text-white mb-6">Order Summary</h3>
+      <h3 className="text-xl text-white mb-6 font-medium">Order Summary</h3>
       
       {/* Cart Items */}
       <div className="space-y-3 mb-6">
         {cartItems.map((item, index) => <div key={`${item.product.id}-${item.size}`} className="flex justify-between text-gray-300">
-            <span>{item.product.name} x{item.quantity}</span>
+            <span className="text-base font-light">{item.product.name} x{item.quantity}</span>
             <span>
-              {item.product.saleInfo && item.product.originalPrice ? (
-                <>
-                  <span className="line-through text-gray-500 mr-2">Tk {(item.product.originalPrice * item.quantity).toFixed(2)}</span>
-                  <span>Tk {(item.product.price * item.quantity).toFixed(2)} BDT</span>
-                </>
-              ) : (
-                <span>Tk {(item.product.price * item.quantity).toFixed(2)}</span>
-              )}
+              {item.product.saleInfo && item.product.originalPrice ? <>
+                  <span className="line-through mr-2 text-zinc-500">Tk {(item.product.originalPrice * item.quantity).toFixed(2)}</span>
+                  <span className="font-normal">Tk {(item.product.price * item.quantity).toFixed(2)} BDT</span>
+                </> : <span className="font-normal">Tk {(item.product.price * item.quantity).toFixed(2)}</span>}
             </span>
           </div>)}
       </div>
@@ -55,8 +51,8 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           <span>- Tk {shippingCost.toFixed(2)}</span>
         </div>
         <div className="flex justify-between font-semibold text-white text-lg border-t border-gray-600 pt-3">
-          <span>Amount to Pay Here</span>
-          <span>Tk {subtotal.toFixed(2)}</span>
+          <span className="font-normal">Amount to Pay Here</span>
+          <span className="text-base font-normal">Tk {subtotal.toFixed(2)}</span>
         </div>
       </div>
 

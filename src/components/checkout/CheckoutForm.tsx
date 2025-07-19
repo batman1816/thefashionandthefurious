@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
@@ -8,7 +7,6 @@ import CustomerInfoForm from './CustomerInfoForm';
 import OrderSummary from './OrderSummary';
 import ShippingOptions from './ShippingOptions';
 import { sendOrderToMake } from '../../utils/makeWebhook';
-
 const CheckoutForm = () => {
   const {
     cartItems,
@@ -33,7 +31,6 @@ const CheckoutForm = () => {
   // bKash payment info
   const [bkashTransactionId, setBkashTransactionId] = useState('');
   const [bkashSenderNumber, setBkashSenderNumber] = useState('');
-
   const getShippingCost = () => {
     switch (shippingOption) {
       case 'inside-dhaka':
@@ -44,7 +41,6 @@ const CheckoutForm = () => {
         return 70;
     }
   };
-
   const handleCustomerInfoChange = (field: string, value: string) => {
     setCustomerInfo(prev => ({
       ...prev,
@@ -52,7 +48,6 @@ const CheckoutForm = () => {
       name: field === 'firstName' || field === 'lastName' ? `${field === 'firstName' ? value : prev.firstName} ${field === 'lastName' ? value : prev.lastName}`.trim() : prev.name
     }));
   };
-
   const validateForm = () => {
     if (!customerInfo.firstName || !customerInfo.lastName || !customerInfo.email || !customerInfo.phone || !customerInfo.address || !customerInfo.city || !customerInfo.zipCode) {
       toast.error('Please fill in all customer information fields');
@@ -64,7 +59,6 @@ const CheckoutForm = () => {
     }
     return true;
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -78,9 +72,7 @@ const CheckoutForm = () => {
       const subtotal = getCartTotal();
       const shippingCost = getShippingCost();
       const total = subtotal + shippingCost;
-
       console.log('🛒 CHECKOUT DEBUG: About to insert order into database:', orderId);
-      
       const orderData = {
         id: orderId,
         customer_name: `${customerInfo.firstName} ${customerInfo.lastName}`,
@@ -110,13 +102,13 @@ const CheckoutForm = () => {
         bkash_transaction_id: paymentMethod === 'bkash' ? bkashTransactionId : null,
         bkash_sender_number: paymentMethod === 'bkash' ? bkashSenderNumber : null
       };
-
       console.log('📊 BKASH DEBUG: Order data with bKash info:', {
         bkash_transaction_id: orderData.bkash_transaction_id,
         bkash_sender_number: orderData.bkash_sender_number
       });
-
-      const { error } = await supabase.from('orders').insert([orderData]);
+      const {
+        error
+      } = await supabase.from('orders').insert([orderData]);
       if (error) {
         console.error('❌ Database error:', error);
         throw error;
@@ -156,20 +148,19 @@ const CheckoutForm = () => {
         console.error('Webhook error:', webhookError);
         // Don't fail the entire checkout if webhook fails
       }
-
       toast.success('Order placed successfully!');
       clearCart();
-      
+
       // Navigate with order data in state
-      navigate('/order-success', { 
-        state: { 
+      navigate('/order-success', {
+        state: {
           order: {
             ...orderData,
             orderDate: new Date().toISOString(),
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString()
           }
-        } 
+        }
       });
     } catch (error) {
       console.error('Checkout error:', error);
@@ -178,9 +169,7 @@ const CheckoutForm = () => {
       setIsSubmitting(false);
     }
   };
-
-  return (
-    <div className="max-w-6xl mx-auto">
+  return <div className="max-w-6xl mx-auto">
       <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="space-y-6">
           <CustomerInfoForm customerInfo={customerInfo} onCustomerInfoChange={handleCustomerInfoChange} />
@@ -192,11 +181,11 @@ const CheckoutForm = () => {
           {/* Payment Method */}
           <div className="p-6 rounded-lg border border-gray-700 bg-zinc-900">
             <div className="flex items-center mb-4">
-              <h3 className="text-lg font-semibold text-white">Payment</h3>
+              <h3 className="text-white text-xl text-left font-normal">Payment</h3>
             </div>
             
             <div className="mb-6">
-              <button type="button" className="w-full py-3 px-4 rounded-lg font-medium text-zinc-50 bg-zinc-900 hover:bg-zinc-800">Bkash</button>
+              <button type="button" className="w-full py-3 px-4 text-zinc-50 text-left rounded-lg bg-transparent text-lg font-normal">Bkash</button>
             </div>
 
             <div className="space-y-4">
@@ -211,7 +200,7 @@ const CheckoutForm = () => {
               </div>
 
               <div className="p-4 rounded-lg bg-zinc-800">
-                <p className="text-green-400 font-semibold mb-2">You need to send us: Tk {getShippingCost()}</p>
+                <p className="text-green-400 mb-2 font-medium">You need to send us: Tk {getShippingCost()}</p>
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-gray-300">Account Type:</span>
                   <span className="text-white font-semibold">PERSONAL</span>
@@ -226,28 +215,14 @@ const CheckoutForm = () => {
                 <label className="block text-white font-medium mb-2">
                   Your Bkash Account Number
                 </label>
-                <input 
-                  type="text" 
-                  value={bkashSenderNumber} 
-                  onChange={e => setBkashSenderNumber(e.target.value)} 
-                  placeholder="01XXXXXXXXX" 
-                  required 
-                  className="w-full px-4 py-3 border border-gray-600 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white" 
-                />
+                <input type="text" value={bkashSenderNumber} onChange={e => setBkashSenderNumber(e.target.value)} placeholder="01XXXXXXXXX" required className="w-full px-4 py-3 border border-gray-600 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white" />
               </div>
 
               <div>
                 <label className="block text-white font-medium mb-2">
                   Bkash Transaction ID
                 </label>
-                <input 
-                  type="text" 
-                  value={bkashTransactionId} 
-                  onChange={e => setBkashTransactionId(e.target.value)} 
-                  placeholder="Txn ID" 
-                  required 
-                  className="w-full px-4 py-3 border border-gray-600 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white" 
-                />
+                <input type="text" value={bkashTransactionId} onChange={e => setBkashTransactionId(e.target.value)} placeholder="Txn ID" required className="w-full px-4 py-3 border border-gray-600 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white" />
               </div>
             </div>
           </div>
@@ -255,8 +230,6 @@ const CheckoutForm = () => {
           <OrderSummary cartItems={cartItems} subtotal={getCartTotal()} shippingCost={getShippingCost()} total={getCartTotal() + getShippingCost()} loading={isSubmitting} onSubmit={handleSubmit} />
         </div>
       </form>
-    </div>
-  );
+    </div>;
 };
-
 export default CheckoutForm;
