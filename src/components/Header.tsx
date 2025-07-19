@@ -36,7 +36,9 @@ const Header = () => {
                       <X size={22} strokeWidth={1} />
                     </button>
                     <div className="absolute left-1/2 transform -translate-x-1/2">
-                      <img src="/lovable-uploads/1bfadb02-757f-46dc-b0c2-f866a1969b54.png" alt="The Fashion & The Furious" className="h-14 object-contain" />
+                      <Link to="/" onClick={() => setIsDrawerOpen(false)}>
+                        <img src="/lovable-uploads/1bfadb02-757f-46dc-b0c2-f866a1969b54.png" alt="The Fashion & The Furious" className="h-14 object-contain hover:opacity-75 transition-opacity" />
+                      </Link>
                     </div>
                     <Link to="/cart" className="relative" onClick={() => setIsDrawerOpen(false)}>
                       <img src="/lovable-uploads/f50749f8-7e4e-41ba-b8e4-18d0a369170e.png" alt="Cart" className="w-10 h-10 hover:opacity-75 transition-opacity" />
