@@ -103,7 +103,7 @@ const Header = () => {
 
           {/* Logo - Centered on mobile, left-aligned on desktop */}
           <Link to="/" className={isMobile ? "absolute left-1/2 transform -translate-x-1/2" : "flex-none"}>
-            <img src="/lovable-uploads/1bfadb02-757f-46dc-b0c2-f866a1969b54.png" alt="The Fashion & The Furious" className="h-14 md:h-14 object-contain" />
+            <img src="/lovable-uploads/1bfadb02-757f-46dc-b0c2-f866a1969b54.png" alt="The Fashion & The Furious" className="h-16 md:h-16 object-contain" />
           </Link>
 
           {/* Desktop Navigation - Right aligned */}
