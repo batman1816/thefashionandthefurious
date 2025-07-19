@@ -63,39 +63,41 @@ const Cart = () => {
                   {/* Mobile Layout */}
                   <div className="flex gap-4 w-full lg:hidden">
                     {/* Product Image */}
-                    <div className="w-20 h-20 bg-white overflow-hidden flex-shrink-0">
+                    <div className="w-28 h-28 bg-white overflow-hidden flex-shrink-0">
                       <img src={item.product.image_url} alt={item.product.name} className="w-full h-full object-cover" />
                     </div>
                     
-                    {/* Product Details */}
-                    <div className="flex-1 flex flex-col">
-                      <h3 className="font-poppins-light text-base font-normal text-zinc-950 mb-1">
-                        {item.product.name}
-                      </h3>
-                      
-                      {/* Price */}
-                      {item.product.saleInfo && item.product.originalPrice ? (
-                        <div className="mb-1">
-                          <p className="line-through font-poppins-extralight font-normal text-zinc-700 text-sm">
-                            Tk {item.product.originalPrice.toFixed(2)}
-                          </p>
-                          <p className="font-poppins-extralight text-zinc-950 font-normal text-base">
+                    {/* Product Details and Quantity */}
+                    <div className="flex-1 flex flex-col justify-between">
+                      <div>
+                        <h3 className="font-poppins-light text-base font-normal text-zinc-950 mb-1">
+                          {item.product.name}
+                        </h3>
+                        
+                        {/* Price */}
+                        {item.product.saleInfo && item.product.originalPrice ? (
+                          <div className="mb-1">
+                            <p className="line-through font-poppins-extralight font-normal text-zinc-700 text-sm">
+                              Tk {item.product.originalPrice.toFixed(2)}
+                            </p>
+                            <p className="font-poppins-extralight text-zinc-950 font-normal text-base">
+                              Tk {item.product.price.toFixed(2)}
+                            </p>
+                          </div>
+                        ) : (
+                          <p className="font-poppins-extralight mb-1 text-zinc-950 font-normal text-base">
                             Tk {item.product.price.toFixed(2)}
                           </p>
-                        </div>
-                      ) : (
-                        <p className="font-poppins-extralight mb-1 text-zinc-950 font-normal text-base">
-                          Tk {item.product.price.toFixed(2)}
+                        )}
+                        
+                        {/* Size */}
+                        <p className="font-poppins-extralight text-sm font-normal text-zinc-950 mb-3">
+                          SIZE: {item.size}
                         </p>
-                      )}
+                      </div>
                       
-                      {/* Size */}
-                      <p className="font-poppins-extralight text-sm font-normal text-zinc-950 mb-3">
-                        SIZE: {item.size}
-                      </p>
-                      
-                      {/* Quantity Controls */}
-                      <div className="flex items-center justify-between">
+                      {/* Quantity Controls - Centered */}
+                      <div className="flex items-center justify-center">
                         <div className="flex items-center border border-gray-300 bg-transparent rounded-none">
                           <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1, item.color)} className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled={item.quantity <= 1}>
                             <Minus size={16} />
