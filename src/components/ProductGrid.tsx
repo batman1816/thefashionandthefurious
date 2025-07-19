@@ -18,11 +18,12 @@ const ProductGrid = ({ products, showSaleTag = false }: ProductGridProps) => {
   const isMobile = useIsMobile();
 
   const handleProductClick = (product: Product) => {
-    if (isMobile) {
-      navigate(`/product/${product.slug || product.id}`);
-    } else {
-      setSelectedProduct(product);
-    }
+    navigate(`/product/${product.slug || product.id}`);
+  };
+
+  const handleChooseOptions = (product: Product, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectedProduct(product);
   };
 
   const handleColorSelect = (productId: string, color: string) => {
@@ -114,10 +115,7 @@ const ProductGrid = ({ products, showSaleTag = false }: ProductGridProps) => {
                 
                 {/* Choose Options Button */}
                 <button 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleProductClick(product);
-                  }}
+                  onClick={(e) => handleChooseOptions(product, e)}
                   className="w-full border border-gray-400 text-black py-2 px-2 text-xs sm:text-sm font-normal hover:bg-gray-50 transition-colors duration-200"
                 >
                   Choose options

@@ -49,7 +49,7 @@ const NewProductsSection = () => {
   };
   const handleProductClick = (product: Product) => {
     console.log('Product clicked:', product.name);
-    setSelectedProduct(product);
+    window.location.href = `/product/${product.slug || product.id}`;
   };
   const handleCloseModal = () => {
     console.log('Modal closed');
