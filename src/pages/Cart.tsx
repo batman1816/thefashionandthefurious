@@ -89,11 +89,11 @@ const Cart = () => {
                   {/* Quantity Controls */}
                   <div className="lg:col-span-3 flex lg:justify-center items-center">
                     <div className="flex items-center gap-4">
-                      <div className="flex items-center border border-gray-300 bg-transparent rounded-none">
+                      <div className="flex items-center border border-gray-300 bg-transparent rounded-none w-fit">
                         <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1, item.color)} className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled={item.quantity <= 1}>
                           <Minus size={16} />
                         </button>
-                        <span className="px-4 py-2 min-w-[60px] font-poppins-extralight text-base text-zinc-950 text-center font-normal">
+                        <span className="px-3 py-2 min-w-[40px] font-poppins-extralight text-base text-zinc-950 text-center font-normal">
                           {item.quantity}
                         </span>
                         <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity + 1, item.color)} className="p-2 hover:bg-gray-50">
