@@ -71,11 +71,13 @@ const DriversSection = () => {
                     {/* Product Image */}
                     <div className="aspect-square overflow-hidden bg-gray-50 relative mb-2 md:mb-4">
                       {/* Sale Badge */}
-                      {isOnSale && <div className="absolute top-2 left-2 md:top-2 md:left-2 text-white text-xs font-bold px-2 py-1 md:px-3 md:py-1 z-10 uppercase tracking-wide" style={{
-                  backgroundColor: '#C24242'
-                }}>
-                          SALE
-                        </div>}
+{isOnSale && (<div
+    className="absolute top-2 left-2 md:top-2 md:left-2 text-white text-xs font-bold z-10 uppercase tracking-wide"
+    style={{
+      backgroundColor: '#C24242',
+      padding: '5px 15px'}}>
+    SALE
+  </div>)}
                       
                       {primaryImage ? <>
                           <img src={primaryImage} alt={product.name} className="w-full h-full object-cover transition-opacity duration-500 ease-in-out group-hover:opacity-0" onError={e => {
