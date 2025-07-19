@@ -22,8 +22,10 @@ const Header = () => {
           {/* Mobile Menu Button - Only on mobile */}
           {isMobile ? <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
               <DrawerTrigger asChild>
-                <button className="text-white">
-                  <Menu size={20} strokeWidth={1} />
+                <button className="text-white flex flex-col gap-1">
+                  <div className="w-5 h-0.5 bg-white"></div>
+                  <div className="w-5 h-0.5 bg-white"></div>
+                  <div className="w-5 h-0.5 bg-white"></div>
                 </button>
               </DrawerTrigger>
               <DrawerContent className="bg-black border-0 border-t-0 max-h-[90vh] [&>*]:border-0">
@@ -101,7 +103,7 @@ const Header = () => {
 
           {/* Logo - Centered on mobile, left-aligned on desktop */}
           <Link to="/" className={isMobile ? "absolute left-1/2 transform -translate-x-1/2" : "flex-none"}>
-            <img src="/lovable-uploads/1bfadb02-757f-46dc-b0c2-f866a1969b54.png" alt="The Fashion & The Furious" className="h-12 md:h-14 object-contain" />
+            <img src="/lovable-uploads/1bfadb02-757f-46dc-b0c2-f866a1969b54.png" alt="The Fashion & The Furious" className="h-14 md:h-14 object-contain" />
           </Link>
 
           {/* Desktop Navigation - Right aligned */}
