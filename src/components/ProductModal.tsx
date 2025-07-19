@@ -201,20 +201,20 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
             {/* Quantity */}
             <div className="mb-12">
               <h3 className="text-sm font-normal mb-4 text-black">Quantity</h3>
-              <div className="flex items-center border border-gray-300 w-fit bg-white">
+              <div className="flex items-center border border-gray-300 bg-transparent rounded-none">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="p-4 hover:bg-gray-50 transition-colors duration-200 disabled:opacity-50"
+                  className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={quantity <= 1}
                 >
                   <Minus size={16} />
                 </button>
-                <span className="px-8 py-4 text-center min-w-[80px] font-normal border-l border-r border-gray-300">
+                <span className="px-4 py-2 min-w-[60px] font-poppins-extralight text-base text-zinc-950 text-center font-normal">
                   {quantity}
                 </span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="p-4 hover:bg-gray-50 transition-colors duration-200"
+                  className="p-2 hover:bg-gray-50"
                 >
                   <Plus size={16} />
                 </button>
