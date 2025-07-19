@@ -116,7 +116,7 @@ const Cart = () => {
                     
                     {/* Total Price - Right aligned */}
                     <div className="flex items-start pt-1">
-                      <p className="font-poppins-light text-lg text-gray-900 font-normal">
+                      <p className="font-poppins-light text-lg text-gray-900 font-normal whitespace-nowrap">
                         Tk {(item.product.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
