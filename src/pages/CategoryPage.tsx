@@ -1,23 +1,20 @@
-
 import { useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ProductGrid from '../components/ProductGrid';
 import { useProducts } from '../context/ProductsContext';
 import CategoryBanner from '../components/CategoryBanner';
-
 const CategoryPage = () => {
   const location = useLocation();
-  const { products } = useProducts();
-  
+  const {
+    products
+  } = useProducts();
+
   // Extract category from pathname
   const category = location.pathname.substring(1); // Remove leading slash
-  
-  // Filter products by category and only include active products
-  const categoryProducts = products.filter(product => 
-    product.category === category && product.is_active !== false
-  );
 
+  // Filter products by category and only include active products
+  const categoryProducts = products.filter(product => product.category === category && product.is_active !== false);
   const getCategoryTitle = (cat: string) => {
     switch (cat) {
       case 'drivers':
@@ -30,7 +27,6 @@ const CategoryPage = () => {
         return 'COLLECTION';
     }
   };
-
   const getCategoryDescription = (cat: string) => {
     switch (cat) {
       case 'drivers':
@@ -43,9 +39,7 @@ const CategoryPage = () => {
         return 'Discover our premium Formula 1 apparel collection.';
     }
   };
-
-  return (
-    <div className="min-h-screen bg-white">
+  return <div className="min-h-screen bg-white">
       <Header />
       
       {/* Category Banner */}
@@ -54,31 +48,23 @@ const CategoryPage = () => {
       {/* Products */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          {categoryProducts.length > 0 ? (
-            <>
+          {categoryProducts.length > 0 ? <>
               <div className="flex justify-between items-center mb-8">
-                <h2 className="text-2xl font-bold text-gray-900">
-                  {categoryProducts.length} Products
-                </h2>
+                
               </div>
               <ProductGrid products={categoryProducts} showSaleTag={true} />
-            </>
-          ) : (
-            <div className="text-center py-16">
+            </> : <div className="text-center py-16">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
                 No products found in this category
               </h2>
               <p className="text-gray-600">
                 Check back soon for new arrivals!
               </p>
-            </div>
-          )}
+            </div>}
         </div>
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default CategoryPage;
