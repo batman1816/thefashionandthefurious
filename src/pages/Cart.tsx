@@ -99,7 +99,7 @@ const Cart = () => {
                       </p>
                       
                       {/* Quantity Controls */}
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
                         <div className="flex items-center border border-gray-300 bg-transparent rounded-none">
                           <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1, item.color)} className="p-1.5 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled={item.quantity <= 1}>
                             <Minus size={14} />
@@ -112,7 +112,7 @@ const Cart = () => {
                           </button>
                         </div>
                         
-                        <button onClick={() => removeFromCart(item.product.id, item.size, item.color)} className="text-gray-400 hover:text-red-500 p-1 transition-colors ml-2">
+                        <button onClick={() => removeFromCart(item.product.id, item.size, item.color)} className="text-gray-400 hover:text-red-500 p-1 transition-colors">
                           <Trash2 size={16} />
                         </button>
                       </div>
@@ -163,7 +163,7 @@ const Cart = () => {
 
                     {/* Quantity Controls */}
                     <div className="lg:col-span-3 flex lg:justify-center items-center">
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2">
                         <div className="flex items-center border border-gray-300 bg-transparent rounded-none w-fit">
                           <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1, item.color)} className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled={item.quantity <= 1}>
                             <Minus size={16} />
