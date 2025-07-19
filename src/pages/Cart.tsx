@@ -63,7 +63,7 @@ const Cart = () => {
                   {/* Mobile Layout */}
                   <div className="flex gap-4 w-full lg:hidden">
                     {/* Product Image */}
-                    <div className="w-20 h-20 bg-white overflow-hidden flex-shrink-0">
+                    <div className="w-28 h-28 bg-white overflow-hidden flex-shrink-0">
                       <img src={item.product.image_url} alt={item.product.name} className="w-full h-full object-cover" />
                     </div>
                     
