@@ -23,7 +23,7 @@ const Header = () => {
           {isMobile ? <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
               <DrawerTrigger asChild>
                 <button className="text-white">
-                  <Menu size={20} />
+                  <Menu size={20} strokeWidth={1} />
                 </button>
               </DrawerTrigger>
               <DrawerContent className="bg-black border-0 border-t-0 max-h-[90vh] [&>*]:border-0">
