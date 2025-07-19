@@ -95,7 +95,7 @@ const Cart = () => {
                       </p>
                       
                       {/* Quantity Controls */}
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-end gap-4">
                         <div className="flex items-center border border-gray-300 bg-transparent rounded-none">
                           <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1, item.color)} className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled={item.quantity <= 1}>
                             <Minus size={16} />
