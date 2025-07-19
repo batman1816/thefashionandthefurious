@@ -64,6 +64,11 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
 
       console.log('Fetched products:', transformedProducts);
       setProducts(transformedProducts);
+      
+      // Update cart with current product prices
+      if ((window as any).updateCartProducts) {
+        (window as any).updateCartProducts(transformedProducts);
+      }
     } catch (error) {
       console.error('Error fetching products:', error);
       toast.error('Failed to load products');

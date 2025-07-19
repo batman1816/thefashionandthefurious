@@ -11,7 +11,8 @@ const Cart = () => {
     getCartTotal,
     getCartSubtotal,
     getBundleDiscount,
-    activeBundleDeal
+    activeBundleDeal,
+    getCurrentPrice
   } = useCart();
   if (cartItems.length === 0) {
     return <div className="min-h-screen bg-white">
@@ -74,20 +75,23 @@ const Cart = () => {
                       </h3>
                       
                       {/* Price */}
-                      {item.product.saleInfo && item.product.originalPrice ? (
-                        <div className="mb-1">
-                          <p className="line-through font-poppins-extralight font-normal text-zinc-700 text-sm">
-                            Tk {item.product.originalPrice.toFixed(2)}
+                      {(() => {
+                        const currentPrice = getCurrentPrice(item.product.id);
+                        return currentPrice.saleInfo && currentPrice.originalPrice ? (
+                          <div className="mb-1">
+                            <p className="line-through font-poppins-extralight font-normal text-zinc-700 text-sm">
+                              Tk {currentPrice.originalPrice.toFixed(2)}
+                            </p>
+                            <p className="font-poppins-extralight text-zinc-950 font-normal text-base">
+                              Tk {currentPrice.price.toFixed(2)}
+                            </p>
+                          </div>
+                        ) : (
+                          <p className="font-poppins-extralight mb-1 text-zinc-950 font-normal text-base">
+                            Tk {currentPrice.price.toFixed(2)}
                           </p>
-                          <p className="font-poppins-extralight text-zinc-950 font-normal text-base">
-                            Tk {item.product.price.toFixed(2)}
-                          </p>
-                        </div>
-                      ) : (
-                        <p className="font-poppins-extralight mb-1 text-zinc-950 font-normal text-base">
-                          Tk {item.product.price.toFixed(2)}
-                        </p>
-                      )}
+                        );
+                      })()}
                       
                       {/* Size */}
                       <p className="font-poppins-extralight text-sm font-normal text-zinc-950 mb-3">
@@ -117,7 +121,7 @@ const Cart = () => {
                     {/* Total Price - Right aligned */}
                     <div className="flex items-start pt-1">
                       <p className="font-poppins-light text-lg text-gray-900 font-normal">
-                        Tk {(item.product.price * item.quantity).toFixed(2)}
+                        Tk {(getCurrentPrice(item.product.id).price * item.quantity).toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -134,16 +138,23 @@ const Cart = () => {
                         <h3 className="font-poppins-light text-lg mb-2 font-normal text-zinc-950 text-left">
                           {item.product.name}
                         </h3>
-                        {item.product.saleInfo && item.product.originalPrice ? <div className="mb-2">
-                            <p className="line-through font-poppins-extralight font-normal text-zinc-700 text-sm">
-                              Tk {item.product.originalPrice.toFixed(2)}
+                        {(() => {
+                          const currentPrice = getCurrentPrice(item.product.id);
+                          return currentPrice.saleInfo && currentPrice.originalPrice ? (
+                            <div className="mb-2">
+                              <p className="line-through font-poppins-extralight font-normal text-zinc-700 text-sm">
+                                Tk {currentPrice.originalPrice.toFixed(2)}
+                              </p>
+                              <p className="font-poppins-extralight text-zinc-950 font-normal text-base text-left">
+                                Tk {currentPrice.price.toFixed(2)}
+                              </p>
+                            </div>
+                          ) : (
+                            <p className="font-poppins-extralight mb-2 text-zinc-950 font-normal text-base text-left">
+                              Tk {currentPrice.price.toFixed(2)}
                             </p>
-                            <p className="font-poppins-extralight text-zinc-950 font-normal text-base text-left">
-                              Tk {item.product.price.toFixed(2)}
-                            </p>
-                          </div> : <p className="font-poppins-extralight mb-2 text-zinc-950 font-normal text-base text-left">
-                            Tk {item.product.price.toFixed(2)}
-                          </p>}
+                          );
+                        })()}
                         <p className="font-poppins-extralight text-sm font-normal text-zinc-950 text-left">
                           SIZE: {item.size}
                         </p>
@@ -175,7 +186,7 @@ const Cart = () => {
                     <div className="lg:col-span-3 flex lg:justify-end items-center">
                       <div className="text-right">
                         <p className="font-poppins-light text-lg text-gray-900 font-normal">
-                          Tk {(item.product.price * item.quantity).toFixed(2)}
+                          Tk {(getCurrentPrice(item.product.id).price * item.quantity).toFixed(2)}
                         </p>
                       </div>
                     </div>

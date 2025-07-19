@@ -15,12 +15,14 @@ interface CartContextType {
   getCartSubtotal: () => number;
   getBundleDiscount: () => number;
   activeBundleDeal: any; // Add for compatibility
+  getCurrentPrice: (productId: string) => { price: number; originalPrice?: number; saleInfo?: any };
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [currentProducts, setCurrentProducts] = useState<Product[]>([]);
 
   // Load cart from localStorage on component mount
   useEffect(() => {
@@ -92,13 +94,46 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setItems([]);
   };
 
-  const total = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+  // Function to get current price for a product (checks for active sales)
+  const getCurrentPrice = (productId: string) => {
+    const currentProduct = currentProducts.find(p => p.id === productId);
+    if (currentProduct) {
+      return {
+        price: currentProduct.price,
+        originalPrice: currentProduct.originalPrice,
+        saleInfo: currentProduct.saleInfo
+      };
+    }
+    // Fallback to cart item price if product not found in current products
+    const cartItem = items.find(item => item.product.id === productId);
+    return {
+      price: cartItem?.product.price || 0,
+      originalPrice: cartItem?.product.originalPrice,
+      saleInfo: cartItem?.product.saleInfo
+    };
+  };
+
+  // Calculate total using current prices
+  const total = items.reduce((sum, item) => {
+    const currentPrice = getCurrentPrice(item.product.id);
+    return sum + (currentPrice.price * item.quantity);
+  }, 0);
   const itemCount = items.reduce((count, item) => count + item.quantity, 0);
 
   const getCartTotal = () => total;
   const getCartSubtotal = () => total;
   const getBundleDiscount = () => 0;
   const activeBundleDeal = null;
+
+  // Load current products data (this will be called by ProductsProvider)
+  const updateCurrentProducts = (products: Product[]) => {
+    setCurrentProducts(products);
+  };
+
+  // Add this to window object so ProductsProvider can call it
+  useEffect(() => {
+    (window as any).updateCartProducts = updateCurrentProducts;
+  }, []);
 
   return (
     <CartContext.Provider value={{
@@ -113,7 +148,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       getCartTotal,
       getCartSubtotal,
       getBundleDiscount,
-      activeBundleDeal
+      activeBundleDeal,
+      getCurrentPrice
     }}>
       {children}
     </CartContext.Provider>
