@@ -1,6 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
+import { supabase } from '../integrations/supabase/client';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import AdminLogin from '../components/admin/AdminLogin';
@@ -19,19 +20,48 @@ const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
 
-  const handleLogin = (password: string) => {
+  useEffect(() => {
+    // Check if user is already authenticated
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        setIsAuthenticated(true);
+      }
+    };
+    checkAuth();
+  }, []);
+
+  const handleLogin = async (password: string) => {
     if (password === ADMIN_PASSWORD) {
-      setIsAuthenticated(true);
-      toast.success('Welcome to admin panel!');
+      try {
+        // Sign in anonymously with Supabase for RLS policies
+        const { error } = await supabase.auth.signInAnonymously();
+        if (error) {
+          console.error('Auth error:', error);
+          toast.error('Authentication failed');
+          return;
+        }
+        setIsAuthenticated(true);
+        toast.success('Welcome to admin panel!');
+      } catch (error) {
+        console.error('Login error:', error);
+        toast.error('Login failed');
+      }
     } else {
       toast.error('Invalid password');
     }
   };
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setActiveTab('dashboard');
-    toast.success('Logged out successfully');
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      setIsAuthenticated(false);
+      setActiveTab('dashboard');
+      toast.success('Logged out successfully');
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error('Logout failed');
+    }
   };
 
   if (!isAuthenticated) {
