@@ -113,11 +113,15 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   };
 
-  // Calculate total using current prices
-  const total = items.reduce((sum, item) => {
-    const currentPrice = getCurrentPrice(item.product.id);
-    return sum + (currentPrice.price * item.quantity);
-  }, 0);
+  // Calculate total using current prices - moved to separate useMemo to avoid circular dependencies
+  const total = React.useMemo(() => {
+    return items.reduce((sum, item) => {
+      const currentProduct = currentProducts.find(p => p.id === item.product.id);
+      const price = currentProduct ? currentProduct.price : item.product.price;
+      return sum + (price * item.quantity);
+    }, 0);
+  }, [items, currentProducts]);
+
   const itemCount = items.reduce((count, item) => count + item.quantity, 0);
 
   const getCartTotal = () => total;
