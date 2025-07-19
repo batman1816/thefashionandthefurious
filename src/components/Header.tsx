@@ -33,7 +33,7 @@ const Header = () => {
                   <Menu size={20} />
                 </button>
               </DrawerTrigger>
-              <DrawerContent className="bg-black border-t-0 max-h-[90vh]">
+              <DrawerContent className="bg-black border-0 border-t-0 max-h-[90vh] [&>*]:border-0">
                 <div className="flex flex-col h-full">
                   {/* Header with X button and logo */}
                   <div className="flex items-center justify-between p-6 pb-8">
@@ -69,7 +69,7 @@ const Header = () => {
                     <div className="space-y-6">
                       <Link 
                         to="/sales" 
-                        className="block text-white text-xl font-light tracking-widest hover:text-gray-300 transition-colors" 
+                        className="block text-white text-xl font-light tracking-widest hover:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" 
                         style={{ fontFamily: 'Poppins', fontWeight: 300 }}
                         onClick={() => setIsDrawerOpen(false)}
                       >
@@ -78,20 +78,8 @@ const Header = () => {
                       
                       <div className="flex items-center justify-between">
                         <Link 
-                          to="/shop-all" 
-                          className="text-white text-xl font-light tracking-widest hover:text-gray-300 transition-colors" 
-                          style={{ fontFamily: 'Poppins', fontWeight: 300 }}
-                          onClick={() => setIsDrawerOpen(false)}
-                        >
-                          COLLECTION
-                        </Link>
-                        <ChevronRight size={20} className="text-white" />
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <Link 
                           to="/f1-classic" 
-                          className="text-white text-xl font-light tracking-widest hover:text-gray-300 transition-colors" 
+                          className="text-white text-xl font-light tracking-widest hover:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" 
                           style={{ fontFamily: 'Poppins', fontWeight: 300 }}
                           onClick={() => setIsDrawerOpen(false)}
                         >
@@ -102,50 +90,20 @@ const Header = () => {
 
                       <Link 
                         to="/teams" 
-                        className="block text-white text-xl font-light tracking-widest hover:text-gray-300 transition-colors" 
+                        className="block text-white text-xl font-light tracking-widest hover:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" 
                         style={{ fontFamily: 'Poppins', fontWeight: 300 }}
                         onClick={() => setIsDrawerOpen(false)}
                       >
                         TEAMS
                       </Link>
 
-                      <div className="flex items-center justify-between">
-                        <Link 
-                          to="/shop-all" 
-                          className="text-white text-xl font-light tracking-widest hover:text-gray-300 transition-colors" 
-                          style={{ fontFamily: 'Poppins', fontWeight: 300 }}
-                          onClick={() => setIsDrawerOpen(false)}
-                        >
-                          PRODUCTS
-                        </Link>
-                        <ChevronRight size={20} className="text-white" />
-                      </div>
-
                       <Link 
                         to="/drivers" 
-                        className="block text-white text-xl font-light tracking-widest hover:text-gray-300 transition-colors" 
+                        className="block text-white text-xl font-light tracking-widest hover:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" 
                         style={{ fontFamily: 'Poppins', fontWeight: 300 }}
                         onClick={() => setIsDrawerOpen(false)}
                       >
                         DRIVERS
-                      </Link>
-
-                      <Link 
-                        to="/shop-all" 
-                        className="block text-white text-xl font-light tracking-widest hover:text-gray-300 transition-colors" 
-                        style={{ fontFamily: 'Poppins', fontWeight: 300 }}
-                        onClick={() => setIsDrawerOpen(false)}
-                      >
-                        ESSENTIALS
-                      </Link>
-
-                      <Link 
-                        to="/shop-all" 
-                        className="block text-white text-xl font-light tracking-widest hover:text-gray-300 transition-colors" 
-                        style={{ fontFamily: 'Poppins', fontWeight: 300 }}
-                        onClick={() => setIsDrawerOpen(false)}
-                      >
-                        ACCESSORIES
                       </Link>
                     </div>
                   </nav>
@@ -153,6 +111,14 @@ const Header = () => {
                   {/* Social Media Links */}
                   <div className="px-6 pb-8 pt-6">
                     <div className="flex gap-6">
+                      <a 
+                        href="https://www.instagram.com/thefashionandthefurious_?igsh=ZGRsZTcyazl3bGp4&utm_source=qr" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="text-white hover:text-gray-300 transition-colors"
+                      >
+                        <Instagram size={24} />
+                      </a>
                       <a 
                         href="https://www.facebook.com/share/1EhKPkuewp/?mibextid=wwXIfr" 
                         target="_blank" 
@@ -162,12 +128,12 @@ const Header = () => {
                         <Facebook size={24} />
                       </a>
                       <a 
-                        href="https://www.instagram.com/thefashionandthefurious_?igsh=ZGRsZTcyazl3bGp4&utm_source=qr" 
+                        href="https://wa.me/8801941126350" 
                         target="_blank" 
                         rel="noopener noreferrer" 
                         className="text-white hover:text-gray-300 transition-colors"
                       >
-                        <Instagram size={24} />
+                        <MessageCircle size={24} />
                       </a>
                     </div>
                   </div>
