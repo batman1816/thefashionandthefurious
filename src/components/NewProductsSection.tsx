@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useProducts } from '../context/ProductsContext';
 import ProductModal from './ProductModal';
 import { Product } from '../types/Product';
 import { supabase } from '../integrations/supabase/client';
 const NewProductsSection = () => {
-  const {
-    products
-  } = useProducts();
+  const { products } = useProducts();
+  const navigate = useNavigate();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [productsWithSales, setProductsWithSales] = useState<Product[]>([]);
 
@@ -49,7 +48,7 @@ const NewProductsSection = () => {
   };
   const handleProductClick = (product: Product) => {
     console.log('Product clicked:', product.name);
-    window.location.href = `/product/${product.slug || product.id}`;
+    navigate(`/product/${product.slug || product.id}`);
   };
   const handleCloseModal = () => {
     console.log('Modal closed');
