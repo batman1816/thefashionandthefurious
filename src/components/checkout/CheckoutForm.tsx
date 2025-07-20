@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
+import { useProducts } from '../../context/ProductsContext';
 import { supabase } from '../../integrations/supabase/client';
 import { toast } from 'sonner';
 import CustomerInfoForm from './CustomerInfoForm';
@@ -11,8 +12,10 @@ const CheckoutForm = () => {
   const {
     cartItems,
     clearCart,
-    getCartTotal
+    getCartTotal,
+    removeInactiveProducts
   } = useCart();
+  const { products } = useProducts();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [customerInfo, setCustomerInfo] = useState({
@@ -62,6 +65,20 @@ const CheckoutForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
+    
+    // Remove any inactive products from cart before checkout
+    const removedItems = removeInactiveProducts();
+    if (removedItems.length > 0) {
+      toast.error(`${removedItems.length} product(s) were removed from your cart as they are no longer available`);
+      if (cartItems.filter(item => {
+        const currentProduct = products.find(p => p.id === item.product.id);
+        return currentProduct && currentProduct.is_active;
+      }).length === 0) {
+        toast.error('Your cart is now empty');
+        return;
+      }
+    }
+    
     if (cartItems.length === 0) {
       toast.error('Your cart is empty');
       return;

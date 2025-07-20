@@ -16,6 +16,7 @@ interface CartContextType {
   getBundleDiscount: () => number;
   activeBundleDeal: any; // Add for compatibility
   getCurrentPrice: (productId: string) => { price: number; originalPrice?: number; saleInfo?: any };
+  removeInactiveProducts: () => CartItem[];
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -134,6 +135,24 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCurrentProducts(products);
   };
 
+  // Function to remove inactive products from cart
+  const removeInactiveProducts = () => {
+    const activeItems = items.filter(item => {
+      const currentProduct = currentProducts.find(p => p.id === item.product.id);
+      return currentProduct && currentProduct.is_active;
+    });
+    
+    const removedCount = items.length - activeItems.length;
+    if (removedCount > 0) {
+      setItems(activeItems);
+      return items.filter(item => {
+        const currentProduct = currentProducts.find(p => p.id === item.product.id);
+        return !currentProduct || !currentProduct.is_active;
+      });
+    }
+    return [];
+  };
+
   // Add this to window object so ProductsProvider can call it
   useEffect(() => {
     (window as any).updateCartProducts = updateCurrentProducts;
@@ -153,7 +172,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       getCartSubtotal,
       getBundleDiscount,
       activeBundleDeal,
-      getCurrentPrice
+      getCurrentPrice,
+      removeInactiveProducts
     }}>
       {children}
     </CartContext.Provider>
