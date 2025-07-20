@@ -34,6 +34,7 @@ const AnnouncementBannerManagement = () => {
       const { data, error } = await supabase
         .from('announcement_banner')
         .select('*')
+        .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
 
@@ -51,9 +52,13 @@ const AnnouncementBannerManagement = () => {
         console.log('Banner data found:', data);
         setBannerData(data);
       } else {
-        console.log('No banner data found, creating default record...');
-        // Create a default banner record if none exists
-        await createDefaultBanner();
+        console.log('No banner data found, using default data...');
+        // Just set default data without creating a record - let user create one manually
+        setBannerData({
+          id: '',
+          text: 'FREE SHIPPING ON ORDERS ABOVE 2000 TK !!!',
+          is_active: false
+        });
       }
     } catch (error) {
       console.error('Error fetching banner data:', error);
@@ -101,52 +106,74 @@ const AnnouncementBannerManagement = () => {
   };
 
   const handleSave = async () => {
-    if (!bannerData.id) {
-      toast({
-        title: "Error",
-        description: "No banner record to update",
-        variant: "destructive"
-      });
-      return;
-    }
-
     setIsLoading(true);
     
     try {
-      console.log('Updating banner with ID:', bannerData.id);
-      console.log('Banner data:', { text: bannerData.text, is_active: bannerData.is_active });
+      if (bannerData.id) {
+        // Update existing banner
+        console.log('Updating banner with ID:', bannerData.id);
+        console.log('Banner data:', { text: bannerData.text, is_active: bannerData.is_active });
 
-      const { error } = await supabase
-        .from('announcement_banner')
-        .update({
-          text: bannerData.text,
-          is_active: bannerData.is_active
-        })
-        .eq('id', bannerData.id);
+        const { error } = await supabase
+          .from('announcement_banner')
+          .update({
+            text: bannerData.text,
+            is_active: bannerData.is_active
+          })
+          .eq('id', bannerData.id);
 
-      if (error) {
-        console.error('Error updating banner:', error);
+        if (error) {
+          console.error('Error updating banner:', error);
+          toast({
+            title: "Error",
+            description: "Failed to update announcement banner",
+            variant: "destructive"
+          });
+          return;
+        }
+
+        console.log('Banner updated successfully');
         toast({
-          title: "Error",
-          description: "Failed to update announcement banner",
-          variant: "destructive"
+          title: "Success",
+          description: "Announcement banner updated successfully"
         });
-        return;
-      }
+      } else {
+        // Create new banner
+        console.log('Creating new banner...');
+        const { data, error } = await supabase
+          .from('announcement_banner')
+          .insert([{
+            text: bannerData.text,
+            is_active: bannerData.is_active
+          }])
+          .select()
+          .single();
 
-      console.log('Banner updated successfully');
-      toast({
-        title: "Success",
-        description: "Announcement banner updated successfully"
-      });
+        if (error) {
+          console.error('Error creating banner:', error);
+          toast({
+            title: "Error",
+            description: "Failed to create announcement banner",
+            variant: "destructive"
+          });
+          return;
+        }
+
+        console.log('Banner created successfully:', data);
+        setBannerData(data);
+        toast({
+          title: "Success",
+          description: "Announcement banner created successfully"
+        });
+      }
 
       // Refresh data to ensure UI is in sync
       await fetchBannerData();
     } catch (error) {
-      console.error('Error updating banner:', error);
+      console.error('Error saving banner:', error);
       toast({
         title: "Error",
-        description: "Failed to update announcement banner",
+        description: "Failed to save announcement banner",
         variant: "destructive"
       });
     } finally {
@@ -210,10 +237,10 @@ const AnnouncementBannerManagement = () => {
 
           <Button 
             onClick={handleSave} 
-            disabled={isLoading || !bannerData.id} 
+            disabled={isLoading} 
             className="w-full bg-blue-600 hover:bg-blue-700"
           >
-            {isLoading ? 'Saving...' : 'Save Changes'}
+            {isLoading ? 'Saving...' : bannerData.id ? 'Update Banner' : 'Create Banner'}
           </Button>
         </CardContent>
       </Card>
