@@ -20,7 +20,7 @@ const AnnouncementBanner = () => {
         .from('announcement_banner')
         .select('*')
         .limit(1)
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error('Error fetching banner data:', error);
