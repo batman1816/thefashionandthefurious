@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import { Instagram, Facebook, MessageCircle } from 'lucide-react';
 const Footer = () => {
@@ -10,7 +9,7 @@ const Footer = () => {
             <div className="mb-4">
               <img src="/lovable-uploads/1bfadb02-757f-46dc-b0c2-f866a1969b54.png" alt="The Fashion & The Furious" className="h-20 object-contain" />
             </div>
-            <p className="text-gray-400 mb-4 text-lg">Premium apparel inspired by F1 for racing enthusiasts, by racing enthusiasts.</p>
+            <p className="text-gray-400 mb-4 text-lg">Premium apparel inspired by F1 for racing enthusiasts, by racing enthusiasts.🏎️</p>
           </div>
 
           {/* Quick Links */}
