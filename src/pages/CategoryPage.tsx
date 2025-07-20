@@ -4,6 +4,7 @@ import Footer from '../components/Footer';
 import ProductGrid from '../components/ProductGrid';
 import { useProducts } from '../context/ProductsContext';
 import CategoryBanner from '../components/CategoryBanner';
+import AnnouncementBanner from '../components/AnnouncementBanner';
 const CategoryPage = () => {
   const location = useLocation();
   const {
@@ -40,6 +41,7 @@ const CategoryPage = () => {
     }
   };
   return <div className="min-h-screen bg-white">
+      <AnnouncementBanner />
       <Header />
       
       {/* Category Banner */}

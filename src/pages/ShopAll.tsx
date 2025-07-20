@@ -2,6 +2,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ProductGrid from '../components/ProductGrid';
 import { useProducts } from '../context/ProductsContext';
+import AnnouncementBanner from '../components/AnnouncementBanner';
 const ShopAll = () => {
   const {
     products
@@ -10,6 +11,7 @@ const ShopAll = () => {
   // Filter to only show active products (all t-shirts regardless of category/tags)
   const allProducts = products.filter(product => product.is_active !== false);
   return <div className="min-h-screen bg-white">
+      <AnnouncementBanner />
       <Header />
       
       {/* Category Hero */}

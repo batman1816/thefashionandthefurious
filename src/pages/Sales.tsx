@@ -4,6 +4,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ProductGrid from '../components/ProductGrid';
 import { Product } from '../types/Product';
+import AnnouncementBanner from '../components/AnnouncementBanner';
 interface Sale {
   id: string;
   product_id: string;
@@ -123,6 +124,7 @@ const Sales = () => {
   };
   const activeBundleDeal = bundleDeals.find(deal => deal.is_active);
   return <div className="min-h-screen bg-white">
+      <AnnouncementBanner />
       <Header />
       
       <div className="container mx-auto px-4 py-8">
