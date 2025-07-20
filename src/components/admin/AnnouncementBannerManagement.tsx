@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '../../integrations/supabase/client';
 import { Button } from '../ui/button';
@@ -6,11 +7,13 @@ import { Label } from '../ui/label';
 import { Switch } from '../ui/switch';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { useToast } from '../../hooks/use-toast';
+
 interface AnnouncementBannerData {
   id: string;
   text: string;
   is_active: boolean;
 }
+
 const AnnouncementBannerManagement = () => {
   const [bannerData, setBannerData] = useState<AnnouncementBannerData>({
     id: '',
@@ -18,36 +21,109 @@ const AnnouncementBannerManagement = () => {
     is_active: false
   });
   const [isLoading, setIsLoading] = useState(false);
-  const {
-    toast
-  } = useToast();
+  const [isInitializing, setIsInitializing] = useState(true);
+  const { toast } = useToast();
+
   useEffect(() => {
     fetchBannerData();
   }, []);
+
   const fetchBannerData = async () => {
     try {
-      const {
-        data,
-        error
-      } = await supabase.from('announcement_banner').select('*').limit(1).single();
+      console.log('Fetching banner data...');
+      const { data, error } = await supabase
+        .from('announcement_banner')
+        .select('*')
+        .limit(1)
+        .maybeSingle();
+
       if (error) {
         console.error('Error fetching banner data:', error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch announcement banner data",
+          variant: "destructive"
+        });
         return;
       }
-      setBannerData(data);
+
+      if (data) {
+        console.log('Banner data found:', data);
+        setBannerData(data);
+      } else {
+        console.log('No banner data found, creating default record...');
+        // Create a default banner record if none exists
+        await createDefaultBanner();
+      }
     } catch (error) {
       console.error('Error fetching banner data:', error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch announcement banner data",
+        variant: "destructive"
+      });
+    } finally {
+      setIsInitializing(false);
     }
   };
-  const handleSave = async () => {
-    setIsLoading(true);
+
+  const createDefaultBanner = async () => {
     try {
-      const {
-        error
-      } = await supabase.from('announcement_banner').update({
-        text: bannerData.text,
-        is_active: bannerData.is_active
-      }).eq('id', bannerData.id);
+      const { data, error } = await supabase
+        .from('announcement_banner')
+        .insert([{
+          text: 'FREE SHIPPING ON ORDERS ABOVE 2000 TK !!!',
+          is_active: false
+        }])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating default banner:', error);
+        toast({
+          title: "Error",
+          description: "Failed to create default banner",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      console.log('Default banner created:', data);
+      setBannerData(data);
+    } catch (error) {
+      console.error('Error creating default banner:', error);
+      toast({
+        title: "Error",
+        description: "Failed to create default banner",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleSave = async () => {
+    if (!bannerData.id) {
+      toast({
+        title: "Error",
+        description: "No banner record to update",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      console.log('Updating banner with ID:', bannerData.id);
+      console.log('Banner data:', { text: bannerData.text, is_active: bannerData.is_active });
+
+      const { error } = await supabase
+        .from('announcement_banner')
+        .update({
+          text: bannerData.text,
+          is_active: bannerData.is_active
+        })
+        .eq('id', bannerData.id);
+
       if (error) {
         console.error('Error updating banner:', error);
         toast({
@@ -57,10 +133,15 @@ const AnnouncementBannerManagement = () => {
         });
         return;
       }
+
+      console.log('Banner updated successfully');
       toast({
         title: "Success",
         description: "Announcement banner updated successfully"
       });
+
+      // Refresh data to ensure UI is in sync
+      await fetchBannerData();
     } catch (error) {
       console.error('Error updating banner:', error);
       toast({
@@ -72,78 +153,114 @@ const AnnouncementBannerManagement = () => {
       setIsLoading(false);
     }
   };
-  return <div className="space-y-6">
+
+  if (isInitializing) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-white">Loading announcement banner...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Announcement Banner</h1>
-        <p className="text-gray-600">Manage the scrolling announcement banner at the top of your site</p>
+        <h1 className="text-3xl font-bold text-white">Announcement Banner</h1>
+        <p className="text-gray-400">Manage the scrolling announcement banner at the top of your site</p>
       </div>
 
-      <Card className="bg-zinc-900">
+      <Card className="bg-zinc-900 border-zinc-700">
         <CardHeader>
           <CardTitle className="text-zinc-50">Banner Settings</CardTitle>
-          <CardDescription className="text-zinc-50">
+          <CardDescription className="text-zinc-400">
             Configure the text and visibility of your announcement banner
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6 bg-zinc-900">
+        <CardContent className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="banner-text" className="bg-zinc-50">Banner Text</Label>
-            <Input id="banner-text" value={bannerData.text} onChange={e => setBannerData({
-            ...bannerData,
-            text: e.target.value
-          })} placeholder="Enter your announcement text..." className="w-full" />
-            <p className="text-sm text-zinc-50">
+            <Label htmlFor="banner-text" className="text-zinc-50">Banner Text</Label>
+            <Input 
+              id="banner-text" 
+              value={bannerData.text} 
+              onChange={(e) => setBannerData({
+                ...bannerData,
+                text: e.target.value
+              })} 
+              placeholder="Enter your announcement text..." 
+              className="w-full bg-zinc-800 border-zinc-600 text-white" 
+            />
+            <p className="text-sm text-zinc-400">
               This text will scroll continuously across the banner
             </p>
           </div>
 
           <div className="flex items-center space-x-2">
-            <Switch id="banner-active" checked={bannerData.is_active} onCheckedChange={checked => setBannerData({
-            ...bannerData,
-            is_active: checked
-          })} />
-            <Label htmlFor="banner-active" className="bg-zinc-50">
+            <Switch 
+              id="banner-active" 
+              checked={bannerData.is_active} 
+              onCheckedChange={(checked) => setBannerData({
+                ...bannerData,
+                is_active: checked
+              })} 
+            />
+            <Label htmlFor="banner-active" className="text-zinc-50">
               Enable announcement banner
             </Label>
           </div>
 
-          <Button onClick={handleSave} disabled={isLoading} className="w-full bg-zinc-950 hover:bg-zinc-800">
+          <Button 
+            onClick={handleSave} 
+            disabled={isLoading || !bannerData.id} 
+            className="w-full bg-blue-600 hover:bg-blue-700"
+          >
             {isLoading ? 'Saving...' : 'Save Changes'}
           </Button>
         </CardContent>
       </Card>
 
       {/* Preview */}
-      <Card>
-        <CardHeader className="bg-zinc-900">
+      <Card className="bg-zinc-900 border-zinc-700">
+        <CardHeader>
           <CardTitle className="text-zinc-50">Preview</CardTitle>
-          <CardDescription className="text-zinc-50">
+          <CardDescription className="text-zinc-400">
             This is how your banner will appear on the website
           </CardDescription>
         </CardHeader>
-        <CardContent className="bg-zinc-900">
-          {bannerData.is_active ? <div className="bg-red-600 text-white py-2 overflow-hidden relative rounded font-poppins">
+        <CardContent>
+          {bannerData.is_active ? (
+            <div className="bg-red-600 text-white py-2 overflow-hidden relative rounded font-poppins">
               <div className="flex animate-scroll-continuous">
                 <div className="flex whitespace-nowrap">
-                  {Array.from({
-                length: 6
-              }, (_, i) => <span key={`first-${i}`} className="inline-block px-8 text-sm font-semibold tracking-wide">
+                  {Array.from({ length: 6 }, (_, i) => (
+                    <span
+                      key={`first-${i}`}
+                      className="inline-block px-8 text-sm font-semibold tracking-wide"
+                    >
                       {bannerData.text}
-                    </span>)}
+                    </span>
+                  ))}
                 </div>
                 <div className="flex whitespace-nowrap">
-                  {Array.from({
-                length: 6
-              }, (_, i) => <span key={`second-${i}`} className="inline-block px-8 text-sm font-semibold tracking-wide">
+                  {Array.from({ length: 6 }, (_, i) => (
+                    <span
+                      key={`second-${i}`}
+                      className="inline-block px-8 text-sm font-semibold tracking-wide"
+                    >
                       {bannerData.text}
-                    </span>)}
+                    </span>
+                  ))}
                 </div>
               </div>
-            </div> : <div className="bg-gray-100 text-gray-500 py-2 px-4 rounded text-center">
+            </div>
+          ) : (
+            <div className="bg-gray-600 text-gray-300 py-2 px-4 rounded text-center">
               Banner is currently disabled
-            </div>}
+            </div>
+          )}
         </CardContent>
       </Card>
-    </div>;
+    </div>
+  );
 };
+
 export default AnnouncementBannerManagement;
