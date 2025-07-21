@@ -104,8 +104,10 @@ const ProductGrid = ({ products, showSaleTag = false }: ProductGridProps) => {
                 </h3>
                 {product.saleInfo && product.originalPrice ? (
                   <div className="text-sm sm:text-base font-normal text-gray-900 mb-2">
-                    <div className="line-through text-gray-400">Tk {product.originalPrice}.00</div>
-                    <div>Tk {product.price}.00 BDT</div>
+                    <div className="flex flex-col md:flex-row md:items-center md:gap-2">
+                      <span className="line-through text-gray-400">Tk {product.originalPrice}.00</span>
+                      <span>Tk {product.price}.00 BDT</span>
+                    </div>
                   </div>
                 ) : (
                   <p className="text-sm sm:text-base font-normal text-gray-900 mb-2">
