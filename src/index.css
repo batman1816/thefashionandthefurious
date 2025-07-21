@@ -119,18 +119,31 @@
   backface-visibility: hidden;
 }
 
-@keyframes flip {
+/* Realistic flip animation with hinge mechanics */
+@keyframes realistic-flip {
   0% {
-    transform: rotateX(0);
+    transform: rotateX(0deg);
+  }
+  25% {
+    transform: rotateX(-15deg);
   }
   50% {
     transform: rotateX(-90deg);
   }
+  75% {
+    transform: rotateX(-105deg);
+  }
   100% {
-    transform: rotateX(0);
+    transform: rotateX(0deg);
   }
 }
 
-.animate-flip {
-  animation: flip 0.6s ease-in-out;
+.animate-realistic-flip {
+  animation: realistic-flip 300ms ease-in-out;
+  transform-origin: center;
+}
+
+/* Custom inner shadow for panel depth */
+.shadow-inner-custom {
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 -2px 4px rgba(255, 255, 255, 0.05);
 }

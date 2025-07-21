@@ -6,67 +6,70 @@ interface FlipClockProps {
 }
 
 interface FlipDigitProps {
-  digit: number;
-  label: string;
+  digit: string;
+  isFlipping: boolean;
 }
 
-const FlipDigit = ({ digit, label }: FlipDigitProps) => {
-  const [currentDigit, setCurrentDigit] = useState(digit);
-  const [isFlipping, setIsFlipping] = useState(false);
-
-  useEffect(() => {
-    if (digit !== currentDigit) {
-      setIsFlipping(true);
-      setTimeout(() => {
-        setCurrentDigit(digit);
-        setIsFlipping(false);
-      }, 300);
-    }
-  }, [digit, currentDigit]);
-
-  const formattedDigit = digit.toString().padStart(2, '0');
-
+const FlipDigit = ({ digit, isFlipping }: FlipDigitProps) => {
   return (
-    <div className="flex flex-col items-center">
-      <div className="relative w-16 h-20 md:w-20 md:h-24 lg:w-24 lg:h-28">
-        {/* Flip card container */}
-        <div className="relative w-full h-full perspective-1000">
-          <div
-            className={`absolute inset-0 w-full h-full transition-transform duration-300 transform-style-preserve-3d ${
-              isFlipping ? 'animate-flip' : ''
-            }`}
-          >
-            {/* Front face */}
-            <div className="absolute inset-0 w-full h-full backface-hidden">
-              <div className="w-full h-full bg-gray-900 rounded-lg border border-gray-700 flex items-center justify-center shadow-lg">
-                <span className="text-white text-2xl md:text-3xl lg:text-4xl font-bold font-mono leading-none">
-                  {formattedDigit}
+    <div className="relative w-14 h-20 md:w-16 md:h-24 lg:w-20 lg:h-28">
+      {/* Panel container */}
+      <div className="relative w-full h-full perspective-1000">
+        <div
+          className={`absolute inset-0 w-full h-full transition-transform duration-300 transform-style-preserve-3d ${
+            isFlipping ? 'animate-realistic-flip' : ''
+          }`}
+        >
+          {/* Main panel */}
+          <div className="absolute inset-0 w-full h-full backface-hidden">
+            {/* Panel background with gradient and shadows */}
+            <div className="w-full h-full bg-gradient-to-b from-[#1A1A1A] to-[#111111] rounded-xl shadow-lg relative overflow-hidden">
+              {/* Inner shadow for depth */}
+              <div className="absolute inset-0 rounded-xl shadow-inner-custom"></div>
+              
+              {/* Digit display */}
+              <div className="w-full h-full flex items-center justify-center">
+                <span 
+                  className="text-[#E2E2E2] text-3xl md:text-4xl lg:text-5xl leading-none select-none"
+                  style={{ fontFamily: 'Poppins', fontWeight: '400' }}
+                >
+                  {digit}
                 </span>
               </div>
-              {/* Top highlight line */}
-              <div className="absolute top-0 left-2 right-2 h-px bg-gray-600"></div>
-              {/* Middle separator line */}
-              <div className="absolute top-1/2 left-0 right-0 h-px bg-gray-700 transform -translate-y-px"></div>
-              {/* Bottom shadow line */}
-              <div className="absolute bottom-0 left-2 right-2 h-px bg-gray-800"></div>
+              
+              {/* Center hinge line */}
+              <div className="absolute top-1/2 left-0 right-0 h-px bg-[#333333] transform -translate-y-px"></div>
+              
+              {/* Top half overlay for flip effect */}
+              <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-[#1A1A1A] to-transparent opacity-20 rounded-t-xl"></div>
             </div>
           </div>
         </div>
       </div>
-      {/* Label */}
-      <span className="text-white text-xs md:text-sm font-semibold mt-2 tracking-wider">
-        {label}
-      </span>
     </div>
   );
 };
 
 const FlipClock = ({ targetDate, title }: FlipClockProps) => {
   const [timeLeft, setTimeLeft] = useState({
-    days: 0,
     hours: 0,
     minutes: 0,
     seconds: 0,
+  });
+  
+  const [prevTimeLeft, setPrevTimeLeft] = useState({
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+
+  const [isFlipping, setIsFlipping] = useState({
+    hours1: false,
+    hours2: false,
+    minutes1: false,
+    minutes2: false,
+    seconds1: false,
+    seconds2: false,
   });
 
   useEffect(() => {
@@ -76,14 +79,53 @@ const FlipClock = ({ targetDate, title }: FlipClockProps) => {
       const difference = target - now;
 
       if (difference > 0) {
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
         const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-        setTimeLeft({ days, hours, minutes, seconds });
+        const newTimeLeft = { hours, minutes, seconds };
+        
+        // Check which digits changed and trigger flip animations
+        const hours1 = Math.floor(hours / 10);
+        const hours2 = hours % 10;
+        const minutes1 = Math.floor(minutes / 10);
+        const minutes2 = minutes % 10;
+        const seconds1 = Math.floor(seconds / 10);
+        const seconds2 = seconds % 10;
+        
+        const prevHours1 = Math.floor(prevTimeLeft.hours / 10);
+        const prevHours2 = prevTimeLeft.hours % 10;
+        const prevMinutes1 = Math.floor(prevTimeLeft.minutes / 10);
+        const prevMinutes2 = prevTimeLeft.minutes % 10;
+        const prevSeconds1 = Math.floor(prevTimeLeft.seconds / 10);
+        const prevSeconds2 = prevTimeLeft.seconds % 10;
+
+        const newFlipState = {
+          hours1: hours1 !== prevHours1,
+          hours2: hours2 !== prevHours2,
+          minutes1: minutes1 !== prevMinutes1,
+          minutes2: minutes2 !== prevMinutes2,
+          seconds1: seconds1 !== prevSeconds1,
+          seconds2: seconds2 !== prevSeconds2,
+        };
+
+        setIsFlipping(newFlipState);
+        setPrevTimeLeft(timeLeft);
+        setTimeLeft(newTimeLeft);
+
+        // Reset flip animations after 300ms
+        setTimeout(() => {
+          setIsFlipping({
+            hours1: false,
+            hours2: false,
+            minutes1: false,
+            minutes2: false,
+            seconds1: false,
+            seconds2: false,
+          });
+        }, 300);
       } else {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
       }
     };
 
@@ -91,34 +133,59 @@ const FlipClock = ({ targetDate, title }: FlipClockProps) => {
     const timer = setInterval(calculateTimeLeft, 1000);
 
     return () => clearInterval(timer);
-  }, [targetDate]);
+  }, [targetDate, timeLeft, prevTimeLeft]);
+
+  // Format digits for display
+  const hours1 = Math.floor(timeLeft.hours / 10).toString();
+  const hours2 = (timeLeft.hours % 10).toString();
+  const minutes1 = Math.floor(timeLeft.minutes / 10).toString();
+  const minutes2 = (timeLeft.minutes % 10).toString();
+  const seconds1 = Math.floor(timeLeft.seconds / 10).toString();
+  const seconds2 = (timeLeft.seconds % 10).toString();
+
+  // Check if countdown is finished
+  const isFinished = timeLeft.hours === 0 && timeLeft.minutes === 0 && timeLeft.seconds === 0;
+
+  if (isFinished) {
+    return (
+      <div className="w-full max-w-4xl mx-auto p-6 bg-black rounded-xl shadow-2xl">
+        <h2 className="text-white text-center text-2xl md:text-4xl lg:text-5xl font-bold tracking-wide" 
+            style={{ fontFamily: 'Poppins', fontWeight: '700' }}>
+          Sale Ended
+        </h2>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-4xl mx-auto p-6 bg-black rounded-xl shadow-2xl">
       {/* Title */}
       <h2 className="text-white text-center text-2xl md:text-4xl lg:text-5xl font-bold mb-8 tracking-wide" 
-          style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700 }}>
+          style={{ fontFamily: 'Poppins', fontWeight: '700' }}>
         {title}
       </h2>
       
-      {/* Flip clock container */}
-      <div className="flex justify-center items-center gap-4 md:gap-6 lg:gap-8">
-        <FlipDigit digit={timeLeft.days} label="DAYS" />
+      {/* Flip clock container - HH:MM:SS format */}
+      <div className="flex justify-center items-center gap-2 md:gap-3 lg:gap-4">
+        {/* Hours */}
+        <FlipDigit digit={hours1} isFlipping={isFlipping.hours1} />
+        <FlipDigit digit={hours2} isFlipping={isFlipping.hours2} />
         
-        {/* Separator colon */}
-        <div className="text-white text-3xl md:text-4xl lg:text-5xl font-bold mb-6">:</div>
+        {/* Colon separator */}
+        <div className="text-[#E2E2E2] text-2xl md:text-3xl lg:text-4xl mx-1" 
+             style={{ fontFamily: 'Poppins', fontWeight: '400' }}>:</div>
         
-        <FlipDigit digit={timeLeft.hours} label="HOURS" />
+        {/* Minutes */}
+        <FlipDigit digit={minutes1} isFlipping={isFlipping.minutes1} />
+        <FlipDigit digit={minutes2} isFlipping={isFlipping.minutes2} />
         
-        {/* Separator colon */}
-        <div className="text-white text-3xl md:text-4xl lg:text-5xl font-bold mb-6">:</div>
+        {/* Colon separator */}
+        <div className="text-[#E2E2E2] text-2xl md:text-3xl lg:text-4xl mx-1" 
+             style={{ fontFamily: 'Poppins', fontWeight: '400' }}>:</div>
         
-        <FlipDigit digit={timeLeft.minutes} label="MINUTES" />
-        
-        {/* Separator colon */}
-        <div className="text-white text-3xl md:text-4xl lg:text-5xl font-bold mb-6">:</div>
-        
-        <FlipDigit digit={timeLeft.seconds} label="SECONDS" />
+        {/* Seconds */}
+        <FlipDigit digit={seconds1} isFlipping={isFlipping.seconds1} />
+        <FlipDigit digit={seconds2} isFlipping={isFlipping.seconds2} />
       </div>
     </div>
   );
