@@ -3,6 +3,7 @@ import { supabase } from '../integrations/supabase/client';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ProductGrid from '../components/ProductGrid';
+import FlipClock from '../components/FlipClock';
 import { Product } from '../types/Product';
 import AnnouncementBanner from '../components/AnnouncementBanner';
 interface Sale {
@@ -129,27 +130,16 @@ const Sales = () => {
       
       <div className="container mx-auto px-4 py-8">
         {/* Countdown Banner */}
-        {countdown && <div className="text-white p-6 rounded-lg mb-8 text-center bg-zinc-950">
-            <h2 className="font-bold mb-4 text-7xl"> SALE ENDS SOON! </h2>
-            <div className="flex justify-center gap-4 text-lg font-mono">
-              <div className="bg-opacity-30 px-3 py-2 rounded bg-zinc-800">
-                <div className="text-2xl font-bold bg-zinc-800">{countdown.days}</div>
-                <div className="text-xs">DAYS</div>
-              </div>
-              <div className="bg-opacity-30 px-3 py-2 rounded bg-zinc-800">
-                <div className="text-2xl font-bold">{countdown.hours}</div>
-                <div className="text-xs">HOURS</div>
-              </div>
-              <div className="bg-opacity-30 px-3 py-2 rounded bg-zinc-800">
-                <div className="text-2xl font-bold">{countdown.minutes}</div>
-                <div className="text-xs">MINUTES</div>
-              </div>
-              <div className="bg-opacity-30 px-3 py-2 rounded bg-zinc-800">
-                <div className="text-2xl font-bold">{countdown.seconds}</div>
-                <div className="text-xs">SECONDS</div>
-              </div>
-            </div>
-          </div>}
+        {countdown && (
+          <div className="mb-8">
+            <FlipClock 
+              targetDate={sales.find(sale => sale.is_active && new Date(sale.end_date) > new Date())?.end_date || 
+                          bundleDeals.find(bundle => bundle.is_active && new Date(bundle.end_date) > new Date())?.end_date || 
+                          new Date().toISOString()}
+              title="SALE ENDS SOON!"
+            />
+          </div>
+        )}
 
         {/* Bundle Deal Banner */}
         {activeBundleDeal && <div className="bg-black text-white p-6 rounded-lg mb-8 text-center">
