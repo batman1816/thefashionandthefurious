@@ -16,7 +16,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   loading,
   onSubmit
 }) => {
-  return <div className="p-6 border border-gray-700 bg-zinc-900 rounded-xl">
+  return <div className="p-6 border border-zinc-900 bg-zinc-900 rounded-xl">
       <h3 className="text-xl text-white mb-6 font-medium">Order Summary</h3>
       
       {/* Cart Items */}
