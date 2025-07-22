@@ -232,14 +232,14 @@ const CheckoutForm = () => {
                 <label className="block text-white font-medium mb-2">
                   Your Bkash Account Number
                 </label>
-                <input type="text" value={bkashSenderNumber} onChange={e => setBkashSenderNumber(e.target.value)} placeholder="01XXXXXXXXX" required className="w-full px-4 py-3 border border-gray-600 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white" />
+                <input type="text" value={bkashSenderNumber} onChange={e => setBkashSenderNumber(e.target.value)} placeholder="01XXXXXXXXX" required className="w-full px-4 py-3 border border-gray-600 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400 bg-white" />
               </div>
 
               <div>
                 <label className="block text-white font-medium mb-2">
                   Bkash Transaction ID
                 </label>
-                <input type="text" value={bkashTransactionId} onChange={e => setBkashTransactionId(e.target.value)} placeholder="Txn ID" required className="w-full px-4 py-3 border border-gray-600 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white" />
+                <input type="text" value={bkashTransactionId} onChange={e => setBkashTransactionId(e.target.value)} placeholder="Txn ID" required className="w-full px-4 py-3 border border-gray-600 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400 bg-white" />
               </div>
             </div>
           </div>
