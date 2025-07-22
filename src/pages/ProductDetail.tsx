@@ -116,9 +116,6 @@ const ProductDetail = () => {
                 Tk {product.price}.00
               </div>}
 
-            <div className="prose text-gray-600 mb-8">
-              <FormattedText text={product.description} />
-            </div>
 
             {/* Color Selection */}
             {product.color_variants && product.color_variants.length > 0 && <div className="mb-4">
@@ -176,6 +173,11 @@ const ProductDetail = () => {
               <button onClick={handleBuyNow} className="w-full bg-black hover:bg-gray-800 text-white py-4 px-8 font-semibold transition-all duration-200 transform hover:scale-[1.01] active:scale-[0.97] active:-translate-y-1">
                 BUY NOW
               </button>
+            </div>
+
+            {/* Product Description */}
+            <div className="prose text-gray-600 mb-6">
+              <FormattedText text={product.description} />
             </div>
 
             {/* Product Details */}

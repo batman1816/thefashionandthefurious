@@ -13,7 +13,7 @@ interface FlipDigitProps {
 
 const FlipDigit = ({ digit, isFlipping, nextDigit }: FlipDigitProps) => {
   return (
-    <div className="relative w-14 h-20 md:w-16 md:h-24 lg:w-20 lg:h-28">
+    <div className="relative w-12 h-16 sm:w-14 sm:h-20 md:w-16 md:h-24 lg:w-18 lg:h-26">
       {/* Panel container */}
       <div className="relative w-full h-full perspective-1000">
         
@@ -26,7 +26,7 @@ const FlipDigit = ({ digit, isFlipping, nextDigit }: FlipDigitProps) => {
             <div className="absolute bottom-0 left-0 right-0 h-1/2 overflow-hidden rounded-b-xl">
               <div className="w-full h-full flex items-start justify-center pt-0">
                 <span 
-                  className="text-[#E2E2E2] text-3xl md:text-4xl lg:text-5xl leading-none select-none"
+                  className="text-[#E2E2E2] text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-none select-none"
                   style={{ fontFamily: 'Poppins', fontWeight: '400', transform: 'translateY(-50%)' }}
                 >
                   {isFlipping ? nextDigit : digit}
@@ -50,7 +50,7 @@ const FlipDigit = ({ digit, isFlipping, nextDigit }: FlipDigitProps) => {
             <div className="w-full h-full overflow-hidden rounded-t-xl">
               <div className="w-full h-full flex items-end justify-center pb-0">
                 <span 
-                  className="text-[#E2E2E2] text-3xl md:text-4xl lg:text-5xl leading-none select-none"
+                  className="text-[#E2E2E2] text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-none select-none"
                   style={{ fontFamily: 'Poppins', fontWeight: '400', transform: 'translateY(50%)' }}
                 >
                   {digit}
@@ -74,7 +74,7 @@ const FlipDigit = ({ digit, isFlipping, nextDigit }: FlipDigitProps) => {
             <div className="w-full h-full overflow-hidden rounded-b-xl">
               <div className="w-full h-full flex items-start justify-center pt-0">
                 <span 
-                  className="text-[#E2E2E2] text-3xl md:text-4xl lg:text-5xl leading-none select-none"
+                  className="text-[#E2E2E2] text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-none select-none"
                   style={{ fontFamily: 'Poppins', fontWeight: '400', transform: 'translateY(-50%)' }}
                 >
                   {nextDigit}
@@ -90,18 +90,26 @@ const FlipDigit = ({ digit, isFlipping, nextDigit }: FlipDigitProps) => {
 
 const FlipClock = ({ targetDate, title }: FlipClockProps) => {
   const [timeLeft, setTimeLeft] = useState({
+    weeks: 0,
+    days: 0,
     hours: 0,
     minutes: 0,
     seconds: 0,
   });
   
   const [prevTimeLeft, setPrevTimeLeft] = useState({
+    weeks: 0,
+    days: 0,
     hours: 0,
     minutes: 0,
     seconds: 0,
   });
 
   const [isFlipping, setIsFlipping] = useState({
+    weeks1: false,
+    weeks2: false,
+    days1: false,
+    days2: false,
     hours1: false,
     hours2: false,
     minutes1: false,
@@ -117,13 +125,19 @@ const FlipClock = ({ targetDate, title }: FlipClockProps) => {
       const difference = target - now;
 
       if (difference > 0) {
+        const weeks = Math.floor(difference / (1000 * 60 * 60 * 24 * 7));
+        const days = Math.floor((difference % (1000 * 60 * 60 * 24 * 7)) / (1000 * 60 * 60 * 24));
         const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-        const newTimeLeft = { hours, minutes, seconds };
+        const newTimeLeft = { weeks, days, hours, minutes, seconds };
         
         // Check which digits changed and trigger flip animations
+        const weeks1 = Math.floor(weeks / 10);
+        const weeks2 = weeks % 10;
+        const days1 = Math.floor(days / 10);
+        const days2 = days % 10;
         const hours1 = Math.floor(hours / 10);
         const hours2 = hours % 10;
         const minutes1 = Math.floor(minutes / 10);
@@ -131,6 +145,10 @@ const FlipClock = ({ targetDate, title }: FlipClockProps) => {
         const seconds1 = Math.floor(seconds / 10);
         const seconds2 = seconds % 10;
         
+        const prevWeeks1 = Math.floor(prevTimeLeft.weeks / 10);
+        const prevWeeks2 = prevTimeLeft.weeks % 10;
+        const prevDays1 = Math.floor(prevTimeLeft.days / 10);
+        const prevDays2 = prevTimeLeft.days % 10;
         const prevHours1 = Math.floor(prevTimeLeft.hours / 10);
         const prevHours2 = prevTimeLeft.hours % 10;
         const prevMinutes1 = Math.floor(prevTimeLeft.minutes / 10);
@@ -139,6 +157,10 @@ const FlipClock = ({ targetDate, title }: FlipClockProps) => {
         const prevSeconds2 = prevTimeLeft.seconds % 10;
 
         const newFlipState = {
+          weeks1: weeks1 !== prevWeeks1,
+          weeks2: weeks2 !== prevWeeks2,
+          days1: days1 !== prevDays1,
+          days2: days2 !== prevDays2,
           hours1: hours1 !== prevHours1,
           hours2: hours2 !== prevHours2,
           minutes1: minutes1 !== prevMinutes1,
@@ -154,6 +176,10 @@ const FlipClock = ({ targetDate, title }: FlipClockProps) => {
         // Reset flip animations after 300ms
         setTimeout(() => {
           setIsFlipping({
+            weeks1: false,
+            weeks2: false,
+            days1: false,
+            days2: false,
             hours1: false,
             hours2: false,
             minutes1: false,
@@ -163,7 +189,7 @@ const FlipClock = ({ targetDate, title }: FlipClockProps) => {
           });
         }, 300);
       } else {
-        setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
+        setTimeLeft({ weeks: 0, days: 0, hours: 0, minutes: 0, seconds: 0 });
       }
     };
 
@@ -174,6 +200,10 @@ const FlipClock = ({ targetDate, title }: FlipClockProps) => {
   }, [targetDate, timeLeft, prevTimeLeft]);
 
   // Format digits for display
+  const weeks1 = Math.floor(timeLeft.weeks / 10).toString();
+  const weeks2 = (timeLeft.weeks % 10).toString();
+  const days1 = Math.floor(timeLeft.days / 10).toString();
+  const days2 = (timeLeft.days % 10).toString();
   const hours1 = Math.floor(timeLeft.hours / 10).toString();
   const hours2 = (timeLeft.hours % 10).toString();
   const minutes1 = Math.floor(timeLeft.minutes / 10).toString();
@@ -182,6 +212,10 @@ const FlipClock = ({ targetDate, title }: FlipClockProps) => {
   const seconds2 = (timeLeft.seconds % 10).toString();
 
   // Format next digits for flip animation
+  const nextWeeks1 = Math.floor(prevTimeLeft.weeks / 10).toString();
+  const nextWeeks2 = (prevTimeLeft.weeks % 10).toString();
+  const nextDays1 = Math.floor(prevTimeLeft.days / 10).toString();
+  const nextDays2 = (prevTimeLeft.days % 10).toString();
   const nextHours1 = Math.floor(prevTimeLeft.hours / 10).toString();
   const nextHours2 = (prevTimeLeft.hours % 10).toString();
   const nextMinutes1 = Math.floor(prevTimeLeft.minutes / 10).toString();
@@ -190,7 +224,7 @@ const FlipClock = ({ targetDate, title }: FlipClockProps) => {
   const nextSeconds2 = (prevTimeLeft.seconds % 10).toString();
 
   // Check if countdown is finished
-  const isFinished = timeLeft.hours === 0 && timeLeft.minutes === 0 && timeLeft.seconds === 0;
+  const isFinished = timeLeft.weeks === 0 && timeLeft.days === 0 && timeLeft.hours === 0 && timeLeft.minutes === 0 && timeLeft.seconds === 0;
 
   if (isFinished) {
     return (
@@ -204,34 +238,70 @@ const FlipClock = ({ targetDate, title }: FlipClockProps) => {
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6 bg-black rounded-xl shadow-2xl">
+    <div className="w-full max-w-6xl mx-auto p-4 md:p-6 bg-black rounded-xl shadow-2xl">
       {/* Title */}
-      <h2 className="text-white text-center text-2xl md:text-4xl lg:text-5xl font-bold mb-8 tracking-wide" 
+      <h2 className="text-white text-center text-xl md:text-3xl lg:text-4xl font-bold mb-6 md:mb-8 tracking-wide" 
           style={{ fontFamily: 'Poppins', fontWeight: '700' }}>
         {title}
       </h2>
       
-      {/* Flip clock container - HH:MM:SS format */}
-      <div className="flex justify-center items-center gap-2 md:gap-3 lg:gap-4">
-        {/* Hours */}
-        <FlipDigit digit={hours1} isFlipping={isFlipping.hours1} nextDigit={nextHours1} />
-        <FlipDigit digit={hours2} isFlipping={isFlipping.hours2} nextDigit={nextHours2} />
+      {/* Flip clock container - Responsive layout */}
+      <div className="flex flex-col gap-4 md:gap-0">
+        {/* Top row: Weeks and Days (mobile: stacked, tablet+: inline) */}
+        <div className="flex justify-center items-center gap-2 md:gap-4 lg:gap-6">
+          {/* Weeks */}
+          <div className="flex flex-col items-center">
+            <div className="flex items-center gap-1">
+              <FlipDigit digit={weeks1} isFlipping={isFlipping.weeks1} nextDigit={nextWeeks1} />
+              <FlipDigit digit={weeks2} isFlipping={isFlipping.weeks2} nextDigit={nextWeeks2} />
+            </div>
+            <span className="text-[#E2E2E2] text-xs md:text-sm mt-1" 
+                  style={{ fontFamily: 'Poppins', fontWeight: '400' }}>WEEKS</span>
+          </div>
+          
+          {/* Days */}
+          <div className="flex flex-col items-center">
+            <div className="flex items-center gap-1">
+              <FlipDigit digit={days1} isFlipping={isFlipping.days1} nextDigit={nextDays1} />
+              <FlipDigit digit={days2} isFlipping={isFlipping.days2} nextDigit={nextDays2} />
+            </div>
+            <span className="text-[#E2E2E2] text-xs md:text-sm mt-1" 
+                  style={{ fontFamily: 'Poppins', fontWeight: '400' }}>DAYS</span>
+          </div>
+        </div>
         
-        {/* Colon separator */}
-        <div className="text-[#E2E2E2] text-2xl md:text-3xl lg:text-4xl mx-1" 
-             style={{ fontFamily: 'Poppins', fontWeight: '400' }}>:</div>
-        
-        {/* Minutes */}
-        <FlipDigit digit={minutes1} isFlipping={isFlipping.minutes1} nextDigit={nextMinutes1} />
-        <FlipDigit digit={minutes2} isFlipping={isFlipping.minutes2} nextDigit={nextMinutes2} />
-        
-        {/* Colon separator */}
-        <div className="text-[#E2E2E2] text-2xl md:text-3xl lg:text-4xl mx-1" 
-             style={{ fontFamily: 'Poppins', fontWeight: '400' }}>:</div>
-        
-        {/* Seconds */}
-        <FlipDigit digit={seconds1} isFlipping={isFlipping.seconds1} nextDigit={nextSeconds1} />
-        <FlipDigit digit={seconds2} isFlipping={isFlipping.seconds2} nextDigit={nextSeconds2} />
+        {/* Bottom row: Hours, Minutes, Seconds */}
+        <div className="flex justify-center items-center gap-2 md:gap-4 lg:gap-6">
+          {/* Hours */}
+          <div className="flex flex-col items-center">
+            <div className="flex items-center gap-1">
+              <FlipDigit digit={hours1} isFlipping={isFlipping.hours1} nextDigit={nextHours1} />
+              <FlipDigit digit={hours2} isFlipping={isFlipping.hours2} nextDigit={nextHours2} />
+            </div>
+            <span className="text-[#E2E2E2] text-xs md:text-sm mt-1" 
+                  style={{ fontFamily: 'Poppins', fontWeight: '400' }}>HOURS</span>
+          </div>
+          
+          {/* Minutes */}
+          <div className="flex flex-col items-center">
+            <div className="flex items-center gap-1">
+              <FlipDigit digit={minutes1} isFlipping={isFlipping.minutes1} nextDigit={nextMinutes1} />
+              <FlipDigit digit={minutes2} isFlipping={isFlipping.minutes2} nextDigit={nextMinutes2} />
+            </div>
+            <span className="text-[#E2E2E2] text-xs md:text-sm mt-1" 
+                  style={{ fontFamily: 'Poppins', fontWeight: '400' }}>MINUTES</span>
+          </div>
+          
+          {/* Seconds */}
+          <div className="flex flex-col items-center">
+            <div className="flex items-center gap-1">
+              <FlipDigit digit={seconds1} isFlipping={isFlipping.seconds1} nextDigit={nextSeconds1} />
+              <FlipDigit digit={seconds2} isFlipping={isFlipping.seconds2} nextDigit={nextSeconds2} />
+            </div>
+            <span className="text-[#E2E2E2] text-xs md:text-sm mt-1" 
+                  style={{ fontFamily: 'Poppins', fontWeight: '400' }}>SECONDS</span>
+          </div>
+        </div>
       </div>
     </div>
   );
