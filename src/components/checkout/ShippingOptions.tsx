@@ -7,7 +7,7 @@ const ShippingOptions = ({
   shippingOption,
   onShippingOptionChange
 }: ShippingOptionsProps) => {
-  return <div className="p-6 rounded-lg border border-gray-700 bg-zinc-900">
+  return <div className="p-6 border border-gray-700 bg-zinc-900 rounded-xl">
       <h3 className="text-xl text-white mb-6 font-medium">Shipping Options</h3>
       <div className="space-y-4">
         <label className="flex items-center space-x-3 cursor-pointer">

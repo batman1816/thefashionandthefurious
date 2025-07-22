@@ -17,7 +17,7 @@ const CustomerInfoForm = ({
   customerInfo,
   onCustomerInfoChange
 }: CustomerInfoFormProps) => {
-  return <div className="p-6 rounded-lg border border-gray-700 bg-zinc-900">
+  return <div className="p-6 border border-gray-700 bg-zinc-900 rounded-xl">
       <h3 className="text-xl text-white mb-6 font-medium">Billing Information</h3>
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

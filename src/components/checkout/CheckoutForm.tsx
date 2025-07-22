@@ -15,7 +15,9 @@ const CheckoutForm = () => {
     getCartTotal,
     removeInactiveProducts
   } = useCart();
-  const { products } = useProducts();
+  const {
+    products
+  } = useProducts();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [customerInfo, setCustomerInfo] = useState({
@@ -65,7 +67,7 @@ const CheckoutForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-    
+
     // Remove any inactive products from cart before checkout
     const removedItems = removeInactiveProducts();
     if (removedItems.length > 0) {
@@ -78,7 +80,6 @@ const CheckoutForm = () => {
         return;
       }
     }
-    
     if (cartItems.length === 0) {
       toast.error('Your cart is empty');
       return;
@@ -196,7 +197,7 @@ const CheckoutForm = () => {
 
         <div className="space-y-6">
           {/* Payment Method */}
-          <div className="p-6 rounded-lg border border-gray-700 bg-zinc-900">
+          <div className="p-6 border border-gray-700 bg-zinc-900 rounded-xl">
             <div className="flex items-center mb-4">
               <h3 className="text-white text-xl text-left font-normal">Payment</h3>
             </div>
