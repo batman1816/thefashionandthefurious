@@ -197,7 +197,7 @@ const CheckoutForm = () => {
 
         <div className="space-y-6">
           {/* Payment Method */}
-          <div className="p-6 border border-gray-700 bg-zinc-900 rounded-xl">
+          <div className="p-6 border border-zinc-900 bg-zinc-900 rounded-xl">
             <div className="flex items-center mb-4">
               <h3 className="text-white text-xl text-left font-normal">Payment</h3>
             </div>
