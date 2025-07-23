@@ -81,8 +81,8 @@ const ProductModal = ({
   const getDisplayImages = () => {
     if (selectedColor && product.color_variants) {
       const colorVariant = product.color_variants.find(variant => variant.color.toLowerCase() === selectedColor.toLowerCase());
-      if (colorVariant?.image_url) {
-        return [colorVariant.image_url];
+      if (colorVariant?.images && colorVariant.images.length > 0) {
+        return colorVariant.images;
       }
     }
     return product.images && product.images.length > 0 ? product.images : product.image_url ? [product.image_url] : [];

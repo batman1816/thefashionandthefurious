@@ -66,23 +66,34 @@ const ProductManagement = () => {
         ...prev,
         color_variants: prev.color_variants.map(variant =>
           variant.color === color 
-            ? { ...variant, image_url: imageUrls[0] }
+            ? { ...variant, images: [...variant.images, ...imageUrls] }
             : variant
         )
       }));
-      toast.success('Color variant image uploaded successfully');
+      toast.success(`${imageUrls.length} color variant image(s) uploaded successfully`);
     } catch (error) {
-      console.error('Failed to upload color variant image:', error);
-      toast.error('Failed to upload color variant image');
+      console.error('Failed to upload color variant images:', error);
+      toast.error('Failed to upload color variant images');
     } finally {
       setUploading(false);
     }
   };
 
+  const removeColorVariantImage = (color: string, imageIndex: number) => {
+    setFormData(prev => ({
+      ...prev,
+      color_variants: prev.color_variants.map(variant =>
+        variant.color === color 
+          ? { ...variant, images: variant.images.filter((_, index) => index !== imageIndex) }
+          : variant
+      )
+    }));
+  };
+
   const addColorVariant = () => {
     setFormData(prev => ({
       ...prev,
-      color_variants: [...prev.color_variants, { color: 'Black', image_url: '' }]
+      color_variants: [...prev.color_variants, { color: 'Black', images: [] }]
     }));
   };
 
@@ -93,7 +104,7 @@ const ProductManagement = () => {
     }));
   };
 
-  const updateColorVariant = (index: number, field: keyof ColorVariant, value: string) => {
+  const updateColorVariant = (index: number, field: keyof ColorVariant, value: any) => {
     setFormData(prev => ({
       ...prev,
       color_variants: prev.color_variants.map((variant, i) =>
@@ -373,19 +384,33 @@ const ProductManagement = () => {
                     </div>
                     
                     <div>
-                      <label className="block text-white mb-2">Color Image</label>
+                      <label className="block text-white mb-2">Color Images</label>
                       <input
                         type="file"
                         accept="image/*"
+                        multiple
                         onChange={(e) => handleColorVariantImageUpload(e, variant.color)}
                         className="w-full px-3 py-2 text-white rounded bg-zinc-900"
                       />
-                      {variant.image_url && (
-                        <img
-                          src={variant.image_url}
-                          alt={`${variant.color} variant`}
-                          className="mt-2 w-16 h-16 object-cover rounded"
-                        />
+                      {variant.images && variant.images.length > 0 && (
+                        <div className="mt-2 grid grid-cols-4 gap-2">
+                          {variant.images.map((imageUrl, imgIndex) => (
+                            <div key={imgIndex} className="relative">
+                              <img
+                                src={imageUrl}
+                                alt={`${variant.color} variant ${imgIndex + 1}`}
+                                className="w-16 h-16 object-cover rounded"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => removeColorVariantImage(variant.color, imgIndex)}
+                                className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700"
+                              >
+                                <X size={12} />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
                       )}
                     </div>
                   </div>

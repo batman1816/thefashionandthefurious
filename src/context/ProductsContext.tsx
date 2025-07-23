@@ -95,7 +95,8 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
           image_url: updatedProduct.image_url,
           images: updatedProduct.images,
           tags: updatedProduct.tags,
-          is_active: updatedProduct.is_active
+          is_active: updatedProduct.is_active,
+          color_variants: updatedProduct.color_variants
         })
         .eq('id', updatedProduct.id);
 
@@ -123,7 +124,8 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
           image_url: newProduct.image_url,
           images: newProduct.images,
           tags: newProduct.tags,
-          is_active: newProduct.is_active !== undefined ? newProduct.is_active : true
+          is_active: newProduct.is_active !== undefined ? newProduct.is_active : true,
+          color_variants: newProduct.color_variants
         })
         .select()
         .single();

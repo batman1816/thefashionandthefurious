@@ -1,6 +1,6 @@
 export interface ColorVariant {
   color: string;
-  image_url: string;
+  images: string[]; // Changed from single image_url to array of images
 }
 
 export interface Product {

@@ -44,7 +44,7 @@ const ProductGrid = ({ products, showSaleTag = false }: ProductGridProps) => {
       variant.color.toLowerCase() === selectedColor.toLowerCase()
     );
     
-    return colorVariant?.image_url || product.image_url || (product.images && product.images[0]);
+    return colorVariant?.images?.[0] || product.image_url || (product.images && product.images[0]);
   };
 
   const getHoverImage = (product: Product) => {
