@@ -29,7 +29,7 @@ const OrderSuccess = () => {
           <p className="text-white mb-8 text-xl text-center">Thank you for your order.</p>
 
           <div className="rounded-lg p-6 mb-8 text-left bg-zinc-950">
-            <h2 className="text-xl font-semibold mb-4 text-white">Order Details</h2>
+            <h2 className="text-xl font-semibold mb-4 text-white text-center">Order Details</h2>
             
             <div className="space-y-2 mb-4">
               <p className="text-white"><strong>Order ID:</strong> #{order.id}</p>
@@ -37,7 +37,7 @@ const OrderSuccess = () => {
               <p className="text-white"><strong>Date:</strong> {order.orderDate ? new Date(order.orderDate).toLocaleDateString() : new Date().toLocaleDateString()}</p>
             </div>
 
-            <h3 className="font-semibold mb-2 text-white">Items Ordered:</h3>
+            <h3 className="font-semibold mb-2 text-white text-center">Items Ordered:</h3>
             <div className="space-y-2">
               {(() => {
               try {
