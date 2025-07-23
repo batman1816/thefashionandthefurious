@@ -99,9 +99,24 @@ const Sales = () => {
         // Map sale prices to products
         productsWithSales = productsData?.map(product => {
           const sale = salesData?.find(s => s.product_id === product.id);
+          
+          // Convert color_variants from Json to ColorVariant[]
+          let colorVariants: any = undefined;
+          if (product.color_variants) {
+            try {
+              colorVariants = Array.isArray(product.color_variants) 
+                ? product.color_variants 
+                : JSON.parse(product.color_variants as string);
+            } catch (error) {
+              console.error('Error parsing color_variants:', error);
+              colorVariants = undefined;
+            }
+          }
+          
           if (sale) {
             return {
               ...product,
+              color_variants: colorVariants,
               originalPrice: sale.original_price,
               price: sale.sale_price,
               saleInfo: {
@@ -111,7 +126,10 @@ const Sales = () => {
               }
             };
           }
-          return product;
+          return {
+            ...product,
+            color_variants: colorVariants
+          };
         }) || [];
       }
       setSales(salesData || []);

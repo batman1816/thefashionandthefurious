@@ -39,8 +39,23 @@ const SalesSection = () => {
         // Map sale prices to products
         const productsWithSales = productsData?.map(product => {
           const sale = salesData?.find(s => s.product_id === product.id);
+          
+          // Convert color_variants from Json to ColorVariant[]
+          let colorVariants: any = undefined;
+          if (product.color_variants) {
+            try {
+              colorVariants = Array.isArray(product.color_variants) 
+                ? product.color_variants 
+                : JSON.parse(product.color_variants as string);
+            } catch (error) {
+              console.error('Error parsing color_variants:', error);
+              colorVariants = undefined;
+            }
+          }
+          
           return {
             ...product,
+            color_variants: colorVariants,
             originalPrice: sale?.original_price || product.price,
             price: sale?.sale_price || product.price,
             saleInfo: sale ? {

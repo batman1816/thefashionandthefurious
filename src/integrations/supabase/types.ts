@@ -194,6 +194,7 @@ export type Database = {
       products: {
         Row: {
           category: string
+          color_variants: Json | null
           created_at: string
           description: string | null
           id: string
@@ -209,6 +210,7 @@ export type Database = {
         }
         Insert: {
           category: string
+          color_variants?: Json | null
           created_at?: string
           description?: string | null
           id?: string
@@ -224,6 +226,7 @@ export type Database = {
         }
         Update: {
           category?: string
+          color_variants?: Json | null
           created_at?: string
           description?: string | null
           id?: string

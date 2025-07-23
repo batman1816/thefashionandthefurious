@@ -42,6 +42,19 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
       const transformedProducts = productsData.map(product => {
         const sale = salesData?.find(s => s.product_id === product.id);
         
+        // Convert color_variants from Json to ColorVariant[]
+        let colorVariants: any = undefined;
+        if (product.color_variants) {
+          try {
+            colorVariants = Array.isArray(product.color_variants) 
+              ? product.color_variants 
+              : JSON.parse(product.color_variants as string);
+          } catch (error) {
+            console.error('Error parsing color_variants:', error);
+            colorVariants = undefined;
+          }
+        }
+        
         return {
           ...product,
           category: product.category as 'drivers' | 'f1-classic' | 'teams',
@@ -49,6 +62,7 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
           tags: product.tags || [],
           is_active: product.is_active !== undefined ? product.is_active : true,
           slug: product.slug,
+          color_variants: colorVariants,
           // Add sale information if available
           ...(sale && {
             originalPrice: sale.original_price,
@@ -96,7 +110,7 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
           images: updatedProduct.images,
           tags: updatedProduct.tags,
           is_active: updatedProduct.is_active,
-          color_variants: updatedProduct.color_variants
+          color_variants: updatedProduct.color_variants as any || null
         })
         .eq('id', updatedProduct.id);
 
@@ -125,7 +139,7 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
           images: newProduct.images,
           tags: newProduct.tags,
           is_active: newProduct.is_active !== undefined ? newProduct.is_active : true,
-          color_variants: newProduct.color_variants
+          color_variants: newProduct.color_variants as any || null
         })
         .select()
         .single();
@@ -138,7 +152,8 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
         images: data.images || (data.image_url ? [data.image_url] : []),
         tags: data.tags || [],
         is_active: data.is_active !== undefined ? data.is_active : true,
-        slug: data.slug
+        slug: data.slug,
+        color_variants: data.color_variants ? (Array.isArray(data.color_variants) ? data.color_variants : JSON.parse(data.color_variants as string)) : undefined
       };
       setProducts(prev => [product, ...prev]);
       toast.success('Product added successfully');

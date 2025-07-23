@@ -36,6 +36,11 @@ const ProductGrid = ({ products, showSaleTag = false }: ProductGridProps) => {
   const getProductImage = (product: Product) => {
     const selectedColor = selectedColors[product.id];
     
+    // If no color is selected, use the first color variant's first image as default
+    if (!selectedColor && product.color_variants && product.color_variants.length > 0) {
+      return product.color_variants[0].images?.[0] || product.image_url || (product.images && product.images[0]);
+    }
+    
     if (!selectedColor || !product.color_variants) {
       return product.image_url || (product.images && product.images[0]);
     }
@@ -48,6 +53,11 @@ const ProductGrid = ({ products, showSaleTag = false }: ProductGridProps) => {
   };
 
   const getHoverImage = (product: Product) => {
+    // If product has color variants, use second color variant's first image as hover
+    if (product.color_variants && product.color_variants.length > 1) {
+      return product.color_variants[1].images?.[0] || null;
+    }
+    // Otherwise use the second image from the main images array
     return product.images && product.images.length > 1 ? product.images[1] : null;
   };
 
