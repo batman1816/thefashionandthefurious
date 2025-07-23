@@ -1,4 +1,4 @@
-# The Fashion & Furious
+# The Fashion & The Furious
 
 A modern e-commerce application for fashion products built with React, TypeScript, and Supabase.
 
