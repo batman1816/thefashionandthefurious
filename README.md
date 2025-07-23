@@ -76,9 +76,6 @@ The app can be deployed directly to Vercel or Netlify by connecting your GitHub 
 - `/public` - Static assets
 - `/supabase` - Database migrations and functions
 
-## Admin Access
-
-Admin panel is available at `/admin` with password: `yUsrA@#$2618`
 
 ## Technologies Used
 
