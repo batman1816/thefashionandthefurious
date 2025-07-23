@@ -1,28 +1,21 @@
-
 import { useLocation, Link } from 'react-router-dom';
 import { CheckCircle } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-
 const OrderSuccess = () => {
   const location = useLocation();
   const order = location.state?.order;
-
   if (!order) {
-    return (
-      <div className="min-h-screen bg-white">
+    return <div className="min-h-screen bg-white">
         <Header />
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-2xl font-bold text-gray-900">Order not found</h1>
           <Link to="/" className="text-red-600 hover:underline">Return to home</Link>
         </div>
         <Footer />
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="min-h-screen bg-white">
+  return <div className="min-h-screen bg-white">
       <Header />
       
       <div className="container mx-auto px-4 py-16 bg-black">
@@ -33,9 +26,7 @@ const OrderSuccess = () => {
             Order Confirmed!
           </h1>
           
-          <p className="text-lg text-white mb-8">
-            Thank you for your order. We'll send you a confirmation email shortly.
-          </p>
+          <p className="text-white mb-8 text-xl text-center">Thank you for your order.</p>
 
           <div className="rounded-lg p-6 mb-8 text-left bg-zinc-950">
             <h2 className="text-xl font-semibold mb-4 text-white">Order Details</h2>
@@ -49,18 +40,16 @@ const OrderSuccess = () => {
             <h3 className="font-semibold mb-2 text-white">Items Ordered:</h3>
             <div className="space-y-2">
               {(() => {
-                try {
-                  const items = typeof order.items === 'string' ? JSON.parse(order.items) : order.items;
-                  return Array.isArray(items) ? items.map((item: any, index: number) => (
-                    <div key={index} className="flex justify-between">
+              try {
+                const items = typeof order.items === 'string' ? JSON.parse(order.items) : order.items;
+                return Array.isArray(items) ? items.map((item: any, index: number) => <div key={index} className="flex justify-between">
                       <span className="text-white">{item.product.name} (Size: {item.size}) × {item.quantity}</span>
                       <span className="text-white">Tk {(item.product.price * item.quantity).toFixed(2)}</span>
-                    </div>
-                  )) : <p className="text-white">No items found</p>;
-                } catch (error) {
-                  return <p className="text-white">Error loading items</p>;
-                }
-              })()}
+                    </div>) : <p className="text-white">No items found</p>;
+              } catch (error) {
+                return <p className="text-white">Error loading items</p>;
+              }
+            })()}
             </div>
           </div>
 
@@ -73,8 +62,6 @@ const OrderSuccess = () => {
       </div>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default OrderSuccess;
