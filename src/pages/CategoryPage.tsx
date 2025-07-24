@@ -24,6 +24,8 @@ const CategoryPage = () => {
         return 'F1 CLASSIC COLLECTION';
       case 'teams':
         return 'TEAMS COLLECTION';
+      case 'mousepads':
+        return 'MOUSEPADS COLLECTION';
       default:
         return 'COLLECTION';
     }
@@ -36,8 +38,10 @@ const CategoryPage = () => {
         return 'Vintage-inspired designs celebrating the golden era of Formula 1 racing and iconic moments in motorsport history.';
       case 'teams':
         return 'Show your team pride with officially-inspired merchandise from the most iconic constructors in Formula 1.';
+      case 'mousepads':
+        return 'Premium gaming mousepads featuring Formula 1 designs. Available in multiple sizes for the perfect desk setup.';
       default:
-        return 'Discover our premium Formula 1 apparel collection.';
+        return 'Discover our premium Formula 1 collection.';
     }
   };
   return <div className="min-h-screen bg-white">

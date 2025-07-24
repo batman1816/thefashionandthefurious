@@ -22,8 +22,15 @@ export interface Product {
     endDate: string;
   };
   color_variants?: ColorVariant[]; // Add color variants support
+  size_variants?: SizeVariant[]; // Add size variants for mousepads
+  main_image?: string; // Main thumbnail image for homepage/category view
   created_at?: string;
   updated_at?: string;
+}
+
+export interface SizeVariant {
+  size: string;
+  image_url: string;
 }
 
 export interface CartItem {

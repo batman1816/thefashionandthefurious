@@ -42,6 +42,7 @@ const App = () => (
                 <Route path="/drivers" element={<CategoryPage />} />
                 <Route path="/f1-classic" element={<CategoryPage />} />
                 <Route path="/teams" element={<CategoryPage />} />
+                <Route path="/mousepads" element={<CategoryPage />} />
                 <Route path="/new-products" element={<NewProducts />} />
                 <Route path="/drivers-products" element={<DriversProducts />} />
                 <Route path="/sales" element={<Sales />} />

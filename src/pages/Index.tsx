@@ -6,6 +6,7 @@ import AnnouncementBanner from '../components/AnnouncementBanner';
 
 // Lazy load components that are not immediately visible  
 const NewProductsSection = lazy(() => import('../components/NewProductsSection'));
+const MousepadSection = lazy(() => import('../components/MousepadSection'));
 const DriversSection = lazy(() => import('../components/DriversSection'));
 const SalesSection = lazy(() => import('../components/SalesSection'));
 // Don't lazy load banner for faster initial display
@@ -30,6 +31,11 @@ const Index = () => {
       {/* New Products Section - Can be lazy loaded */}
       <Suspense fallback={<SectionLoader />}>
         <NewProductsSection />
+      </Suspense>
+
+      {/* Mousepad Section - Can be lazy loaded */}
+      <Suspense fallback={<SectionLoader />}>
+        <MousepadSection />
       </Suspense>
 
       {/* Drivers Section - Can be lazy loaded */}

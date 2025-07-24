@@ -79,6 +79,13 @@ const Header = () => {
                         TEAMS
                       </Link>
 
+                      <Link to="/mousepads" className="block text-white text-lg font-light tracking-widest hover:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" style={{
+                    fontFamily: 'Poppins',
+                    fontWeight: 300
+                  }} onClick={() => setIsDrawerOpen(false)}>
+                        MOUSEPADS
+                      </Link>
+
                       <Link to="/sales" className="block text-white text-lg font-light tracking-widest hover:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left" style={{
                     fontFamily: 'Poppins',
                     fontWeight: 300
@@ -125,6 +132,9 @@ const Header = () => {
             </Link>
             <Link to="/teams" className="text-white hover:text-white transition-all font-poppins-extralight font-extralight text-sm tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left">
               Teams
+            </Link>
+            <Link to="/mousepads" className="text-white hover:text-white transition-all font-poppins-extralight font-extralight text-sm tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left">
+              Mousepads
             </Link>
             <Link to="/sales" className="text-white hover:text-white transition-all font-poppins-extralight font-extralight text-sm tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left">
               Sales

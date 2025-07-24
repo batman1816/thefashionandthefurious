@@ -5,7 +5,7 @@ import { Product, ColorVariant } from '../../types/Product';
 import { uploadImage, deleteImage } from '../../utils/imageUpload';
 import { toast } from 'sonner';
 
-type ProductCategory = 'drivers' | 'f1-classic' | 'teams';
+type ProductCategory = 'drivers' | 'f1-classic' | 'teams' | 'mousepads';
 const AVAILABLE_TAGS = ['Teams', 'Drivers', 'F1 Classic', 'New'];
 
 const ProductManagement = () => {
