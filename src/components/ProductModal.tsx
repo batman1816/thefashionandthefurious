@@ -77,14 +77,24 @@ const ProductModal = ({
     setSelectedColor(color);
   };
 
-  // Get the correct image based on selected color
+  // Get the correct image based on selected color or size (for mousepads)
   const getDisplayImages = () => {
+    // For mousepads, check size variants first
+    if (product.category === 'mousepads' && selectedSize && product.size_variants) {
+      const sizeVariant = product.size_variants.find(variant => variant.size === selectedSize);
+      if (sizeVariant?.image_url) {
+        return [sizeVariant.image_url];
+      }
+    }
+    
+    // For other products, check color variants
     if (selectedColor && product.color_variants) {
       const colorVariant = product.color_variants.find(variant => variant.color.toLowerCase() === selectedColor.toLowerCase());
       if (colorVariant?.images && colorVariant.images.length > 0) {
         return colorVariant.images;
       }
     }
+    
     return product.images && product.images.length > 0 ? product.images : product.image_url ? [product.image_url] : [];
   };
   const carouselImages = getDisplayImages();
