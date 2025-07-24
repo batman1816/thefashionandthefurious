@@ -25,6 +25,7 @@ const CategoryBannerManagement = () => {
     { value: 'drivers', label: 'Drivers' },
     { value: 'teams', label: 'Teams' },
     { value: 'f1-classic', label: 'F1 Classic' },
+    { value: 'mousepads', label: 'Mousepads' },
     { value: 'shop-all', label: 'Shop All' }
   ];
 
