@@ -21,6 +21,8 @@ const CategoryBanner = ({ category }: CategoryBannerProps) => {
         return 'F1 CLASSIC COLLECTION';
       case 'teams':
         return 'TEAMS COLLECTION';
+      case 'mousepads':
+        return 'MOUSEPADS COLLECTION';
       case 'shop-all':
         return 'SHOP ALL';
       default:
@@ -36,6 +38,8 @@ const CategoryBanner = ({ category }: CategoryBannerProps) => {
         return 'Vintage-inspired designs celebrating the golden era of Formula 1 racing and iconic moments in motorsport history.';
       case 'teams':
         return 'Show your team pride with officially-inspired merchandise from the most iconic constructors in Formula 1.';
+      case 'mousepads':
+        return 'Premium gaming mousepads featuring Formula 1 designs and high-quality materials for optimal performance.';
       case 'shop-all':
         return 'Discover our complete Formula 1 apparel collection.';
       default:

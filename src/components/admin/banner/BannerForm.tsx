@@ -151,6 +151,7 @@ const BannerForm = ({ editingBanner, onSubmit, onCancel }: BannerFormProps) => {
             <SelectItem value="drivers">Drivers</SelectItem>
             <SelectItem value="teams">Teams</SelectItem>
             <SelectItem value="f1-classic">F1 Classic</SelectItem>
+            <SelectItem value="mousepads">Mousepads</SelectItem>
             <SelectItem value="shop-all">Shop All</SelectItem>
           </SelectContent>
         </Select>
