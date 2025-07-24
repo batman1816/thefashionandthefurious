@@ -57,12 +57,14 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
         
         return {
           ...product,
-          category: product.category as 'drivers' | 'f1-classic' | 'teams',
+          category: product.category as 'drivers' | 'f1-classic' | 'teams' | 'mousepads',
           images: product.images || (product.image_url ? [product.image_url] : []),
           tags: product.tags || [],
           is_active: product.is_active !== undefined ? product.is_active : true,
           slug: product.slug,
           color_variants: colorVariants,
+          size_variants: product.size_variants ? (Array.isArray(product.size_variants) ? product.size_variants : JSON.parse(product.size_variants as string)) : undefined,
+          main_image: product.main_image,
           // Add sale information if available
           ...(sale && {
             originalPrice: sale.original_price,
@@ -110,7 +112,9 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
           images: updatedProduct.images,
           tags: updatedProduct.tags,
           is_active: updatedProduct.is_active,
-          color_variants: updatedProduct.color_variants as any || null
+          color_variants: updatedProduct.color_variants as any || null,
+          size_variants: updatedProduct.size_variants as any || null,
+          main_image: updatedProduct.main_image
         })
         .eq('id', updatedProduct.id);
 
@@ -139,7 +143,9 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
           images: newProduct.images,
           tags: newProduct.tags,
           is_active: newProduct.is_active !== undefined ? newProduct.is_active : true,
-          color_variants: newProduct.color_variants as any || null
+          color_variants: newProduct.color_variants as any || null,
+          size_variants: newProduct.size_variants as any || null,
+          main_image: newProduct.main_image
         })
         .select()
         .single();
@@ -148,12 +154,14 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
 
       const product = { 
         ...data, 
-        category: data.category as 'drivers' | 'f1-classic' | 'teams',
+        category: data.category as 'drivers' | 'f1-classic' | 'teams' | 'mousepads',
         images: data.images || (data.image_url ? [data.image_url] : []),
         tags: data.tags || [],
         is_active: data.is_active !== undefined ? data.is_active : true,
         slug: data.slug,
-        color_variants: data.color_variants ? (Array.isArray(data.color_variants) ? data.color_variants : JSON.parse(data.color_variants as string)) : undefined
+        color_variants: data.color_variants ? (Array.isArray(data.color_variants) ? data.color_variants : JSON.parse(data.color_variants as string)) : undefined,
+        size_variants: data.size_variants ? (Array.isArray(data.size_variants) ? data.size_variants : JSON.parse(data.size_variants as string)) : undefined,
+        main_image: data.main_image
       };
       setProducts(prev => [product, ...prev]);
       toast.success('Product added successfully');

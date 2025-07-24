@@ -52,10 +52,30 @@ const SalesSection = () => {
               colorVariants = undefined;
             }
           }
+
+          // Convert size_variants from Json to SizeVariant[]
+          let sizeVariants: any = undefined;
+          if (product.size_variants) {
+            try {
+              sizeVariants = Array.isArray(product.size_variants) 
+                ? product.size_variants 
+                : JSON.parse(product.size_variants as string);
+            } catch (error) {
+              console.error('Error parsing size_variants:', error);
+              sizeVariants = undefined;
+            }
+          }
           
           return {
             ...product,
+            category: product.category as 'drivers' | 'f1-classic' | 'teams' | 'mousepads',
+            images: product.images || (product.image_url ? [product.image_url] : []),
+            tags: product.tags || [],
+            is_active: product.is_active !== undefined ? product.is_active : true,
+            slug: product.slug,
             color_variants: colorVariants,
+            size_variants: sizeVariants,
+            main_image: product.main_image,
             originalPrice: sale?.original_price || product.price,
             price: sale?.sale_price || product.price,
             saleInfo: sale ? {

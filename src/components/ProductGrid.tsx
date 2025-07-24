@@ -36,20 +36,25 @@ const ProductGrid = ({ products, showSaleTag = false }: ProductGridProps) => {
   const getProductImage = (product: Product) => {
     const selectedColor = selectedColors[product.id];
     
+    // For mousepads, use main_image if available
+    if (product.category === 'mousepads' && product.main_image) {
+      return product.main_image;
+    }
+    
     // If no color is selected, use the first color variant's first image as default
     if (!selectedColor && product.color_variants && product.color_variants.length > 0) {
       return product.color_variants[0].images?.[0] || product.image_url || (product.images && product.images[0]);
     }
     
     if (!selectedColor || !product.color_variants) {
-      return product.image_url || (product.images && product.images[0]);
+      return product.main_image || product.image_url || (product.images && product.images[0]);
     }
 
     const colorVariant = product.color_variants.find(variant => 
       variant.color.toLowerCase() === selectedColor.toLowerCase()
     );
     
-    return colorVariant?.images?.[0] || product.image_url || (product.images && product.images[0]);
+    return colorVariant?.images?.[0] || product.main_image || product.image_url || (product.images && product.images[0]);
   };
 
   const getHoverImage = (product: Product) => {

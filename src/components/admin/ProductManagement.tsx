@@ -1,12 +1,27 @@
 import { useState } from 'react';
 import { Plus, Edit, Trash2, Upload, X, Eye, EyeOff } from 'lucide-react';
 import { useProducts } from '../../context/ProductsContext';
-import { Product, ColorVariant } from '../../types/Product';
+import { Product, ColorVariant, SizeVariant } from '../../types/Product';
 import { uploadImage, deleteImage } from '../../utils/imageUpload';
 import { toast } from 'sonner';
 
 type ProductCategory = 'drivers' | 'f1-classic' | 'teams' | 'mousepads';
 const AVAILABLE_TAGS = ['Teams', 'Drivers', 'F1 Classic', 'New'];
+
+interface FormData {
+  name: string;
+  description: string;
+  price: string;
+  category: ProductCategory;
+  sizes: string[];
+  image_url: string;
+  images: string[];
+  tags: string[];
+  is_active: boolean;
+  color_variants: ColorVariant[];
+  size_variants: SizeVariant[];
+  main_image: string;
+}
 
 const ProductManagement = () => {
   const {
@@ -20,17 +35,19 @@ const ProductManagement = () => {
   const [isAddingProduct, setIsAddingProduct] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     description: '',
     price: '',
-    category: 'drivers' as ProductCategory,
+    category: 'drivers',
     sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
     image_url: '',
-    images: [] as string[],
-    tags: [] as string[],
+    images: [],
+    tags: [],
     is_active: true,
-    color_variants: [] as ColorVariant[]
+    color_variants: [],
+    size_variants: [],
+    main_image: ''
   });
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -148,7 +165,9 @@ const ProductManagement = () => {
       images: formData.images,
       tags: formData.tags,
       is_active: formData.is_active,
-      color_variants: formData.color_variants.length > 0 ? formData.color_variants : undefined
+      color_variants: formData.color_variants.length > 0 ? formData.color_variants : undefined,
+      size_variants: formData.size_variants.length > 0 ? formData.size_variants : undefined,
+      main_image: formData.main_image || formData.image_url
     };
     
     try {
@@ -175,7 +194,9 @@ const ProductManagement = () => {
         images: [],
         tags: [],
         is_active: true,
-        color_variants: []
+        color_variants: [],
+        size_variants: [],
+        main_image: ''
       });
     } catch (error) {
       console.error('Error saving product:', error);
@@ -184,17 +205,24 @@ const ProductManagement = () => {
   };
 
   const handleEdit = (product: Product) => {
+    // Set default sizes based on category
+    const defaultSizes = product.category === 'mousepads' 
+      ? ['900 X 400 MM', '700 X 300 MM', '350 X 300 MM']
+      : ['XS', 'S', 'M', 'L', 'XL', '2XL'];
+
     setFormData({
       name: product.name,
       description: product.description || '',
       price: product.price.toString(),
       category: product.category as ProductCategory,
-      sizes: product.sizes,
+      sizes: product.sizes.length > 0 ? product.sizes : defaultSizes,
       image_url: product.image_url || '',
       images: product.images || [],
       tags: product.tags || [],
       is_active: product.is_active !== undefined ? product.is_active : true,
-      color_variants: product.color_variants || []
+      color_variants: product.color_variants || [],
+      size_variants: product.size_variants || [],
+      main_image: product.main_image || product.image_url || ''
     });
     setEditingProduct(product);
     setIsAddingProduct(true);
@@ -225,7 +253,9 @@ const ProductManagement = () => {
       images: [],
       tags: [],
       is_active: true,
-      color_variants: []
+      color_variants: [],
+      size_variants: [],
+      main_image: ''
     });
   };
 
@@ -315,16 +345,88 @@ const ProductManagement = () => {
               <label className="block text-white mb-2">Category</label>
               <select
                 value={formData.category}
-                onChange={e => setFormData(prev => ({
-                  ...prev,
-                  category: e.target.value as any
-                }))}
+                onChange={e => {
+                  const newCategory = e.target.value as ProductCategory;
+                  setFormData(prev => ({
+                    ...prev,
+                    category: newCategory,
+                    sizes: newCategory === 'mousepads' 
+                      ? ['900 X 400 MM', '700 X 300 MM', '350 X 300 MM']
+                      : ['XS', 'S', 'M', 'L', 'XL', '2XL'],
+                    size_variants: []
+                  }));
+                }}
                 className="w-full px-3 py-2 text-white rounded bg-zinc-900"
               >
                 <option value="drivers">Drivers</option>
                 <option value="f1-classic">F1 Classic</option>
                 <option value="teams">Teams</option>
+                <option value="mousepads">Mousepads</option>
               </select>
+            </div>
+
+            {/* Dynamic Sizes Section */}
+            <div>
+              <label className="block text-white mb-2">Sizes</label>
+              {formData.category === 'mousepads' ? (
+                <div className="space-y-2">
+                  {['900 X 400 MM', '700 X 300 MM', '350 X 300 MM'].map((size) => {
+                    const isChecked = formData.sizes.includes(size);
+                    return (
+                      <label key={size} className="flex items-center space-x-2 text-white">
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setFormData(prev => ({
+                                ...prev,
+                                sizes: [...prev.sizes, size]
+                              }));
+                            } else {
+                              setFormData(prev => ({
+                                ...prev,
+                                sizes: prev.sizes.filter(s => s !== size)
+                              }));
+                            }
+                          }}
+                          className="rounded"
+                        />
+                        <span>{size}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 gap-2">
+                  {['XS', 'S', 'M', 'L', 'XL', '2XL'].map(size => {
+                    const isChecked = formData.sizes.includes(size);
+                    return (
+                      <label key={size} className="flex items-center space-x-2 text-white">
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setFormData(prev => ({
+                                ...prev,
+                                sizes: [...prev.sizes, size]
+                              }));
+                            } else {
+                              setFormData(prev => ({
+                                ...prev,
+                                sizes: prev.sizes.filter(s => s !== size)
+                              }));
+                            }
+                          }}
+                          className="rounded"
+                        />
+                        <span>{size}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             <div>
@@ -344,80 +446,62 @@ const ProductManagement = () => {
               </div>
             </div>
 
-            {/* Color Variants Section */}
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <label className="block text-white">Color Variants (Optional)</label>
-                <button
-                  type="button"
-                  onClick={addColorVariant}
-                  className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
-                >
-                  Add Color
-                </button>
-              </div>
-              
-              {formData.color_variants.map((variant, index) => (
-                <div key={index} className="border border-gray-600 rounded p-4 mb-4">
-                  <div className="flex justify-between items-center mb-3">
-                    <h4 className="text-white font-medium">Color Variant {index + 1}</h4>
-                    <button
-                      type="button"
-                      onClick={() => removeColorVariant(index)}
-                      className="text-red-400 hover:text-red-300"
-                    >
-                      <X size={16} />
-                    </button>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-white mb-2">Color Name</label>
-                      <select
-                        value={variant.color}
-                        onChange={(e) => updateColorVariant(index, 'color', e.target.value)}
-                        className="w-full px-3 py-2 text-white rounded bg-zinc-900"
-                      >
-                        <option value="Black">Black</option>
-                        <option value="White">White</option>
-                      </select>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-white mb-2">Color Images</label>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        onChange={(e) => handleColorVariantImageUpload(e, variant.color)}
-                        className="w-full px-3 py-2 text-white rounded bg-zinc-900"
-                      />
-                      {variant.images && variant.images.length > 0 && (
-                        <div className="mt-2 grid grid-cols-4 gap-2">
-                          {variant.images.map((imageUrl, imgIndex) => (
-                            <div key={imgIndex} className="relative">
-                              <img
-                                src={imageUrl}
-                                alt={`${variant.color} variant ${imgIndex + 1}`}
-                                className="w-16 h-16 object-cover rounded"
-                              />
-                              <button
-                                type="button"
-                                onClick={() => removeColorVariantImage(variant.color, imgIndex)}
-                                className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700"
-                              >
-                                <X size={12} />
-                              </button>
-                            </div>
-                          ))}
+            {/* Size Variants for Mousepads */}
+            {formData.category === 'mousepads' && (
+              <div>
+                <label className="block text-white mb-2">Size-specific Images</label>
+                <div className="space-y-4">
+                  {formData.sizes.map((size) => (
+                    <div key={size} className="border border-gray-600 rounded p-4">
+                      <h4 className="text-white font-medium mb-2">Size: {size}</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-white mb-2">Upload Image for {size}</label>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+                              
+                              setUploading(true);
+                              try {
+                                const imageUrl = await uploadImage(file, 'product-images');
+                                setFormData(prev => ({
+                                  ...prev,
+                                  size_variants: [
+                                    ...prev.size_variants.filter(sv => sv.size !== size),
+                                    { size, image_url: imageUrl }
+                                  ]
+                                }));
+                                toast.success(`Image uploaded for ${size}`);
+                              } catch (error) {
+                                toast.error('Failed to upload image');
+                              } finally {
+                                setUploading(false);
+                              }
+                            }}
+                            className="w-full px-3 py-2 text-white rounded bg-zinc-900"
+                          />
                         </div>
-                      )}
+                        {formData.size_variants.find(sv => sv.size === size) && (
+                          <div>
+                            <label className="block text-white mb-2">Current Image</label>
+                            <img
+                              src={formData.size_variants.find(sv => sv.size === size)?.image_url}
+                              alt={`${size} variant`}
+                              className="w-24 h-24 object-cover rounded"
+                            />
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
 
+            {/* Product Images */}
             <div>
               <label className="block text-white mb-2">Product Images *</label>
               <div className="space-y-4">
@@ -472,6 +556,109 @@ const ProductManagement = () => {
               </div>
             </div>
 
+            {/* Main Thumbnail Selection */}
+            {formData.images.length > 0 && (
+              <div>
+                <label className="block text-white mb-2">Select Main Thumbnail (for homepage/category view)</label>
+                <div className="grid grid-cols-4 gap-4">
+                  {formData.images.map((imageUrl, index) => (
+                    <div key={index} className="relative cursor-pointer" onClick={() => {
+                      setFormData(prev => ({ ...prev, main_image: imageUrl }));
+                    }}>
+                      <img
+                        src={imageUrl}
+                        alt={`Thumbnail option ${index + 1}`}
+                        className={`w-full h-24 object-cover rounded border-2 ${
+                          formData.main_image === imageUrl ? 'border-blue-500' : 'border-gray-600'
+                        }`}
+                      />
+                      {formData.main_image === imageUrl && (
+                        <div className="absolute bottom-0 left-0 right-0 bg-blue-600 text-white text-xs text-center py-1">
+                          Main Thumbnail
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Color Variants Section */}
+            {formData.category !== 'mousepads' && (
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <label className="block text-white">Color Variants (Optional)</label>
+                  <button
+                    type="button"
+                    onClick={addColorVariant}
+                    className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
+                  >
+                    Add Color
+                  </button>
+                </div>
+                
+                {formData.color_variants.map((variant, index) => (
+                  <div key={index} className="border border-gray-600 rounded p-4 mb-4">
+                    <div className="flex justify-between items-center mb-3">
+                      <h4 className="text-white font-medium">Color Variant {index + 1}</h4>
+                      <button
+                        type="button"
+                        onClick={() => removeColorVariant(index)}
+                        className="text-red-400 hover:text-red-300"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-white mb-2">Color Name</label>
+                        <select
+                          value={variant.color}
+                          onChange={(e) => updateColorVariant(index, 'color', e.target.value)}
+                          className="w-full px-3 py-2 text-white rounded bg-zinc-900"
+                        >
+                          <option value="Black">Black</option>
+                          <option value="White">White</option>
+                        </select>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-white mb-2">Color Images</label>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          onChange={(e) => handleColorVariantImageUpload(e, variant.color)}
+                          className="w-full px-3 py-2 text-white rounded bg-zinc-900"
+                        />
+                        {variant.images && variant.images.length > 0 && (
+                          <div className="mt-2 grid grid-cols-4 gap-2">
+                            {variant.images.map((imageUrl, imgIndex) => (
+                              <div key={imgIndex} className="relative">
+                                <img
+                                  src={imageUrl}
+                                  alt={`${variant.color} variant ${imgIndex + 1}`}
+                                  className="w-16 h-16 object-cover rounded"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => removeColorVariantImage(variant.color, imgIndex)}
+                                  className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700"
+                                >
+                                  <X size={12} />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"
@@ -517,7 +704,6 @@ const ProductManagement = () => {
                 <th className="px-6 py-3 text-left text-white bg-zinc-800">Category</th>
                 <th className="px-6 py-3 text-left text-white bg-zinc-800">Tags</th>
                 <th className="px-6 py-3 text-left text-white bg-zinc-800">Price</th>
-                <th className="px-6 py-3 text-left text-white bg-zinc-800">Colors</th>
                 <th className="px-6 py-3 text-left text-white bg-zinc-800">Status</th>
                 <th className="px-6 py-3 text-left text-white bg-zinc-800">Actions</th>
               </tr>
@@ -527,7 +713,7 @@ const ProductManagement = () => {
                 <tr key={product.id} className="border-b border-gray-700">
                   <td className="px-6 py-4 bg-zinc-800">
                     <img
-                      src={product.image_url}
+                      src={product.main_image || product.image_url}
                       alt={product.name}
                       className="w-16 h-16 object-cover rounded"
                     />
@@ -548,19 +734,6 @@ const ProductManagement = () => {
                     )}
                   </td>
                   <td className="px-6 py-4 text-white bg-zinc-800">Tk {product.price}</td>
-                  <td className="px-6 py-4 text-gray-300 bg-zinc-800">
-                    {product.color_variants && product.color_variants.length > 0 ? (
-                      <div className="flex flex-wrap gap-1">
-                        {product.color_variants.map((variant) => (
-                          <span key={variant.color} className="bg-purple-600 text-white text-xs px-2 py-1 rounded">
-                            {variant.color}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      <span className="text-gray-500">No variants</span>
-                    )}
-                  </td>
                   <td className="px-6 py-4 bg-zinc-800">
                     <span
                       className={`px-2 py-1 rounded text-xs ${

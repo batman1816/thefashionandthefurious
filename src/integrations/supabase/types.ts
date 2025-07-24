@@ -201,8 +201,10 @@ export type Database = {
           image_url: string | null
           images: string[] | null
           is_active: boolean
+          main_image: string | null
           name: string
           price: number
+          size_variants: Json | null
           sizes: string[]
           slug: string | null
           tags: string[] | null
@@ -217,8 +219,10 @@ export type Database = {
           image_url?: string | null
           images?: string[] | null
           is_active?: boolean
+          main_image?: string | null
           name: string
           price: number
+          size_variants?: Json | null
           sizes?: string[]
           slug?: string | null
           tags?: string[] | null
@@ -233,8 +237,10 @@ export type Database = {
           image_url?: string | null
           images?: string[] | null
           is_active?: boolean
+          main_image?: string | null
           name?: string
           price?: number
+          size_variants?: Json | null
           sizes?: string[]
           slug?: string | null
           tags?: string[] | null

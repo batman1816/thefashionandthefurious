@@ -97,7 +97,7 @@ const Sales = () => {
         if (productsError) throw productsError;
 
         // Map sale prices to products
-        productsWithSales = productsData?.map(product => {
+        productsWithSales = (productsData?.map(product => {
           const sale = salesData?.find(s => s.product_id === product.id);
           
           // Convert color_variants from Json to ColorVariant[]
@@ -112,11 +112,35 @@ const Sales = () => {
               colorVariants = undefined;
             }
           }
+
+          // Convert size_variants from Json to SizeVariant[]
+          let sizeVariants: any = undefined;
+          if (product.size_variants) {
+            try {
+              sizeVariants = Array.isArray(product.size_variants) 
+                ? product.size_variants 
+                : JSON.parse(product.size_variants as string);
+            } catch (error) {
+              console.error('Error parsing size_variants:', error);
+              sizeVariants = undefined;
+            }
+          }
+          
+          const baseProduct = {
+            ...product,
+            category: product.category as 'drivers' | 'f1-classic' | 'teams' | 'mousepads',
+            images: product.images || (product.image_url ? [product.image_url] : []),
+            tags: product.tags || [],
+            is_active: product.is_active !== undefined ? product.is_active : true,
+            slug: product.slug,
+            color_variants: colorVariants,
+            size_variants: sizeVariants,
+            main_image: product.main_image
+          };
           
           if (sale) {
             return {
-              ...product,
-              color_variants: colorVariants,
+              ...baseProduct,
               originalPrice: sale.original_price,
               price: sale.sale_price,
               saleInfo: {
@@ -126,11 +150,9 @@ const Sales = () => {
               }
             };
           }
-          return {
-            ...product,
-            color_variants: colorVariants
-          };
-        }) || [];
+          
+          return baseProduct;
+        }) as Product[]) || [];
       }
       setSales(salesData || []);
       setBundleDeals(bundleData || []);
