@@ -115,8 +115,8 @@ const ProductDetail = () => {
 
           {/* Product Info */}
           <div className="flex flex-col">
-            <h1 className="font-bold mb-4 text-2xl text-zinc-950">
-              {product.name}
+            <h1 className="text-3xl md:text-5xl font-normal text-black mb-6 tracking-wide leading-tight" style={{fontFamily: 'Poppins', fontWeight: 400}}>
+              {product.name.toUpperCase()}
             </h1>
             
             {product.saleInfo && product.originalPrice ? <div className="text-2xl font-normal text-gray-900 mb-6">
