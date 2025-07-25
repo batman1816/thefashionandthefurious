@@ -141,7 +141,7 @@ const ProductDetail = () => {
             {availableSizes.length > 0 && <div className="mb-4">
                 <h3 className="text-lg font-semibold mb-3">Size</h3>
                 <div className="flex flex-wrap gap-2">
-                  {availableSizes.map(size => <button key={size} onClick={() => handleSizeSelect(size)} className={`px-4 py-2 border border-black rounded-full font-extralight transition-colors ${selectedSize === size ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-50'}`} style={{fontFamily: 'Poppins', fontWeight: 200}}>
+                  {availableSizes.map(size => <button key={size} onClick={() => handleSizeSelect(size)} className={`px-4 py-2 border-2 border-black rounded-full font-light transition-colors ${selectedSize === size ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-50'}`} style={{fontFamily: 'Poppins', fontWeight: 300}}>
                       {size}
                     </button>)}
                 </div>
