@@ -147,10 +147,10 @@ const ProductModal = ({
                 </div>
               </div>}
 
-            {/* Size Chart */}
-            <div className="mb-8">
-              <SizeChart />
-            </div>
+            {/* Size Chart - Hidden for mousepads */}
+            {product.category !== 'mousepads' && <div className="mb-8">
+                <SizeChart />
+              </div>}
 
             {/* Quantity */}
             <div className="mb-12">
