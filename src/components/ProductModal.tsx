@@ -112,7 +112,7 @@ const ProductModal = ({
 
           {/* Product Info */}
           <div className="p-12 flex flex-col">
-            <h1 className="text-2xl font-normal text-black mb-4 tracking-wide leading-relaxed">
+            <h1 className="text-2xl md:text-3xl font-normal text-black mb-4 tracking-wide leading-relaxed">
               {product.name.toUpperCase()}
             </h1>
             
