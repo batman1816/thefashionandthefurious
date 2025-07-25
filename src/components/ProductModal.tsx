@@ -141,10 +141,7 @@ const ProductModal = ({
             {availableSizes.length > 0 && <div className="mb-4">
                 <h3 className="text-sm font-normal mb-4 text-black">SIZE</h3>
                 <div className="flex flex-wrap gap-2 max-w-full overflow-x-auto">
-                  {availableSizes.map(size => <button key={size} onClick={() => handleSizeSelect(size)} className={`flex-shrink-0 px-4 py-2 text-sm font-normal transition-all duration-200 border ${product.category === 'mousepads' 
-                      ? (selectedSize === size ? 'bg-black text-white border-black rounded-full' : 'bg-white text-black border-gray-300 hover:border-black rounded-full')
-                      : (selectedSize === size ? 'bg-gray-200 text-black border-gray-300 rounded-full' : 'bg-gray-100 text-black border-gray-300 hover:bg-gray-200 rounded-full')
-                    }`}>
+                  {availableSizes.map(size => <button key={size} onClick={() => handleSizeSelect(size)} className={`flex-shrink-0 px-4 py-2 text-sm font-extralight transition-all duration-200 border border-black rounded-full ${selectedSize === size ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-50'}`} style={{fontFamily: 'Poppins', fontWeight: 200}}>
                       {size}
                     </button>)}
                 </div>
