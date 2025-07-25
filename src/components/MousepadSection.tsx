@@ -60,7 +60,7 @@ const MousepadSection = () => {
         </div>
 
         {mousepadProducts.length > 0 && <div className="text-center mt-8">
-            <button onClick={() => navigate('/mousepads')} className="bg-black text-white hover:bg-gray-800 transition-colors duration-200 my-0 mx-0 text-center text-sm px-[24px] py-[8px] font-medium">VIEW ALL</button>
+            <button onClick={() => navigate('/mousepads')} className="inline-block bg-black hover:bg-gray-800 text-white px-8 py-3 font-poppins font-medium transition-colors duration-300 uppercase tracking-wide text-sm">VIEW ALL</button>
           </div>}
       </div>
     </section>;

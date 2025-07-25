@@ -120,9 +120,9 @@ const SalesSection = () => {
         <div className="text-center mt-8">
           <a 
             href="/sales" 
-            className="inline-block bg-red-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors"
+            className="inline-block bg-black hover:bg-gray-800 text-white px-8 py-3 font-poppins font-medium transition-colors duration-300 uppercase tracking-wide text-sm"
           >
-            View All Sales
+            VIEW ALL
           </a>
         </div>
       </div>
