@@ -399,7 +399,7 @@ const ProductManagement = () => {
                 </div>
               ) : (
                 <div className="grid grid-cols-3 gap-2">
-                  {['XS', 'S', 'M', 'L', 'XL', '2XL'].map(size => {
+                  {['M', 'L', 'XL', '2XL'].map(size => {
                     const isChecked = formData.sizes.includes(size);
                     return (
                       <label key={size} className="flex items-center space-x-2 text-white">
