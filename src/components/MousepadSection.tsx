@@ -30,7 +30,7 @@ const MousepadSection = () => {
   return <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 tracking-wide">
+          <h2 className="text-3xl mb-4 tracking-wide md:text-2xl font-medium text-zinc-950">
             MOUSEPADS
           </h2>
           
@@ -60,7 +60,7 @@ const MousepadSection = () => {
         </div>
 
         {mousepadProducts.length > 0 && <div className="text-center mt-8">
-            <button onClick={() => navigate('/mousepads')} className="bg-black text-white text-sm font-medium hover:bg-gray-800 transition-colors duration-200 px-[37px] py-[14px] my-0 mx-[26px]">View All </button>
+            <button onClick={() => navigate('/mousepads')} className="bg-black text-white hover:bg-gray-800 transition-colors duration-200 my-0 mx-0 text-center text-sm px-[24px] py-[8px] font-medium">VIEW ALL</button>
           </div>}
       </div>
     </section>;

@@ -94,7 +94,7 @@ const NewProductsSection = () => {
                     
                     {/* Product Info */}
                     <div className="text-left space-y-1">
-                      <h3 className="text-sm md:text-base font-normal text-black leading-tight">
+                      <h3 className="text-sm font-normal text-black leading-tight md:text-base">
                         {product.name}
                       </h3>
                       <div className="text-sm md:text-base font-normal text-black">
