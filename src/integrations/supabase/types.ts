@@ -204,6 +204,7 @@ export type Database = {
           main_image: string | null
           name: string
           price: number
+          size_pricing: Json | null
           size_variants: Json | null
           sizes: string[]
           slug: string | null
@@ -222,6 +223,7 @@ export type Database = {
           main_image?: string | null
           name: string
           price: number
+          size_pricing?: Json | null
           size_variants?: Json | null
           sizes?: string[]
           slug?: string | null
@@ -240,6 +242,7 @@ export type Database = {
           main_image?: string | null
           name?: string
           price?: number
+          size_pricing?: Json | null
           size_variants?: Json | null
           sizes?: string[]
           slug?: string | null

@@ -24,6 +24,7 @@ export interface Product {
   color_variants?: ColorVariant[]; // Add color variants support
   size_variants?: SizeVariant[]; // Add size variants for mousepads
   main_image?: string; // Main thumbnail image for homepage/category view
+  size_pricing?: { [key: string]: number } | null; // Size-specific pricing for mousepads
   created_at?: string;
   updated_at?: string;
 }

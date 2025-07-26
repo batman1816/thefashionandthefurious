@@ -7,6 +7,8 @@ import Footer from '../components/Footer';
 import AdminLogin from '../components/admin/AdminLogin';
 import AdminDashboard from '../components/admin/AdminDashboard';
 import ProductManagement from '../components/admin/ProductManagement';
+import MousepadManagement from '../components/admin/MousepadManagement';
+import TShirtManagement from '../components/admin/TShirtManagement';
 import OrderManagement from '../components/admin/OrderManagement';
 import BannerManagement from '../components/admin/BannerManagement';
 import AnnouncementBannerManagement from '../components/admin/AnnouncementBannerManagement';
@@ -82,6 +84,10 @@ const Admin = () => {
         return <AdminDashboard onLogout={handleLogout} />;
       case 'products':
         return <ProductManagement />;
+      case 'mousepads':
+        return <MousepadManagement />;
+      case 'tshirts':
+        return <TShirtManagement />;
       case 'orders':
         return <OrderManagement />;
       case 'banners':
@@ -111,7 +117,9 @@ const Admin = () => {
             <nav className="space-y-2">
               {[
                 { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-                { id: 'products', label: 'Products', icon: '📦' },
+                { id: 'products', label: 'All Products', icon: '📦' },
+                { id: 'mousepads', label: 'Mousepads', icon: '🖱️' },
+                { id: 'tshirts', label: 'T-Shirts', icon: '👕' },
                 { id: 'orders', label: 'Orders', icon: '🛒' },
                 { id: 'banners', label: 'Banners', icon: '🖼️' },
                 { id: 'announcement', label: 'Announcement', icon: '📢' },

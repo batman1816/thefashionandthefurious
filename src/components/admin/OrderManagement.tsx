@@ -273,7 +273,10 @@ const OrderManagement = () => {
                           <div key={index} className="p-4 rounded flex justify-between bg-zinc-800">
                             <div>
                               <p className="font-medium">{item.product?.name || item.name}</p>
-                              <p className="text-gray-400">Size: {item.size} | Qty: {item.quantity}</p>
+                              <p className="text-gray-400">
+                                {item.color && `Color: ${item.color} | `}
+                                Size: {item.size} | Qty: {item.quantity}
+                              </p>
                             </div>
                             <div className="text-right">
                               <p className="font-medium">Tk{((item.product?.price || item.price) * item.quantity).toFixed(2)}</p>

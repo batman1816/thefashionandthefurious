@@ -100,7 +100,12 @@ const Cart = () => {
                         );
                       })()}
                       
-                      {/* Size */}
+                      {/* Color and Size */}
+                      {item.color && (
+                        <p className="font-poppins-extralight text-sm font-normal text-zinc-950 mb-1">
+                          COLOR: {item.color}
+                        </p>
+                      )}
                       <p className="font-poppins-extralight text-sm font-normal text-zinc-950 mb-3">
                         SIZE: {item.size}
                       </p>
@@ -162,6 +167,11 @@ const Cart = () => {
                             </p>
                           );
                         })()}
+                        {item.color && (
+                          <p className="font-poppins-extralight text-sm font-normal text-zinc-950 text-left mb-1">
+                            COLOR: {item.color}
+                          </p>
+                        )}
                         <p className="font-poppins-extralight text-sm font-normal text-zinc-950 text-left">
                           SIZE: {item.size}
                         </p>
