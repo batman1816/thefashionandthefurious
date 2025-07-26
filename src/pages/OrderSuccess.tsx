@@ -43,7 +43,7 @@ const OrderSuccess = () => {
               try {
                 const items = typeof order.items === 'string' ? JSON.parse(order.items) : order.items;
                 return Array.isArray(items) ? items.map((item: any, index: number) => <div key={index} className="flex justify-between">
-                      <span className="text-white text-left">{item.product.name} (Size: {item.size}) × {item.quantity}</span>
+                      <span className="text-white">{item.product.name} (Size: {item.size}) × {item.quantity}</span>
                       <span className="text-white">Tk {(item.product.price * item.quantity).toFixed(2)}</span>
                     </div>) : <p className="text-white">No items found</p>;
               } catch (error) {
