@@ -4,6 +4,7 @@ import { useOrders } from '../../hooks/useOrders';
 import OrderSearch from './OrderSearch';
 import { Order } from '../../types/Order';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
+
 const OrderManagement = () => {
   const {
     orders,
@@ -17,6 +18,7 @@ const OrderManagement = () => {
     goToPage
   } = useOrders();
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending':
@@ -29,6 +31,7 @@ const OrderManagement = () => {
         return 'text-gray-400';
     }
   };
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'pending':
@@ -41,6 +44,7 @@ const OrderManagement = () => {
         return <Clock size={16} />;
     }
   };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -50,12 +54,17 @@ const OrderManagement = () => {
       minute: '2-digit'
     });
   };
+
   if (loading) {
-    return <div className="flex justify-center items-center h-64">
+    return (
+      <div className="flex justify-center items-center h-64">
         <div className="text-white">Loading orders...</div>
-      </div>;
+      </div>
+    );
   }
-  return <div className="text-white">
+
+  return (
+    <div className="text-white">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold">Order Management</h2>
         <div className="text-gray-400">
@@ -83,7 +92,8 @@ const OrderManagement = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {orders.map(order => <TableRow key={order.id} className="border-gray-700 hover:bg-gray-700">
+            {orders.map(order => (
+              <TableRow key={order.id} className="border-gray-700 hover:bg-gray-700">
                 <TableCell className="bg-zinc-800">
                   <div className="text-sm font-medium text-white">#{order.id}</div>
                 </TableCell>
@@ -109,60 +119,93 @@ const OrderManagement = () => {
                   </div>
                 </TableCell>
                 <TableCell className="bg-zinc-800">
-                  {order.bkash_transaction_id ? <div className="text-xs">
+                  {order.bkash_transaction_id ? (
+                    <div className="text-xs">
                       <div className="text-green-400 font-medium">✅ Paid</div>
                       <div className="text-gray-400">TXN: {order.bkash_transaction_id}</div>
                       <div className="text-gray-400">From: {order.bkash_sender_number}</div>
-                    </div> : <div className="text-xs text-red-400">❌ No Payment Info</div>}
+                    </div>
+                  ) : (
+                    <div className="text-xs text-red-400">❌ No Payment Info</div>
+                  )}
                 </TableCell>
                 <TableCell className="bg-zinc-800">
-                  <button onClick={() => setSelectedOrder(order)} className="text-blue-400 hover:text-blue-300">
+                  <button 
+                    onClick={() => setSelectedOrder(order)} 
+                    className="text-blue-400 hover:text-blue-300"
+                  >
                     <Eye size={16} />
                   </button>
                 </TableCell>
-              </TableRow>)}
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
 
-        {orders.length === 0 && <div className="text-center py-8 text-gray-400 bg-zinc-800">
+        {orders.length === 0 && (
+          <div className="text-center py-8 text-gray-400">
             {searchTerm ? 'No orders found matching your search.' : 'No orders found.'}
-          </div>}
+          </div>
+        )}
       </div>
 
       {/* Pagination */}
-      {totalPages > 1 && <div className="flex justify-center items-center mt-6 space-x-2">
-          <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1} className="flex items-center px-3 py-2 text-sm rounded disabled:opacity-50 disabled:cursor-not-allowed bg-zinc-800 hover:bg-zinc-700 text-slate-50">
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center mt-6 space-x-2">
+          <button
+            onClick={() => goToPage(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="flex items-center px-3 py-2 text-sm bg-gray-700 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-600"
+          >
             <ChevronLeft size={16} className="mr-1" />
             Previous
           </button>
           
           <div className="flex space-x-1">
-            {Array.from({
-          length: totalPages
-        }, (_, i) => i + 1).map(page => <button key={page} onClick={() => goToPage(page)} className={`px-3 py-2 text-sm rounded ${currentPage === page ? 'bg-blue-600 text-white' : 'bg-gray-700 text-white hover:bg-gray-600'}`}>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => goToPage(page)}
+                className={`px-3 py-2 text-sm rounded ${
+                  currentPage === page
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-700 text-white hover:bg-gray-600'
+                }`}
+              >
                 {page}
-              </button>)}
+              </button>
+            ))}
           </div>
           
-          <button onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages} className="flex items-center px-3 py-2 text-sm text-white rounded disabled:opacity-50 disabled:cursor-not-allowed bg-zinc-800 hover:bg-zinc-700">
+          <button
+            onClick={() => goToPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="flex items-center px-3 py-2 text-sm bg-gray-700 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-600"
+          >
             Next
             <ChevronRight size={16} className="ml-1" />
           </button>
-        </div>}
+        </div>
+      )}
 
       {/* Order Detail Modal */}
-      {selectedOrder && <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      {selectedOrder && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-zinc-900">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-2xl font-bold">Order #{selectedOrder.id}</h3>
-              <button onClick={() => setSelectedOrder(null)} className="text-gray-400 hover:text-white text-2xl">
+              <button 
+                onClick={() => setSelectedOrder(null)} 
+                className="text-gray-400 hover:text-white text-2xl"
+              >
                 ×
               </button>
             </div>
 
             <div className="space-y-6">
               {/* bKash Payment Info Section */}
-              {selectedOrder.bkash_transaction_id && <div className="p-4 rounded bg-green-900/20 border border-green-600">
+              {selectedOrder.bkash_transaction_id && (
+                <div className="p-4 rounded bg-green-900/20 border border-green-600">
                   <h4 className="text-lg font-semibold mb-3 text-green-400 flex items-center gap-2">
                     💳 bKash Payment Details
                   </h4>
@@ -180,21 +223,30 @@ const OrderManagement = () => {
                   </div>
                   
                   <div className="flex gap-3">
-                    <button onClick={() => updateOrderStatus(selectedOrder.id, 'fulfilled')} className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded transition-colors flex items-center gap-2">
+                    <button 
+                      onClick={() => updateOrderStatus(selectedOrder.id, 'fulfilled')}
+                      className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded transition-colors flex items-center gap-2"
+                    >
                       <Check size={16} />
                       Approve Payment
                     </button>
-                    <button onClick={() => updateOrderStatus(selectedOrder.id, 'cancelled')} className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors flex items-center gap-2">
+                    <button 
+                      onClick={() => updateOrderStatus(selectedOrder.id, 'cancelled')}
+                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors flex items-center gap-2"
+                    >
                       <X size={16} />
                       Deny Payment
                     </button>
                   </div>
-                </div>}
+                </div>
+              )}
 
-              {!selectedOrder.bkash_transaction_id && <div className="p-4 rounded bg-red-900/20 border border-red-600">
+              {!selectedOrder.bkash_transaction_id && (
+                <div className="p-4 rounded bg-red-900/20 border border-red-600">
                   <h4 className="text-lg font-semibold mb-2 text-red-400">❌ No Payment Information</h4>
                   <p className="text-gray-300">Customer has not provided bKash payment details yet.</p>
-                </div>}
+                </div>
+              )}
 
               {/* Customer Info */}
               <div>
@@ -214,26 +266,31 @@ const OrderManagement = () => {
                 <h4 className="text-lg font-semibold mb-3">Order Items</h4>
                 <div className="space-y-3">
                   {(() => {
-                try {
-                  const items = typeof selectedOrder.items === 'string' ? JSON.parse(selectedOrder.items) : selectedOrder.items;
-                  if (Array.isArray(items)) {
-                    return items.map((item: any, index: number) => <div key={index} className="p-4 rounded flex justify-between bg-zinc-800">
+                    try {
+                      const items = typeof selectedOrder.items === 'string' ? JSON.parse(selectedOrder.items) : selectedOrder.items;
+                      if (Array.isArray(items)) {
+                        return items.map((item: any, index: number) => (
+                          <div key={index} className="p-4 rounded flex justify-between bg-zinc-800">
                             <div>
                               <p className="font-medium">{item.product?.name || item.name}</p>
-                              <p className="text-gray-400">Size: {item.size} | Qty: {item.quantity}</p>
+                              <p className="text-gray-400">
+                                {item.color && `Color: ${item.color} | `}
+                                Size: {item.size} | Qty: {item.quantity}
+                              </p>
                             </div>
                             <div className="text-right">
                               <p className="font-medium">Tk{((item.product?.price || item.price) * item.quantity).toFixed(2)}</p>
                             </div>
-                          </div>);
-                  } else {
-                    return <p className="text-gray-400">No items found</p>;
-                  }
-                } catch (error) {
-                  console.error('Error parsing order items:', error);
-                  return <p className="text-gray-400">Error loading items</p>;
-                }
-              })()}
+                          </div>
+                        ));
+                      } else {
+                        return <p className="text-gray-400">No items found</p>;
+                      }
+                    } catch (error) {
+                      console.error('Error parsing order items:', error);
+                      return <p className="text-gray-400">Error loading items</p>;
+                    }
+                  })()}
                 </div>
               </div>
 
@@ -260,13 +317,34 @@ const OrderManagement = () => {
               <div>
                 <h4 className="text-lg font-semibold mb-3">Order Status</h4>
                 <div className="flex gap-3">
-                  <button onClick={() => updateOrderStatus(selectedOrder.id, 'pending')} className={`px-4 py-2 rounded transition-colors ${selectedOrder.status === 'pending' ? 'bg-yellow-600 text-white' : 'bg-gray-600 hover:bg-yellow-600 text-white'}`}>
+                  <button 
+                    onClick={() => updateOrderStatus(selectedOrder.id, 'pending')} 
+                    className={`px-4 py-2 rounded transition-colors ${
+                      selectedOrder.status === 'pending' 
+                        ? 'bg-yellow-600 text-white' 
+                        : 'bg-gray-600 hover:bg-yellow-600 text-white'
+                    }`}
+                  >
                     Mark as Pending
                   </button>
-                  <button onClick={() => updateOrderStatus(selectedOrder.id, 'fulfilled')} className={`px-4 py-2 rounded transition-colors ${selectedOrder.status === 'fulfilled' ? 'bg-green-600 text-white' : 'bg-gray-600 hover:bg-green-600 text-white'}`}>
+                  <button 
+                    onClick={() => updateOrderStatus(selectedOrder.id, 'fulfilled')} 
+                    className={`px-4 py-2 rounded transition-colors ${
+                      selectedOrder.status === 'fulfilled' 
+                        ? 'bg-green-600 text-white' 
+                        : 'bg-gray-600 hover:bg-green-600 text-white'
+                    }`}
+                  >
                     Mark as Fulfilled
                   </button>
-                  <button onClick={() => updateOrderStatus(selectedOrder.id, 'cancelled')} className={`px-4 py-2 rounded transition-colors ${selectedOrder.status === 'cancelled' ? 'bg-red-600 text-white' : 'bg-gray-600 hover:bg-red-600 text-white'}`}>
+                  <button 
+                    onClick={() => updateOrderStatus(selectedOrder.id, 'cancelled')} 
+                    className={`px-4 py-2 rounded transition-colors ${
+                      selectedOrder.status === 'cancelled' 
+                        ? 'bg-red-600 text-white' 
+                        : 'bg-gray-600 hover:bg-red-600 text-white'
+                    }`}
+                  >
                     Mark as Cancelled
                   </button>
                 </div>
@@ -282,7 +360,10 @@ const OrderManagement = () => {
               </div>
             </div>
           </div>
-        </div>}
-    </div>;
+        </div>
+      )}
+    </div>
+  );
 };
+
 export default OrderManagement;

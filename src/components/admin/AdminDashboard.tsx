@@ -23,7 +23,7 @@ const AdminDashboard = ({
     switch (activeSection) {
       case 'dashboard':
         return <div className="rounded-lg p-6 bg-zinc-800">
-            
+            <h3 className="text-xl font-semibold mb-6 text-white">Sales Overview</h3>
             <SalesChart />
             
             {/* Total Sales and Orders Summary */}
