@@ -54,6 +54,19 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
             colorVariants = undefined;
           }
         }
+
+        // Convert size_pricing from Json to { [key: string]: number }
+        let sizePricing: { [key: string]: number } | null = null;
+        if (product.size_pricing) {
+          try {
+            sizePricing = typeof product.size_pricing === 'object' 
+              ? product.size_pricing as { [key: string]: number }
+              : JSON.parse(product.size_pricing as string);
+          } catch (error) {
+            console.error('Error parsing size_pricing:', error);
+            sizePricing = null;
+          }
+        }
         
         return {
           ...product,
@@ -65,6 +78,7 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
           color_variants: colorVariants,
           size_variants: product.size_variants ? (Array.isArray(product.size_variants) ? product.size_variants : JSON.parse(product.size_variants as string)) : undefined,
           main_image: product.main_image,
+          size_pricing: sizePricing,
           // Add sale information if available
           ...(sale && {
             originalPrice: sale.original_price,
@@ -114,7 +128,8 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
           is_active: updatedProduct.is_active,
           color_variants: updatedProduct.color_variants as any || null,
           size_variants: updatedProduct.size_variants as any || null,
-          main_image: updatedProduct.main_image
+          main_image: updatedProduct.main_image,
+          size_pricing: updatedProduct.size_pricing as any || null
         })
         .eq('id', updatedProduct.id);
 
@@ -145,14 +160,28 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
           is_active: newProduct.is_active !== undefined ? newProduct.is_active : true,
           color_variants: newProduct.color_variants as any || null,
           size_variants: newProduct.size_variants as any || null,
-          main_image: newProduct.main_image
+          main_image: newProduct.main_image,
+          size_pricing: newProduct.size_pricing as any || null
         })
         .select()
         .single();
 
       if (error) throw error;
 
-      const product = { 
+      // Convert size_pricing for new product
+      let newProductSizePricing: { [key: string]: number } | null = null;
+      if (data.size_pricing) {
+        try {
+          newProductSizePricing = typeof data.size_pricing === 'object' 
+            ? data.size_pricing as { [key: string]: number }
+            : JSON.parse(data.size_pricing as string);
+        } catch (error) {
+          console.error('Error parsing size_pricing for new product:', error);
+          newProductSizePricing = null;
+        }
+      }
+
+      const product: Product = { 
         ...data, 
         category: data.category as 'drivers' | 'f1-classic' | 'teams' | 'mousepads',
         images: data.images || (data.image_url ? [data.image_url] : []),
@@ -161,7 +190,8 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
         slug: data.slug,
         color_variants: data.color_variants ? (Array.isArray(data.color_variants) ? data.color_variants : JSON.parse(data.color_variants as string)) : undefined,
         size_variants: data.size_variants ? (Array.isArray(data.size_variants) ? data.size_variants : JSON.parse(data.size_variants as string)) : undefined,
-        main_image: data.main_image
+        main_image: data.main_image,
+        size_pricing: newProductSizePricing
       };
       setProducts(prev => [product, ...prev]);
       toast.success('Product added successfully');

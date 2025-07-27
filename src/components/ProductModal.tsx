@@ -120,8 +120,8 @@ const ProductModal = ({
                 <span className="line-through text-gray-400 mr-2">Tk {product.originalPrice}.00</span>
                 <span>Tk {product.price}.00 BDT</span>
               </div> : <div className="text-xl font-normal text-black mb-2">
-                {product.category === 'mousepads' && (product as any).size_pricing && selectedSize ? (
-                  <>Tk {(product as any).size_pricing[selectedSize] || product.price}.00</>
+                {product.category === 'mousepads' && product.size_pricing && selectedSize ? (
+                  <>Tk {product.size_pricing[selectedSize] || product.price}.00</>
                 ) : (
                   <>Tk {product.price}.00</>
                 )}
@@ -177,8 +177,8 @@ const ProductModal = ({
                   {availableSizes.map(size => {
                     // Get size-specific price for mousepads
                     const getSizePrice = () => {
-                      if (product.category === 'mousepads' && (product as any).size_pricing) {
-                        return (product as any).size_pricing[size] || product.price;
+                      if (product.category === 'mousepads' && product.size_pricing) {
+                        return product.size_pricing[size] || product.price;
                       }
                       return product.price;
                     };
@@ -191,7 +191,7 @@ const ProductModal = ({
                         style={{fontFamily: 'Poppins', fontWeight: 300}}
                       >
                         {size}
-                        {product.category === 'mousepads' && (product as any).size_pricing && (
+                        {product.category === 'mousepads' && product.size_pricing && (
                           <span className="block text-xs mt-1">
                             Tk{getSizePrice()}
                           </span>

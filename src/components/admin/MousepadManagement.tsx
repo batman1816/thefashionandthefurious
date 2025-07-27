@@ -632,8 +632,8 @@ const MousepadManagement = () => {
                   </td>
                   <td className="px-4 py-3 text-white">{product.name}</td>
                   <td className="px-4 py-3 text-white">
-                    {(product as any).size_pricing ? 
-                      `From Tk${Math.min(...Object.values((product as any).size_pricing).filter((p: any) => p > 0))}` :
+                    {product.size_pricing ? 
+                      `From Tk${Math.min(...Object.values(product.size_pricing).filter((p: number) => p > 0))}` :
                       `Tk${product.price}`
                     }
                   </td>

@@ -65,6 +65,19 @@ const SalesSection = () => {
               sizeVariants = undefined;
             }
           }
+
+          // Convert size_pricing from Json to { [key: string]: number }
+          let sizePricing: { [key: string]: number } | null = null;
+          if (product.size_pricing) {
+            try {
+              sizePricing = typeof product.size_pricing === 'object' 
+                ? product.size_pricing as { [key: string]: number }
+                : JSON.parse(product.size_pricing as string);
+            } catch (error) {
+              console.error('Error parsing size_pricing:', error);
+              sizePricing = null;
+            }
+          }
           
           return {
             ...product,
@@ -76,6 +89,7 @@ const SalesSection = () => {
             color_variants: colorVariants,
             size_variants: sizeVariants,
             main_image: product.main_image,
+            size_pricing: sizePricing,
             originalPrice: sale?.original_price || product.price,
             price: sale?.sale_price || product.price,
             saleInfo: sale ? {
