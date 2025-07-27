@@ -19,6 +19,10 @@ const MousepadSection = () => {
     return product.main_image || product.image_url || product.images && product.images[0];
   };
   const getLowestPrice = (product: Product) => {
+    if (product.size_pricing) {
+      const prices = Object.values(product.size_pricing);
+      return Math.min(...prices);
+    }
     if (product.saleInfo) {
       return product.price;
     }

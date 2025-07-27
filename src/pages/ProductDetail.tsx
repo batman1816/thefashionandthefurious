@@ -123,7 +123,10 @@ const ProductDetail = () => {
                 <span className="line-through mr-2 text-base text-zinc-600">Tk {product.originalPrice}.00</span>
                 <span className="text-lg text-zinc-950">Tk {product.price}.00 BDT</span>
               </div> : <div className="text-xl font-normal text-gray-900 mb-6">
-                Tk {product.price}.00
+                {product.category === 'mousepads' && product.size_pricing && selectedSize ? 
+                  `Tk ${product.size_pricing[selectedSize] || product.price}.00` : 
+                  `Tk ${product.price}.00`
+                }
               </div>}
 
 

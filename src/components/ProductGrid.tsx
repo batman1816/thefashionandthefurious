@@ -23,6 +23,11 @@ const ProductGrid = ({ products, showSaleTag = false }: ProductGridProps) => {
 
   const handleChooseOptions = (product: Product, e: React.MouseEvent) => {
     e.stopPropagation();
+    // Don't open modal for mousepads - navigate directly to product page
+    if (product.category === 'mousepads') {
+      navigate(`/product/${product.slug || product.id}`);
+      return;
+    }
     setSelectedProduct(product);
   };
 
@@ -126,7 +131,10 @@ const ProductGrid = ({ products, showSaleTag = false }: ProductGridProps) => {
                   </div>
                 ) : (
                   <p className="text-sm sm:text-base font-normal text-gray-900 mb-2">
-                    Tk {product.price}
+                    {product.category === 'mousepads' && product.size_pricing ? 
+                      `From Tk ${Math.min(...Object.values(product.size_pricing))}` : 
+                      `Tk ${product.price}`
+                    }
                   </p>
                 )}
                 
