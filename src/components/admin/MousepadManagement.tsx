@@ -357,44 +357,50 @@ const MousepadManagement = () => {
             <div>
               <label className="block text-white mb-2">Size-specific Pricing</label>
               <div className="space-y-2">
-                {MOUSEPAD_SIZES.map((size) => (
-                  <div key={size} className="flex items-center gap-4">
-                    <label className="flex items-center space-x-2 text-white min-w-[150px]">
-                      <input
-                        type="checkbox"
-                        checked={formData.sizes.includes(size)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setFormData(prev => ({
-                              ...prev,
-                              sizes: [...prev.sizes, size]
-                            }));
-                          } else {
-                            setFormData(prev => ({
-                              ...prev,
-                              sizes: prev.sizes.filter(s => s !== size),
-                              size_pricing: {
-                                ...prev.size_pricing,
-                                [size]: 0
-                              }
-                            }));
-                          }
-                        }}
-                        className="rounded"
-                      />
-                      <span>{size}</span>
-                    </label>
-                    {formData.sizes.includes(size) && (
-                      <input
-                        type="number"
-                        placeholder="Price in Taka"
-                        value={formData.size_pricing[size] || ''}
-                        onChange={(e) => handleSizePricingChange(size, e.target.value)}
-                        className="px-3 py-2 text-white rounded bg-zinc-900 w-32"
-                      />
-                    )}
-                  </div>
-                ))}
+                 {MOUSEPAD_SIZES.map((size) => (
+                   <div key={size} className="flex items-center gap-4">
+                     <label className="flex items-center space-x-2 text-white min-w-[150px]">
+                       <input
+                         type="checkbox"
+                         checked={formData.sizes.includes(size)}
+                         onChange={(e) => {
+                           if (e.target.checked) {
+                             setFormData(prev => ({
+                               ...prev,
+                               sizes: [...prev.sizes, size],
+                               size_pricing: {
+                                 ...prev.size_pricing,
+                                 [size]: size === '900 X 400 MM' ? 2499 : 
+                                        size === '700 X 300 MM' ? 1999 : 
+                                        size === '350 X 300 MM' ? 1499 : 0
+                               }
+                             }));
+                           } else {
+                             setFormData(prev => ({
+                               ...prev,
+                               sizes: prev.sizes.filter(s => s !== size),
+                               size_pricing: {
+                                 ...prev.size_pricing,
+                                 [size]: 0
+                               }
+                             }));
+                           }
+                         }}
+                         className="rounded"
+                       />
+                       <span>{size}</span>
+                     </label>
+                     {formData.sizes.includes(size) && (
+                       <input
+                         type="number"
+                         placeholder="Price in Taka"
+                         value={formData.size_pricing[size] || ''}
+                         onChange={(e) => handleSizePricingChange(size, e.target.value)}
+                         className="px-3 py-2 text-white rounded bg-zinc-900 w-32"
+                       />
+                     )}
+                   </div>
+                 ))}
               </div>
             </div>
 

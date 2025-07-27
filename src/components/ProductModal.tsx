@@ -72,6 +72,7 @@ const ProductModal = ({
   };
   const handleSizeSelect = (size: string) => {
     setSelectedSize(size);
+    console.log('Size selected:', size, 'Product size_pricing:', product.size_pricing);
   };
   const handleColorSelect = (color: string) => {
     setSelectedColor(color);
@@ -120,8 +121,8 @@ const ProductModal = ({
                 <span className="line-through text-gray-400 mr-2">Tk {product.originalPrice}.00</span>
                 <span>Tk {product.price}.00 BDT</span>
               </div> : <div className="text-xl font-normal text-black mb-2">
-                {product.category === 'mousepads' && product.size_pricing && selectedSize ? (
-                  <>Tk {product.size_pricing[selectedSize] || product.price}.00</>
+                {product.category === 'mousepads' && product.size_pricing && selectedSize && product.size_pricing[selectedSize] ? (
+                  <>Tk {product.size_pricing[selectedSize]}.00</>
                 ) : (
                   <>Tk {product.price}.00</>
                 )}
