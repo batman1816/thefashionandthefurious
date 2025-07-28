@@ -220,10 +220,22 @@ const OrderManagement = () => {
                     return items.map((item: any, index: number) => <div key={index} className="p-4 rounded flex justify-between bg-zinc-800">
                             <div>
                               <p className="font-medium">{item.product?.name || item.name}</p>
-                              <p className="text-gray-400">Size: {item.size} | Qty: {item.quantity}</p>
+                              <p className="text-gray-400">
+                                Size: {item.size}
+                                {item.color ? ` | Color: ${item.color}` : ''} | Qty: {item.quantity}
+                              </p>
                             </div>
                             <div className="text-right">
-                              <p className="font-medium">Tk{((item.product?.price || item.price) * item.quantity).toFixed(2)}</p>
+                              <p className="font-medium">
+                                Tk{(() => {
+                                  let price = item.product?.price || item.price;
+                                  // For mousepads, use size-specific pricing
+                                  if (item.product?.category === 'mousepads' && item.product?.size_pricing && item.size) {
+                                    price = item.product.size_pricing[item.size] || price;
+                                  }
+                                  return (price * item.quantity).toFixed(2);
+                                })()}
+                              </p>
                             </div>
                           </div>);
                   } else {

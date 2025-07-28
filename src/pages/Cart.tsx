@@ -72,7 +72,16 @@ const Cart = () => {
                   <div className="flex gap-3 w-full lg:hidden">
                     {/* Product Image */}
                     <div className="w-20 h-20 bg-white overflow-hidden flex-shrink-0">
-                      <img src={item.product.image_url} alt={item.product.name} className="w-full h-full object-cover" />
+                      <img src={(() => {
+                        // Get correct image based on color variant
+                        if (item.color && item.product.color_variants) {
+                          const colorVariant = item.product.color_variants.find(variant => variant.color.toLowerCase() === item.color?.toLowerCase());
+                          if (colorVariant?.images && colorVariant.images.length > 0) {
+                            return colorVariant.images[0];
+                          }
+                        }
+                        return item.product.main_image || item.product.image_url || (item.product.images && item.product.images[0]);
+                      })()} alt={item.product.name} className="w-full h-full object-cover" />
                     </div>
                     
                     {/* Product Details */}
@@ -84,18 +93,25 @@ const Cart = () => {
                       {/* Price */}
                       {(() => {
                         const currentPrice = getCurrentPrice(item.product.id);
+                        let price = currentPrice.price;
+                        
+                        // For mousepads, use size-specific pricing
+                        if (item.product.category === 'mousepads' && item.product.size_pricing && item.size) {
+                          price = item.product.size_pricing[item.size] || currentPrice.price;
+                        }
+                        
                         return currentPrice.saleInfo && currentPrice.originalPrice ? (
                           <div className="mb-1">
                             <p className="line-through font-poppins-extralight font-normal text-zinc-700 text-sm">
                               Tk {currentPrice.originalPrice.toFixed(2)}
                             </p>
                             <p className="font-poppins-extralight text-zinc-950 font-normal text-base">
-                              Tk {currentPrice.price.toFixed(2)}
+                              Tk {price.toFixed(2)}
                             </p>
                           </div>
                         ) : (
                           <p className="font-poppins-extralight mb-1 text-zinc-950 font-normal text-base">
-                            Tk {currentPrice.price.toFixed(2)}
+                            Tk {price.toFixed(2)}
                           </p>
                         );
                       })()}
@@ -133,7 +149,17 @@ const Cart = () => {
                     {/* Total Price - Right aligned */}
                     <div className="flex items-start pt-1">
                       <p className="font-poppins-light text-lg text-gray-900 font-normal">
-                        Tk {(getCurrentPrice(item.product.id).price * item.quantity).toFixed(2)}
+                        Tk {(() => {
+                          const currentPrice = getCurrentPrice(item.product.id);
+                          let price = currentPrice.price;
+                          
+                          // For mousepads, use size-specific pricing
+                          if (item.product.category === 'mousepads' && item.product.size_pricing && item.size) {
+                            price = item.product.size_pricing[item.size] || currentPrice.price;
+                          }
+                          
+                          return (price * item.quantity).toFixed(2);
+                        })()}
                       </p>
                     </div>
                   </div>
@@ -143,7 +169,16 @@ const Cart = () => {
                     {/* Product Info */}
                     <div className="lg:col-span-6 flex gap-4">
                       <div className="w-32 h-32 bg-white overflow-hidden flex-shrink-0">
-                        <img src={item.product.image_url} alt={item.product.name} className="w-full h-full object-cover" />
+                        <img src={(() => {
+                          // Get correct image based on color variant
+                          if (item.color && item.product.color_variants) {
+                            const colorVariant = item.product.color_variants.find(variant => variant.color.toLowerCase() === item.color?.toLowerCase());
+                            if (colorVariant?.images && colorVariant.images.length > 0) {
+                              return colorVariant.images[0];
+                            }
+                          }
+                          return item.product.main_image || item.product.image_url || (item.product.images && item.product.images[0]);
+                        })()} alt={item.product.name} className="w-full h-full object-cover" />
                       </div>
                       
                       <div className="flex-1 min-w-0">
@@ -152,18 +187,25 @@ const Cart = () => {
                         </h3>
                         {(() => {
                           const currentPrice = getCurrentPrice(item.product.id);
+                          let price = currentPrice.price;
+                          
+                          // For mousepads, use size-specific pricing
+                          if (item.product.category === 'mousepads' && item.product.size_pricing && item.size) {
+                            price = item.product.size_pricing[item.size] || currentPrice.price;
+                          }
+                          
                           return currentPrice.saleInfo && currentPrice.originalPrice ? (
                             <div className="mb-2">
                               <p className="line-through font-poppins-extralight font-normal text-zinc-700 text-sm">
                                 Tk {currentPrice.originalPrice.toFixed(2)}
                               </p>
                               <p className="font-poppins-extralight text-zinc-950 font-normal text-base text-left">
-                                Tk {currentPrice.price.toFixed(2)}
+                                Tk {price.toFixed(2)}
                               </p>
                             </div>
                           ) : (
                             <p className="font-poppins-extralight mb-2 text-zinc-950 font-normal text-base text-left">
-                              Tk {currentPrice.price.toFixed(2)}
+                              Tk {price.toFixed(2)}
                             </p>
                           );
                         })()}
@@ -203,7 +245,17 @@ const Cart = () => {
                     <div className="lg:col-span-3 flex lg:justify-end items-center">
                       <div className="text-right">
                         <p className="font-poppins-light text-lg text-gray-900 font-normal">
-                          Tk {(getCurrentPrice(item.product.id).price * item.quantity).toFixed(2)}
+                          Tk {(() => {
+                            const currentPrice = getCurrentPrice(item.product.id);
+                            let price = currentPrice.price;
+                            
+                            // For mousepads, use size-specific pricing
+                            if (item.product.category === 'mousepads' && item.product.size_pricing && item.size) {
+                              price = item.product.size_pricing[item.size] || currentPrice.price;
+                            }
+                            
+                            return (price * item.quantity).toFixed(2);
+                          })()}
                         </p>
                       </div>
                     </div>

@@ -43,8 +43,20 @@ const OrderSuccess = () => {
               try {
                 const items = typeof order.items === 'string' ? JSON.parse(order.items) : order.items;
                 return Array.isArray(items) ? items.map((item: any, index: number) => <div key={index} className="flex justify-between">
-                      <span className="text-white">{item.product.name} (Size: {item.size}) × {item.quantity}</span>
-                      <span className="text-white">Tk {(item.product.price * item.quantity).toFixed(2)}</span>
+                      <span className="text-white">
+                        {item.product.name} (Size: {item.size}
+                        {item.color ? `, Color: ${item.color}` : ''}) × {item.quantity}
+                      </span>
+                      <span className="text-white">
+                        Tk {(() => {
+                          let price = item.product.price;
+                          // For mousepads, use size-specific pricing
+                          if (item.product.category === 'mousepads' && item.product.size_pricing && item.size) {
+                            price = item.product.size_pricing[item.size] || item.product.price;
+                          }
+                          return (price * item.quantity).toFixed(2);
+                        })()}
+                      </span>
                     </div>) : <p className="text-white">No items found</p>;
               } catch (error) {
                 return <p className="text-white">Error loading items</p>;
