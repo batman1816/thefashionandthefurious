@@ -87,7 +87,7 @@ const ProductModal = ({
         return [sizeVariant.image_url];
       }
     }
-    
+
     // For other products, check color variants
     if (selectedColor && product.color_variants) {
       const colorVariant = product.color_variants.find(variant => variant.color.toLowerCase() === selectedColor.toLowerCase());
@@ -95,7 +95,6 @@ const ProductModal = ({
         return colorVariant.images;
       }
     }
-    
     return product.images && product.images.length > 0 ? product.images : product.image_url ? [product.image_url] : [];
   };
   const carouselImages = getDisplayImages();
@@ -121,14 +120,10 @@ const ProductModal = ({
                 <span className="line-through text-gray-400 mr-2">Tk {product.originalPrice}.00</span>
                 <span>Tk {product.price}.00 BDT</span>
               </div> : <div className="text-xl font-normal text-black mb-2">
-                {product.category === 'mousepads' && product.size_pricing && selectedSize && product.size_pricing[selectedSize] ? (
-                  <>Tk {product.size_pricing[selectedSize]}.00</>
-                ) : (
-                  <>Tk {product.price}.00</>
-                )}
+                {product.category === 'mousepads' && product.size_pricing && selectedSize && product.size_pricing[selectedSize] ? <>Tk {product.size_pricing[selectedSize]}.00</> : <>Tk {product.price}.00</>}
               </div>}
 
-            <p className="text-sm text-gray-500 mb-8 underline px-[13px] py-[3px]">
+            <p className="text-sm text-gray-500 mb-8 underline py-[3px] px-0">
               Shipping calculated at checkout.
             </p>
 
@@ -137,37 +132,31 @@ const ProductModal = ({
                 <h3 className="text-sm font-normal mb-4 text-black font-poppins">COLOR</h3>
                 <div className="flex flex-wrap gap-3 max-w-full overflow-x-auto">
                   {product.color_variants.map(variant => {
-                    const colorMap: { [key: string]: string } = {
-                      'Black': '#000000',
-                      'White': '#FFFFFF',
-                      'Red': '#FF0000',
-                      'Blue': '#0000FF',
-                      'Green': '#00FF00',
-                      'Yellow': '#FFFF00',
-                      'Pink': '#FFC0CB',
-                      'Purple': '#800080',
-                      'Orange': '#FFA500',
-                      'Gray': '#808080',
-                      'Grey': '#808080'
-                    };
-                    const colorValue = colorMap[variant.color] || '#000000';
-                    
-                    return (
-                      <button 
-                        key={variant.color} 
-                        onClick={() => handleColorSelect(variant.color)} 
-                        className={`flex flex-col items-center gap-2 p-2 transition-all duration-200 ${selectedColor === variant.color ? 'opacity-100' : 'opacity-70 hover:opacity-100'}`}
-                      >
-                        <div 
-                          className={`w-8 h-8 rounded-full border-2 transition-all duration-200 ${selectedColor === variant.color ? 'border-black border-4' : 'border-gray-300'}`}
-                          style={{ backgroundColor: colorValue }}
-                        />
+                const colorMap: {
+                  [key: string]: string;
+                } = {
+                  'Black': '#000000',
+                  'White': '#FFFFFF',
+                  'Red': '#FF0000',
+                  'Blue': '#0000FF',
+                  'Green': '#00FF00',
+                  'Yellow': '#FFFF00',
+                  'Pink': '#FFC0CB',
+                  'Purple': '#800080',
+                  'Orange': '#FFA500',
+                  'Gray': '#808080',
+                  'Grey': '#808080'
+                };
+                const colorValue = colorMap[variant.color] || '#000000';
+                return <button key={variant.color} onClick={() => handleColorSelect(variant.color)} className={`flex flex-col items-center gap-2 p-2 transition-all duration-200 ${selectedColor === variant.color ? 'opacity-100' : 'opacity-70 hover:opacity-100'}`}>
+                        <div className={`w-8 h-8 rounded-full border-2 transition-all duration-200 ${selectedColor === variant.color ? 'border-black border-4' : 'border-gray-300'}`} style={{
+                    backgroundColor: colorValue
+                  }} />
                          <span className="text-sm font-normal text-black font-poppins">
                            {variant.color}
                          </span>
-                      </button>
-                    );
-                  })}
+                      </button>;
+              })}
                 </div>
               </div>}
 
@@ -176,29 +165,20 @@ const ProductModal = ({
                 <h3 className="text-sm font-normal mb-4 text-black font-poppins">SIZE</h3>
                 <div className="flex flex-wrap gap-2 max-w-full overflow-x-auto">
                   {availableSizes.map(size => {
-                    // Get size-specific price for mousepads
-                    const getSizePrice = () => {
-                      if (product.category === 'mousepads' && product.size_pricing) {
-                        return product.size_pricing[size] || product.price;
-                      }
-                      return product.price;
-                    };
-                    
-                    return (
-                      <button 
-                        key={size} 
-                        onClick={() => handleSizeSelect(size)} 
-                         className={`flex-shrink-0 px-4 py-2 text-sm font-light transition-all duration-200 border border-black rounded-full ${selectedSize === size ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-50'} font-poppins`} 
-                      >
+                // Get size-specific price for mousepads
+                const getSizePrice = () => {
+                  if (product.category === 'mousepads' && product.size_pricing) {
+                    return product.size_pricing[size] || product.price;
+                  }
+                  return product.price;
+                };
+                return <button key={size} onClick={() => handleSizeSelect(size)} className={`flex-shrink-0 px-4 py-2 text-sm font-light transition-all duration-200 border border-black rounded-full ${selectedSize === size ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-50'} font-poppins`}>
                         {size}
-                        {product.category === 'mousepads' && product.size_pricing && (
-                          <span className="block text-xs mt-1">
+                        {product.category === 'mousepads' && product.size_pricing && <span className="block text-xs mt-1">
                             Tk{getSizePrice()}
-                          </span>
-                        )}
-                      </button>
-                    );
-                  })}
+                          </span>}
+                      </button>;
+              })}
                 </div>
               </div>}
 
