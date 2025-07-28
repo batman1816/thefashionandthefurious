@@ -114,10 +114,7 @@ const ProductDetail = () => {
 
           {/* Product Info */}
           <div className="flex flex-col">
-            <h1 className="text-3xl md:text-5xl font-normal text-black mb-6 tracking-wide leading-tight" style={{
-            fontFamily: 'Poppins',
-            fontWeight: 400
-          }}>
+            <h1 className="text-3xl md:text-5xl font-normal text-black mb-6 tracking-wide leading-tight font-poppins">
               {product.name.toUpperCase()}
             </h1>
             
@@ -131,10 +128,7 @@ const ProductDetail = () => {
 
             {/* Color Selection */}
             {product.color_variants && product.color_variants.length > 0 && <div className="mb-6">
-                <h3 className="text-sm font-normal mb-4 text-black" style={{
-              fontFamily: 'Poppins',
-              fontWeight: 400
-            }}>COLOR</h3>
+                <h3 className="text-sm font-normal mb-4 text-black font-poppins">COLOR</h3>
                 <div className="flex flex-wrap gap-3 max-w-full overflow-x-auto">
                   {product.color_variants.map(variant => {
                 const colorMap: {
@@ -157,12 +151,9 @@ const ProductDetail = () => {
                         <div className={`w-8 h-8 rounded-full border-2 transition-all duration-200 ${selectedColor === variant.color ? 'border-black border-4' : 'border-gray-300'}`} style={{
                     backgroundColor: colorValue
                   }} />
-                        <span className="text-sm font-normal text-black" style={{
-                    fontFamily: 'Poppins',
-                    fontWeight: 400
-                  }}>
-                          {variant.color}
-                        </span>
+                         <span className="text-sm font-normal text-black font-poppins">
+                           {variant.color}
+                         </span>
                       </button>;
               })}
                 </div>
@@ -170,10 +161,7 @@ const ProductDetail = () => {
 
             {/* Size Selection */}
             {availableSizes.length > 0 && <div className="mb-4">
-                <h3 className="text-sm font-normal mb-4 text-black" style={{
-              fontFamily: 'Poppins',
-              fontWeight: 400
-            }}>SIZE</h3>
+                <h3 className="text-sm font-normal mb-4 text-black font-poppins">SIZE</h3>
                 <div className="flex flex-wrap gap-2 max-w-full overflow-x-auto">
                   {availableSizes.map(size => {
                 // Get size-specific price for mousepads
@@ -183,10 +171,7 @@ const ProductDetail = () => {
                   }
                   return product.price;
                 };
-                return <button key={size} onClick={() => handleSizeSelect(size)} className={`flex-shrink-0 px-4 py-2 text-sm font-light transition-all duration-200 border border-black rounded-full ${selectedSize === size ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-50'}`} style={{
-                  fontFamily: 'Poppins',
-                  fontWeight: 300
-                }}>
+                return <button key={size} onClick={() => handleSizeSelect(size)} className={`flex-shrink-0 px-4 py-2 text-sm font-light transition-all duration-200 border border-black rounded-full ${selectedSize === size ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-50'} font-poppins`}>
                         {size}
                       </button>;
               })}
@@ -200,10 +185,7 @@ const ProductDetail = () => {
 
             {/* Quantity */}
             <div className="mb-8">
-              <h3 className="text-sm font-normal mb-4 text-black" style={{
-              fontFamily: 'Poppins',
-              fontWeight: 400
-            }}>QUANTITY</h3>
+              <h3 className="text-sm font-normal mb-4 text-black font-poppins">QUANTITY</h3>
               <div className="flex items-center border border-gray-300 bg-transparent rounded-none w-fit py-px px-[12px]">
                 <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled={quantity <= 1}>
                   <Minus size={16} />
