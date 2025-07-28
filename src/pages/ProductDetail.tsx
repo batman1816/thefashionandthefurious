@@ -188,7 +188,6 @@ const ProductDetail = () => {
                   fontWeight: 300
                 }}>
                         {size}
-                        {product.category === 'mousepads' && product.size_pricing}
                       </button>;
               })}
                 </div>
