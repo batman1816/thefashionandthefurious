@@ -149,7 +149,7 @@ const ProductModal = ({
                 };
                 const colorValue = colorMap[variant.color] || '#000000';
                 return <button key={variant.color} onClick={() => handleColorSelect(variant.color)} className={`flex flex-col items-center gap-2 p-2 transition-all duration-200 ${selectedColor === variant.color ? 'opacity-100' : 'opacity-70 hover:opacity-100'}`}>
-                        <div className={`w-8 h-8 rounded-full border-2 transition-all duration-200 ${selectedColor === variant.color ? 'border-black border-4' : 'border-gray-300'}`} style={{
+                        <div className={`w-7 h-7 rounded-full border-2 transition-all duration-200 ${selectedColor === variant.color ? 'border-black border-[3px]' : 'border-gray-300'}`} style={{
                     backgroundColor: colorValue
                   }} />
                          <span className="text-sm font-normal text-black font-poppins">
