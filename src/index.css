@@ -1,7 +1,4 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
-@import "@fontsource/poppins";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -102,7 +99,9 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground;
+    font-family: 'Poppins', sans-serif;
+    font-display: swap;
   }
 }
 
