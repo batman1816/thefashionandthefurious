@@ -5,6 +5,7 @@ import { Product, ColorVariant } from '../../types/Product';
 import { uploadImage, deleteImage } from '../../utils/imageUpload';
 import { toast } from 'sonner';
 import { Switch } from '../ui/switch';
+import RichTextEditor from './RichTextEditor';
 
 type TShirtCategory = 'drivers' | 'f1-classic' | 'teams';
 const AVAILABLE_TAGS = ['Teams', 'Drivers', 'F1 Classic', 'New'];
@@ -324,14 +325,13 @@ const TShirtManagement = () => {
 
             <div>
               <label className="block text-white mb-2">Description</label>
-              <textarea
+              <RichTextEditor
                 value={formData.description}
-                onChange={e => setFormData(prev => ({
+                onChange={(value) => setFormData(prev => ({
                   ...prev,
-                  description: e.target.value
+                  description: value
                 }))}
-                placeholder="Enter product description. Use line breaks for formatting."
-                className="w-full px-3 py-2 text-white rounded h-32 bg-zinc-900"
+                placeholder="Enter product description. Use formatting buttons above for bold, italic, and bullet points."
               />
             </div>
 
