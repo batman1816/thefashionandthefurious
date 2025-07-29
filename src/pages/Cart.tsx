@@ -73,6 +73,14 @@ const Cart = () => {
                     {/* Product Image */}
                     <div className="w-20 h-20 bg-white overflow-hidden flex-shrink-0">
                       <img src={(() => {
+                        // For mousepads, show size-specific image first
+                        if (item.product.category === 'mousepads' && item.product.size_variants && item.size) {
+                          const sizeVariant = item.product.size_variants.find(variant => variant.size === item.size);
+                          if (sizeVariant?.image_url) {
+                            return sizeVariant.image_url;
+                          }
+                        }
+                        
                         // Get correct image based on color variant
                         if (item.color && item.product.color_variants) {
                           const colorVariant = item.product.color_variants.find(variant => variant.color.toLowerCase() === item.color?.toLowerCase());
@@ -170,6 +178,14 @@ const Cart = () => {
                     <div className="lg:col-span-6 flex gap-4">
                       <div className="w-32 h-32 bg-white overflow-hidden flex-shrink-0">
                         <img src={(() => {
+                          // For mousepads, show size-specific image first
+                          if (item.product.category === 'mousepads' && item.product.size_variants && item.size) {
+                            const sizeVariant = item.product.size_variants.find(variant => variant.size === item.size);
+                            if (sizeVariant?.image_url) {
+                              return sizeVariant.image_url;
+                            }
+                          }
+                          
                           // Get correct image based on color variant
                           if (item.color && item.product.color_variants) {
                             const colorVariant = item.product.color_variants.find(variant => variant.color.toLowerCase() === item.color?.toLowerCase());
