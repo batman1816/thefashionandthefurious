@@ -44,8 +44,9 @@ const OrderSuccess = () => {
                 const items = typeof order.items === 'string' ? JSON.parse(order.items) : order.items;
                 return Array.isArray(items) ? items.map((item: any, index: number) => <div key={index} className="flex justify-between">
                                <span className="text-white">
-                        {item.product.name} (Size: {item.size}
-                        {item.color ? `, Color: ${item.color}` : ''}) × {item.quantity}
+                        {item.product.name} 
+                        {item.size ? ` (Size: ${item.size})` : ''}
+                        {item.color ? ` (Color: ${item.color})` : ''} × {item.quantity}
                       </span>
                       <span className="text-white">
                         Tk {(() => {
