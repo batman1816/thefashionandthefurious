@@ -108,6 +108,7 @@ const CheckoutForm = () => {
             image_url: item.product.image_url
           },
           size: item.size,
+          color: item.color,
           quantity: item.quantity,
           name: item.product.name,
           price: item.product.price
@@ -148,6 +149,7 @@ const CheckoutForm = () => {
             productName: item.product.name,
             productPrice: item.product.price,
             size: item.size,
+            color: item.color,
             quantity: item.quantity,
             total: item.product.price * item.quantity
           })),
