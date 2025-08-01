@@ -221,8 +221,9 @@ const OrderManagement = () => {
                             <div>
                               <p className="font-medium">{item.product?.name || item.name}</p>
                               <p className="text-gray-400">
-                                Size: {item.size}
-                                {item.color ? ` | Color: ${item.color}` : ''} | Qty: {item.quantity}
+                                {item.size ? `Size: ${item.size}` : ''}
+                                {item.color ? ` | Color: ${item.color}` : ''} 
+                                {item.size || item.color ? ' | ' : ''}Qty: {item.quantity}
                               </p>
                             </div>
                             <div className="text-right">
