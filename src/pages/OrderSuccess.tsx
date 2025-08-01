@@ -32,9 +32,9 @@ const OrderSuccess = () => {
             <h2 className="text-xl font-semibold mb-4 text-white text-center">Order Details</h2>
             
             <div className="space-y-2 mb-4">
-              <p className="text-white"><strong>Order ID:</strong> #{order.id}</p>
-              <p className="text-white"><strong>Total:</strong> Tk {order.total.toFixed(2)}</p>
-              <p className="text-white"><strong>Date:</strong> {order.orderDate ? new Date(order.orderDate).toLocaleDateString() : new Date().toLocaleDateString()}</p>
+              <p className="text-white text-center"><strong>Order ID:</strong> #{order.id}</p>
+              <p className="text-white text-center"><strong>Total:</strong> Tk {order.total.toFixed(2)}</p>
+              <p className="text-white text-center"><strong>Date:</strong> {order.orderDate ? new Date(order.orderDate).toLocaleDateString() : new Date().toLocaleDateString()}</p>
             </div>
 
             <h3 className="font-semibold mb-2 text-white text-center">Items Ordered:</h3>
@@ -50,13 +50,13 @@ const OrderSuccess = () => {
                       </span>
                       <span className="text-white">
                         Tk {(() => {
-                          let price = item.product.price;
-                          // For mousepads, use size-specific pricing
-                          if (item.product.category === 'mousepads' && item.product.size_pricing && item.size) {
-                            price = item.product.size_pricing[item.size] || item.product.price;
-                          }
-                          return (price * item.quantity).toFixed(2);
-                        })()}
+                      let price = item.product.price;
+                      // For mousepads, use size-specific pricing
+                      if (item.product.category === 'mousepads' && item.product.size_pricing && item.size) {
+                        price = item.product.size_pricing[item.size] || item.product.price;
+                      }
+                      return (price * item.quantity).toFixed(2);
+                    })()}
                       </span>
                     </div>) : <p className="text-white">No items found</p>;
               } catch (error) {
