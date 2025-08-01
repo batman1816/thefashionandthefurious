@@ -12,36 +12,38 @@ const Footer = () => {
             <p className="text-gray-400 mb-4 text-lg">Premium apparel inspired by F1 for racing enthusiasts, by racing enthusiasts.🏎️</p>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h4 className="font-semibold mb-4">SHOP</h4>
-            <ul className="space-y-2 text-gray-400">
-              <li><Link to="/drivers" className="hover:text-white transition-colors">Drivers</Link></li>
-              <li><Link to="/f1-classic" className="hover:text-white transition-colors">F1 Classic</Link></li>
-              <li><Link to="/teams" className="hover:text-white transition-colors">Teams</Link></li>
-            </ul>
-          </div>
-
-          {/* Customer Service & Social Media */}
-          <div>
-            <div className="flex items-center gap-4 mb-4">
-              <h4 className="font-semibold">SUPPORT</h4>
-              <div className="flex gap-3">
-                <a href="https://www.instagram.com/thefashionandthefurious_?igsh=ZGRsZTcyazl3bGp4&utm_source=qr" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
-                  <Instagram size={20} />
-                </a>
-                <a href="https://www.facebook.com/share/1EhKPkuewp/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
-                  <Facebook size={20} />
-                </a>
-                <a href="https://wa.me/8801941126350" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
-                  <MessageCircle size={20} />
-                </a>
-              </div>
+          {/* Quick Links & Support - side by side on mobile */}
+          <div className="grid grid-cols-2 md:grid-cols-1 gap-4 md:gap-0">
+            <div>
+              <h4 className="font-semibold mb-4">SHOP</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li><Link to="/drivers" className="hover:text-white transition-colors">Drivers</Link></li>
+                <li><Link to="/f1-classic" className="hover:text-white transition-colors">F1 Classic</Link></li>
+                <li><Link to="/teams" className="hover:text-white transition-colors">Teams</Link></li>
+              </ul>
             </div>
-            <ul className="space-y-2 text-gray-400">
-              <li><Link to="/shipping" className="hover:text-white transition-colors">Shipping Info</Link></li>
-              <li><Link to="/returns" className="hover:text-white transition-colors">Returns</Link></li>
-            </ul>
+
+            {/* Customer Service & Social Media */}
+            <div>
+              <div className="flex items-center gap-4 mb-4">
+                <h4 className="font-semibold">SUPPORT</h4>
+                <div className="flex gap-3">
+                  <a href="https://www.instagram.com/thefashionandthefurious_?igsh=ZGRsZTcyazl3bGp4&utm_source=qr" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
+                    <Instagram size={20} />
+                  </a>
+                  <a href="https://www.facebook.com/share/1EhKPkuewp/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
+                    <Facebook size={20} />
+                  </a>
+                  <a href="https://wa.me/8801941126350" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
+                    <MessageCircle size={20} />
+                  </a>
+                </div>
+              </div>
+              <ul className="space-y-2 text-gray-400">
+                <li><Link to="/shipping" className="hover:text-white transition-colors">Shipping Info</Link></li>
+                <li><Link to="/returns" className="hover:text-white transition-colors">Returns</Link></li>
+              </ul>
+            </div>
           </div>
         </div>
 
