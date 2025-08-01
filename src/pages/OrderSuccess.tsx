@@ -32,9 +32,9 @@ const OrderSuccess = () => {
             <h2 className="text-xl font-semibold mb-4 text-white text-center">Order Details</h2>
             
             <div className="space-y-2 mb-4">
-              <p className="text-white text-center"><strong>Order ID:</strong> #{order.id}</p>
-              <p className="text-white text-center"><strong>Total:</strong> Tk {order.total.toFixed(2)}</p>
-              <p className="text-white text-center"><strong>Date:</strong> {order.orderDate ? new Date(order.orderDate).toLocaleDateString() : new Date().toLocaleDateString()}</p>
+              <p className="text-white text-left"><strong>Order ID:</strong> #{order.id}</p>
+              <p className="text-white text-left"><strong>Total:</strong> Tk {order.total.toFixed(2)}</p>
+              <p className="text-white text-left"><strong>Date:</strong> {order.orderDate ? new Date(order.orderDate).toLocaleDateString() : new Date().toLocaleDateString()}</p>
             </div>
 
             <h3 className="font-semibold mb-2 text-white text-center">Items Ordered:</h3>
