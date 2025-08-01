@@ -3,7 +3,7 @@ import { Instagram, Facebook, MessageCircle } from 'lucide-react';
 const Footer = () => {
   return <footer className="bg-black text-white py-12">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Brand */}
           <div>
             <div className="mb-4">
@@ -12,8 +12,8 @@ const Footer = () => {
             <p className="text-gray-400 mb-4 text-lg">Premium apparel inspired by F1 for racing enthusiasts, by racing enthusiasts.🏎️</p>
           </div>
 
-          {/* Quick Links & Support - side by side on mobile */}
-          <div className="grid grid-cols-2 md:grid-cols-1 gap-4 md:gap-0">
+          {/* Quick Links & Support - side by side on mobile and tablet */}
+          <div className="grid grid-cols-2 lg:grid-cols-1 gap-4 lg:gap-0">
             <div>
               <h4 className="font-semibold mb-4">SHOP</h4>
               <ul className="space-y-2 text-gray-400">
