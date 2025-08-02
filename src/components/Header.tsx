@@ -120,7 +120,7 @@ const Header = () => {
           </Link>
 
           {/* Desktop Navigation - Right aligned */}
-          <nav className="hidden md:flex space-x-8 ml-auto mr-8">
+          <nav className="hidden lg:flex space-x-8 ml-auto mr-8">
             <Link to="/shop-all" className="text-white hover:text-white transition-all font-poppins-extralight font-extralight text-sm tracking-wider relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left">
               Shop All
             </Link>

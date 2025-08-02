@@ -73,7 +73,7 @@ const ProductGrid = ({ products, showSaleTag = false }: ProductGridProps) => {
 
   return (
     <>
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
         {products.map((product) => {
           const mainImage = getProductImage(product);
           const hoverImage = getHoverImage(product);
@@ -90,7 +90,7 @@ const ProductGrid = ({ products, showSaleTag = false }: ProductGridProps) => {
                  {/* Sale Tag */}
                 {showSaleTag && product.saleInfo && (
                   <div className="absolute top-2 left-2 z-10">
-                    <span style={{ backgroundColor: '#C24242' }} className="text-white text-xs font-bold px-2 py-1 md:px-3 md:py-1 uppercase tracking-wide">
+                    <span style={{ backgroundColor: '#C24242' }} className="text-white text-xs font-bold px-2 py-1 lg:px-3 lg:py-1 uppercase tracking-wide">
                       SALE
                     </span>
                   </div>
@@ -123,8 +123,8 @@ const ProductGrid = ({ products, showSaleTag = false }: ProductGridProps) => {
                   {product.name}
                 </h3>
                 {product.saleInfo && product.originalPrice ? (
-                  <div className="text-sm sm:text-base font-normal text-gray-900 mb-2">
-                    <div className="flex flex-col md:flex-row md:items-center md:gap-2">
+                   <div className="text-sm sm:text-base font-normal text-gray-900 mb-2">
+                     <div className="flex flex-col lg:flex-row lg:items-center lg:gap-2">
                       <span className="line-through text-gray-400">Tk {product.originalPrice}.00</span>
                       <span>Tk {product.price}.00 BDT</span>
                     </div>

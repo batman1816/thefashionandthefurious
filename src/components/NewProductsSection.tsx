@@ -56,23 +56,23 @@ const NewProductsSection = () => {
     console.log('Modal closed');
     setSelectedProduct(null);
   };
-  return <section className="py-8 md:py-16 bg-white">
+  return <section className="py-8 lg:py-16 bg-white">
       <div className="container mx-auto px-4">
-        <h2 className="text-2xl mb-8 md:mb-12 font-medium md:text-2xl text-zinc-950 text-center">
+        <h2 className="text-2xl mb-8 lg:mb-12 font-medium lg:text-2xl text-zinc-950 text-center">
           NEW PRODUCTS
         </h2>
         
         {productsWithSales.length > 0 ? <>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6 mb-8 md:mb-12">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 lg:gap-6 mb-8 lg:mb-12">
               {productsWithSales.map(product => {
             const primaryImage = product.images && product.images.length > 0 ? product.images[0] : product.image_url;
             const hoverImage = product.images && product.images.length > 1 ? product.images[1] : primaryImage;
             const isOnSale = product.originalPrice && product.originalPrice > product.price;
             return <div key={product.id} className="group cursor-pointer bg-white" onClick={() => handleProductClick(product)}>
                     {/* Product Image */}
-                    <div className="aspect-square overflow-hidden bg-gray-50 relative mb-2 md:mb-4">
+                    <div className="aspect-square overflow-hidden bg-gray-50 relative mb-2 lg:mb-4">
                       {/* Sale Badge */}
-                      {isOnSale && <div className="absolute top-2 left-2 md:top-2 md:left-2 text-white text-xs font-bold px-2 py-1 md:px-3 md:py-1 z-10 uppercase tracking-wide" style={{
+                      {isOnSale && <div className="absolute top-2 left-2 lg:top-2 lg:left-2 text-white text-xs font-bold px-2 py-1 lg:px-3 lg:py-1 z-10 uppercase tracking-wide" style={{
                   backgroundColor: '#C24242'
                 }}>
                           SALE
@@ -94,17 +94,17 @@ const NewProductsSection = () => {
                     
                     {/* Product Info */}
                     <div className="text-left space-y-1">
-                      <h3 className="text-sm font-normal text-black leading-tight md:text-base">
+                      <h3 className="text-sm font-normal text-black leading-tight lg:text-base">
                         {product.name}
                       </h3>
-                      <div className="text-sm md:text-base font-normal text-black">
-                        {isOnSale ? <div className="flex flex-col md:flex-row md:items-center md:gap-2">
-                            <span className="line-through md:text-sm text-sm text-zinc-600">Tk {product.originalPrice}.00</span>
+                      <div className="text-sm lg:text-base font-normal text-black">
+                        {isOnSale ? <div className="flex flex-col lg:flex-row lg:items-center lg:gap-2">
+                            <span className="line-through lg:text-sm text-sm text-zinc-600">Tk {product.originalPrice}.00</span>
                             <span className="font-normal text-zinc-950 text-base">Tk {product.price}.00 BDT</span>
                           </div> : <span className="font-normal text-zinc-950 text-base">Tk {product.price}</span>}
                       </div>
                       <div className="pt-2">
-                        <button onClick={e => handleChooseOptions(product, e)} className="w-full border border-gray-400 text-black py-2 px-2 md:px-4 text-xs md:text-sm font-normal hover:bg-gray-50 transition-colors duration-200">
+                        <button onClick={e => handleChooseOptions(product, e)} className="w-full border border-gray-400 text-black py-2 px-2 lg:px-4 text-xs lg:text-sm font-normal hover:bg-gray-50 transition-colors duration-200">
                           Choose options
                         </button>
                       </div>

@@ -34,13 +34,13 @@ const MousepadSection = () => {
   return <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl mb-4 tracking-wide md:text-2xl font-medium text-zinc-950">
+          <h2 className="text-3xl mb-4 tracking-wide lg:text-2xl font-medium text-zinc-950">
             MOUSEPADS
           </h2>
           
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
           {mousepadProducts.map(product => {
           const mainImage = getProductImage(product);
           const isHovered = hoveredProduct === product.id;
