@@ -51,42 +51,42 @@ const Header = () => {
                   {/* Navigation Menu */}
                   <nav className="flex-1 px-6">
                     <div className="space-y-6">
-                      <Link to="/shop-all" className="block text-white text-lg font-light tracking-widest hover:text-gray-300 active:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 active:after:scale-x-100 after:origin-bottom-left" style={{
+                      <Link to="/shop-all" className="inline-block text-white text-lg font-light tracking-widest hover:text-gray-300 active:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-left after:transition-all after:duration-300 hover:after:w-full active:after:w-full" style={{
                     fontFamily: 'Poppins',
                     fontWeight: 300
                   }} onClick={() => setIsDrawerOpen(false)}>
                         SHOP ALL
                       </Link>
                       
-                      <Link to="/drivers" className="block text-white text-lg font-light tracking-widest hover:text-gray-300 active:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 active:after:scale-x-100 after:origin-bottom-left" style={{
+                      <Link to="/drivers" className="inline-block text-white text-lg font-light tracking-widest hover:text-gray-300 active:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-left after:transition-all after:duration-300 hover:after:w-full active:after:w-full" style={{
                     fontFamily: 'Poppins',
                     fontWeight: 300
                   }} onClick={() => setIsDrawerOpen(false)}>
                         DRIVERS
                       </Link>
 
-                      <Link to="/f1-classic" className="block text-white text-lg font-light tracking-widest hover:text-gray-300 active:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 active:after:scale-x-100 after:origin-bottom-left" style={{
+                      <Link to="/f1-classic" className="inline-block text-white text-lg font-light tracking-widest hover:text-gray-300 active:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-left after:transition-all after:duration-300 hover:after:w-full active:after:w-full" style={{
                     fontFamily: 'Poppins',
                     fontWeight: 300
                   }} onClick={() => setIsDrawerOpen(false)}>
                         F1 CLASSIC
                       </Link>
 
-                      <Link to="/teams" className="block text-white text-lg font-light tracking-widest hover:text-gray-300 active:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 active:after:scale-x-100 after:origin-bottom-left" style={{
+                      <Link to="/teams" className="inline-block text-white text-lg font-light tracking-widest hover:text-gray-300 active:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-left after:transition-all after:duration-300 hover:after:w-full active:after:w-full" style={{
                     fontFamily: 'Poppins',
                     fontWeight: 300
                   }} onClick={() => setIsDrawerOpen(false)}>
                         TEAMS
                       </Link>
 
-                      <Link to="/mousepads" className="block text-white text-lg font-light tracking-widest hover:text-gray-300 active:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 active:after:scale-x-100 after:origin-bottom-left" style={{
+                      <Link to="/mousepads" className="inline-block text-white text-lg font-light tracking-widest hover:text-gray-300 active:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-left after:transition-all after:duration-300 hover:after:w-full active:after:w-full" style={{
                     fontFamily: 'Poppins',
                     fontWeight: 300
                   }} onClick={() => setIsDrawerOpen(false)}>
                         MOUSEPADS
                       </Link>
 
-                      <Link to="/sales" className="block text-white text-lg font-light tracking-widest hover:text-gray-300 active:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 active:after:scale-x-100 after:origin-bottom-left" style={{
+                      <Link to="/sales" className="inline-block text-white text-lg font-light tracking-widest hover:text-gray-300 active:text-gray-300 transition-colors relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-white after:origin-bottom-left after:transition-all after:duration-300 hover:after:w-full active:after:w-full" style={{
                     fontFamily: 'Poppins',
                     fontWeight: 300
                   }} onClick={() => setIsDrawerOpen(false)}>
